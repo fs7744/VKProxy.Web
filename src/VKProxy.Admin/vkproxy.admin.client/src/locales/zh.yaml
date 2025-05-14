@@ -1,1 +1,13 @@
-hello: 世界
+Routes: 路由
+document: 文档
+setting: 设置
+Clusters: 后端服务
+Listen: 监听
+intro1: 支持 HTTP/1.1、HTTP/2、HTTP/3、websocket、socks5
+intro2: 高度可自定义，可让开发人员以最少的努力，根据自己的特定需求量身打造 Proxy
+intro3: 提供一组丰富的扩充点，可让开发人员视需要新增自定义逻辑和功能，并使用熟悉的 C# 程式代码
+key: 名称
+protocols: 协议
+address: 地址
+edit: 编辑
+delete: 删除

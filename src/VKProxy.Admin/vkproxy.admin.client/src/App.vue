@@ -6,9 +6,9 @@
   import { useI18n } from 'vue-i18n'
   import {
     Document,
-    Menu as IconMenu,
+    MostlyCloudy,
     Location,
-    Setting,
+    Aim,
     DArrowRight,
     DArrowLeft,
     Sunny,
@@ -17,7 +17,7 @@
   import { useDark, useToggle } from '@vueuse/core'
   import { useStorage } from '@vueuse/core'
 
-  const isCollapse = ref(true)
+
   const { t, locale } = useI18n({
     useScope: 'global'
   })
@@ -28,6 +28,8 @@
     localStorage,
     { mergeDefaults: true }
   )
+
+  const isCollapse = ref(false)
 
   const isDark = useDark()
   const toggleDark = useToggle(isDark)
@@ -40,14 +42,19 @@
     locale.value = language.value
     state.value.language = language.value
   }
+
+  const open = (u: string) => {
+  window.open(u, "_blank")
+}
 </script>
 
 <template>
 
   <el-menu mode="horizontal" style="width: 100%"
            :ellipsis="false">
-    <el-menu-item index="0">
-      <el-image src="/favicon.ico" fit="fill" />
+    <el-menu-item index="0" >
+      <el-image style="width: 100px; height: 55px" src="/logo.jpg" fit="scale-down" />
+      <el-text size="large" style="font-weight: 600;" truncated>VKProxy</el-text>
     </el-menu-item>
     <el-menu-item index="1">
       <el-switch v-model="isDark" change="() =>toggleDark()">
@@ -65,10 +72,10 @@
         <span v-else>en</span>
       </el-button>
     </el-menu-item>
-    <el-menu-item index="3">
+    <!-- <el-menu-item index="3">
       <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
       <el-text size="large" style="margin-left: 4px;" truncated>User name</el-text>
-    </el-menu-item>
+    </el-menu-item> -->
   </el-menu>
 
   <el-container>
@@ -86,60 +93,40 @@
       </div>
       <el-menu default-active="2"
                class="el-menu-vertical"
-               :collapse="isCollapse">
-        <el-sub-menu index="1">
+               :collapse="isCollapse" :router="true">
+        <el-menu-item index="401">
+          <el-icon><location /></el-icon>
           <template #title>
-            <el-icon><location /></el-icon>
-            <span>Navigator One</span>
+            <span>{{$t('Routes')}}</span>
           </template>
-          <el-menu-item-group>
-            <template #title>
-              <span>Group One</span>
-            </template>
-            <el-menu-item index="1-1">item one</el-menu-item>
-            <el-menu-item index="1-2">item two</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group title="Group Two">
-            <el-menu-item index="1-3">item three</el-menu-item>
-          </el-menu-item-group>
-          <el-sub-menu index="1-4">
-            <template #title>
-              <span>item four</span>
-            </template>
-            <el-menu-item index="1-4-1">item one</el-menu-item>
-          </el-sub-menu>
-        </el-sub-menu>
+          </el-menu-item>
         <el-menu-item index="2">
-          <el-icon><icon-menu /></el-icon>
+          <el-icon><MostlyCloudy /></el-icon>
           <template #title>
-            Navigator Two
+            <span>{{$t('Clusters')}}</span>
           </template>
         </el-menu-item>
-        <el-menu-item index="3" disabled>
+        <el-menu-item index="listen">
+          <el-icon><Aim /></el-icon>
+          <template #title>
+            <span>{{$t('Listen')}}</span>
+          </template>
+        </el-menu-item>
+        <el-menu-item index="" @click="open('https://fs7744.github.io/vkproxy.doc/')">
           <el-icon><document /></el-icon>
           <template #title>
-            Navigator Three
-          </template>
-        </el-menu-item>
-        <el-menu-item index="4">
-          <el-icon><setting /></el-icon>
-          <template #title>
-            Navigator Four
+            <span>{{$t('document')}}</span>
           </template>
         </el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>
-      <el-header>
-        <el-row>
-        </el-row>
-      </el-header>
       <el-main>
         <el-config-provider :locale="localev">
-          <p>message: {{ $t('hello') }}</p>
+          <router-view />
         </el-config-provider>
       </el-main>
-      <el-footer>Footer</el-footer>
+      <el-footer></el-footer>
     </el-container>
   </el-container>
 </template>

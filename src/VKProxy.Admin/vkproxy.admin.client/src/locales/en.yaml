@@ -1,0 +1,13 @@
+Routes: Routes
+document: Document
+setting: Setting
+Clusters: Clusters
+Listen: Listen
+intro1: support HTTP/1.1、HTTP/2、HTTP/3、websocket、socks5
+intro2: highly customizable, allowing developers to tailor the proxy to their specific needs with minimal effort
+intro3: provides a rich set of extensibility points, enabling developers to add custom logic and features as needed, using familiar C# code
+key: Name
+protocols: Protocols
+address: Address
+edit: Edit
+delete: Delete
