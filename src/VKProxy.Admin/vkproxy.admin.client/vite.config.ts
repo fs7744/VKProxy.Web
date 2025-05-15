@@ -13,6 +13,18 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 
 // https://vite.dev/config/
 export default defineConfig({
+  css: {
+    preprocessorOptions: {
+      scss: { api: 'modern-compiler' },
+    }
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: "http://127.0.0.1:5041"
+      }
+    }
+  },
   plugins: [
     vue(),
     vueJsx(),

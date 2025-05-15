@@ -11,3 +11,5 @@ protocols: 协议
 address: 地址
 edit: 编辑
 delete: 删除
+operations: 操作
+sni: 服务器名称指示

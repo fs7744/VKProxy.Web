@@ -16,7 +16,7 @@
             <el-auto-resizer>
                 <template #default="{ height, width }">
                 <el-table-v2  :width="width"
-                :height="height" :columns="columns" :data="listens" fixed>
+                :height="height" :columns="columns" :data="listens" >
                 </el-table-v2>
             </template>
             </el-auto-resizer>
@@ -39,6 +39,9 @@ import {
     ElTooltip,
     TableV2FixedDir,
 } from 'element-plus'
+import { storageService } from '../service/storage'
+import { protocols } from '../components/protocols.vue'
+
 const { t } = useI18n({
     useScope: 'global'
 })
@@ -50,40 +53,16 @@ const goBack = () => {
 }
 
 const searchKey = ref('')
-const listens = ref<any[]>([{ Key: 'http_dddd', Protocols: 12, Address: ["127.0.0.1:5001", "[::1]:5001"] }]);
+const listens = ref<any[]>([]);
 
 const columns: Column<any>[] = [
     {
-        key: 'Key',
-        dataKey: 'Key',
-        width: 150,
-        fixed: TableV2FixedDir.LEFT,
-        headerCellRenderer: () => (
-            <span> {t('key')} </span>
-        )
-    },
-    {
-        key: 'Protocols',
-        dataKey: 'Protocols',
-        width: 150,
-        fixed: TableV2FixedDir.LEFT,
-        headerCellRenderer: () => (
-            <span> {t('protocols')} </span>
-        )
-    },
-    {
-        key: 'Address',
-        dataKey: 'Address',
-        width: 350,
-        headerCellRenderer: () => (
-            <span> {t('address')} </span>
-        )
-    },
-    {
         key: 'operations',
-        title: 'Operations',
+        headerCellRenderer: () => (
+            <span> {t('operations')} </span>
+        ),
         cellRenderer: () => (
-            <div>
+            <div style="padding-right: 18px;">
                 <ElButton size="small">{t('edit')}</ElButton>
                 <ElButton size="small" type="danger">
                     {t('delete')}
@@ -92,12 +71,66 @@ const columns: Column<any>[] = [
         ),
         width: 150,
         align: 'center',
-    }
+        fixed: TableV2FixedDir.LEFT,
+    },
+    {
+        key: 'Key',
+        dataKey: 'Key',
+        width: 150,
+        headerCellRenderer: () => (
+            <span> {t('key')} </span>
+        )
+    },
+    {
+        key: 'SniId',
+        dataKey: 'SniId',
+        width: 150,
+        headerCellRenderer: () => (
+            <span> {t('sni')} </span>
+        )
+    },
+    {
+        key: 'RouteId',
+        dataKey: 'RouteId',
+        width: 100,
+        headerCellRenderer: () => (
+            <span> {t('Routes')} </span>
+        )
+    },
+    {
+        key: 'Key',
+        dataKey: 'Key',
+        width: 150,
+        headerCellRenderer: () => (
+            <span> {t('key')} </span>
+        )
+    },
+    {
+        key: 'Protocols',
+        dataKey: 'Protocols',
+        width: 150,
+        headerCellRenderer: () => (
+            <span> {t('protocols')} </span>
+        ),
+        cellRenderer: ({ cellData: p }) => (
+          <protocols protocols={p}> </protocols>
+        )
+    },
+    {
+        key: 'Address',
+        dataKey: 'Address',
+        minWidth: 150,
+        headerCellRenderer: () => (
+            <span> {t('address')} </span>
+        )
+    } as any
 ]
 
-const search = () => {
-    console.log(searchKey.value)
+const search = async () => {
+    listens.value = (await storageService.getListen(searchKey.value)) ?? []
 }
+
+search()
 </script>
 
 <style scoped></style>

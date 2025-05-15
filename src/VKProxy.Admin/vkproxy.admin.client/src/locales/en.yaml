@@ -11,3 +11,5 @@ protocols: Protocols
 address: Address
 edit: Edit
 delete: Delete
+operations: Operations
+sni: Server Name Indication

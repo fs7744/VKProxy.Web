@@ -7,7 +7,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A92FB770-7BD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VKProxy.Admin.Server", "src\VKProxy.Admin\VKProxy.Admin.Server\VKProxy.Admin.Server.csproj", "{3E297583-CB74-429D-9918-176F9D9ECEFF}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "vkproxy.admin.client", "src\VKProxy.Admin\vkproxy.admin.client\vkproxy.admin.client.esproj", "{E7B0E3E0-F468-4996-9654-797FB58447FF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VKProxy.Core", "..\VKProxy\src\VKProxy.Core\VKProxy.Core.csproj", "{880B1A96-499D-1C01-A92B-DF1AC1AEA010}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VKProxy", "..\VKProxy\src\VKProxy\VKProxy.csproj", "{024D2CDF-0760-59DA-3E62-9E2728555E8D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VKProxy.Storages.Etcd", "..\VKProxy\src\VKProxy.Storages.Etcd\VKProxy.Storages.Etcd.csproj", "{2D729A5D-2CB1-3918-2131-597B75E8BCB6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,17 +23,29 @@ Global
 		{3E297583-CB74-429D-9918-176F9D9ECEFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E297583-CB74-429D-9918-176F9D9ECEFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E297583-CB74-429D-9918-176F9D9ECEFF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E7B0E3E0-F468-4996-9654-797FB58447FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E7B0E3E0-F468-4996-9654-797FB58447FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E7B0E3E0-F468-4996-9654-797FB58447FF}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{E7B0E3E0-F468-4996-9654-797FB58447FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E7B0E3E0-F468-4996-9654-797FB58447FF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E7B0E3E0-F468-4996-9654-797FB58447FF}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{880B1A96-499D-1C01-A92B-DF1AC1AEA010}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{880B1A96-499D-1C01-A92B-DF1AC1AEA010}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{880B1A96-499D-1C01-A92B-DF1AC1AEA010}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{880B1A96-499D-1C01-A92B-DF1AC1AEA010}.Release|Any CPU.Build.0 = Release|Any CPU
+		{024D2CDF-0760-59DA-3E62-9E2728555E8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{024D2CDF-0760-59DA-3E62-9E2728555E8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{024D2CDF-0760-59DA-3E62-9E2728555E8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{024D2CDF-0760-59DA-3E62-9E2728555E8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D729A5D-2CB1-3918-2131-597B75E8BCB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D729A5D-2CB1-3918-2131-597B75E8BCB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D729A5D-2CB1-3918-2131-597B75E8BCB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D729A5D-2CB1-3918-2131-597B75E8BCB6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3E297583-CB74-429D-9918-176F9D9ECEFF} = {A92FB770-7BDF-4D0B-93B5-C486CBBD48C0}
+		{880B1A96-499D-1C01-A92B-DF1AC1AEA010} = {A92FB770-7BDF-4D0B-93B5-C486CBBD48C0}
+		{024D2CDF-0760-59DA-3E62-9E2728555E8D} = {A92FB770-7BDF-4D0B-93B5-C486CBBD48C0}
+		{2D729A5D-2CB1-3918-2131-597B75E8BCB6} = {A92FB770-7BDF-4D0B-93B5-C486CBBD48C0}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E6AB957A-6F32-4118-BF39-3FD11157A999}
 	EndGlobalSection
 EndGlobal
