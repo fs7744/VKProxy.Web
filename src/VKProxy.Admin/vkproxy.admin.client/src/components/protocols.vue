@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import { isNumber } from 'lodash';
-import { GatewayProtocols } from '../ets/GatewayProtocols'
+import { GatewayProtocols,toGatewayProtocolsNames } from '../ets/GatewayProtocols'
 import { ref } from 'vue';
 
 const props = defineProps({
@@ -20,7 +20,6 @@ const props = defineProps({
     }
 })
 
-const v = ref(props.protocols as GatewayProtocols)
-
+const v = ref(toGatewayProtocolsNames(props.protocols as GatewayProtocols).join(','))
 
 </script>
