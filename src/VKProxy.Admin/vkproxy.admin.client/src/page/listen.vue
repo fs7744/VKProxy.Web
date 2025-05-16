@@ -6,7 +6,7 @@
       </template>
     </el-page-header>
     <div style="padding-bottom: 8px;">
-      <el-input placeholder="Please input" v-model="searchKey" @change="search()">
+      <el-input :placeholder="$t('inputPrefix')" v-model="searchKey" @change="search()">
         <template #prepend>
           <el-button :icon="Search" @click="search()" />
         </template>
@@ -34,7 +34,7 @@
 
 
 <script setup lang="tsx">
-import { ref } from 'vue'
+import { ref ,reactive} from 'vue'
 import { useRouter } from 'vue-router'
 import { Search } from '@element-plus/icons-vue'
 import type { Column } from 'element-plus'

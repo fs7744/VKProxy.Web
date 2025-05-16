@@ -6,13 +6,15 @@ class StorageService {
   }
 
   removeListen(key: string) {
-    return http(`/api/listen?key=${key}`, { method: 'DELETE'})
+    return http(`/api/listen?key=${key}`, { method: 'DELETE' })
   }
 
   updateListen(config: any) {
-    return http(`/api/listen`, { method: 'POST', body: JSON.stringify(config), headers: {
-    "Content-Type": "application/json",
-  }})
+    return http(`/api/listen`, {
+      method: 'POST', body: JSON.stringify(config), headers: {
+        "Content-Type": "application/json",
+      }
+    })
   }
 }
 

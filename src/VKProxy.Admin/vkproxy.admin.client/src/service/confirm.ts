@@ -10,7 +10,7 @@ export const i18n = createI18n({
   fallbackLocale: 'en',
   messages
 })
-const { t } = i18n.global
+export const { t } = i18n.global
 
 export const handleClose = async (done: () => void) => {
   try {

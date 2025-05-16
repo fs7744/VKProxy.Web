@@ -16,3 +16,9 @@ sni: 服务器名称指示
 new: 新建
 closeLoss: 关闭可能会导致未保存的修改丢失，您确定要关闭吗？
 removeLoss: 您确认要删除
+inputPrefix: 您可以输入前缀
+required: 必填
+requiredLength: 长度必须大于
+create: 创建
+update: 更新
+bothL47: L4 / L7 协议不能共存

@@ -16,3 +16,9 @@ sni: Server Name Indication
 new: New
 closeLoss: Closing may result in loss of unsaved changes. Are you sure you want to close?
 removeLoss: Are you sure you want to remove
+inputPrefix: Please input prefix
+required: Required, please input
+requiredLength: Length should be more than 
+create: Create
+update: Update
+bothL47: L4 / L7 protocols cannot coexist
