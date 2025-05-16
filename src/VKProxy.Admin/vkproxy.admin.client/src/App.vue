@@ -70,7 +70,7 @@ const open = (u: string) => {
       <el-text size="large" style="font-weight: 600;" truncated>VKProxy</el-text>
     </el-menu-item>
     <el-menu-item index="1">
-      <el-switch v-model="isDark" @change="toggleDark()">
+      <el-switch v-model="isDark" change="() => toggleDark()">
         <template #active-action>
           <el-icon>
             <Moon />

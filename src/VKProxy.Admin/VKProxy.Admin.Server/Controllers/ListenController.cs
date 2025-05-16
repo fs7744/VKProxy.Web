@@ -16,9 +16,21 @@ namespace VKProxy.Admin.Server.Controllers
         }
 
         [HttpGet]
-        public Task<IEnumerable<ListenConfig>> GetAsync([FromQuery] string? prefix)
+        public async Task<IEnumerable<ListenConfig>> GetAsync([FromQuery] string? prefix)
         {
-            return storage.GetListenAsync(prefix);
+            return await storage.GetListenAsync(prefix);
+        }
+
+        [HttpPost]
+        public async Task UpdateAsync([FromBody] ListenConfig config)
+        {
+            await storage.UpdateListenAsync(config);
+        }
+
+        [HttpDelete]
+        public async Task<long> DeleteAsync([FromQuery] string key)
+        {
+            return await storage.DeleteListenAsync(key);
         }
     }
 }

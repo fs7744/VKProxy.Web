@@ -11,7 +11,7 @@ const routes: any[] = [
         path: '/',
         name: 'home',
         component: Home,
-    }, 
+    },
     {
         path: '/listen',
         name: 'listen',

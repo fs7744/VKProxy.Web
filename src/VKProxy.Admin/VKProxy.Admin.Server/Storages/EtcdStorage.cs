@@ -16,6 +16,12 @@ public class EtcdStorage : IStorage
         this.options = options;
     }
 
+    public async Task<long> DeleteListenAsync(string key)
+    {
+        var r = await client.DeleteAsync($"{options.Prefix}listen/{key}");
+        return r.Deleted;
+    }
+
     public async Task<IEnumerable<ListenConfig>> GetListenAsync(string prefix)
     {
         var res = await client.GetRangeAsync($"{options.Prefix}listen/{prefix}");
@@ -25,5 +31,10 @@ public class EtcdStorage : IStorage
             r.Key = i.Key.ToStrUtf8().Substring(options.Prefix.Length + 7);
             return r;
         });
+    }
+
+    public async Task UpdateListenAsync(ListenConfig config)
+    {
+        await client.PutAsync($"{options.Prefix}listen/{config.Key}", JsonSerializer.Serialize(config));
     }
 }
