@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Address: typeof import('./src/components/address.vue')['default']
     copy: typeof import('./src/components/protocols copy.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAutoResizer: typeof import('element-plus/es')['ElAutoResizer']
@@ -49,6 +50,7 @@ declare module 'vue' {
     IconEcosystem: typeof import('./src/components/icons/IconEcosystem.vue')['default']
     IconSupport: typeof import('./src/components/icons/IconSupport.vue')['default']
     IconTooling: typeof import('./src/components/icons/IconTooling.vue')['default']
+    IpAddress: typeof import('./src/components/ipAddress.vue')['default']
     Protocols: typeof import('./src/components/protocols.vue')['default']
     ProtocolsSelect: typeof import('./src/components/protocolsSelect.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

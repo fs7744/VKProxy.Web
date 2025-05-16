@@ -9,6 +9,10 @@
     <el-form-item :label="$t('protocols')" prop="Protocols">
       <protocolsSelect v-model="form.Protocols" />
     </el-form-item>
+
+    <el-form-item :label="$t('address')" prop="Address">
+      <ipAddress v-model="form.Address" />
+    </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="submitForm(formRef)">
         <el-text v-model="form.Key" v-if="isNew">{{ $t('create') }}</el-text>
@@ -25,7 +29,7 @@ import { reactive, ref, watchEffect } from 'vue'
 import { ListenData } from '../ets/ListenData';
 import type { FormInstance, FormRules } from 'element-plus'
 import { useI18n } from 'vue-i18n';
-import { protocolsSelect } from '../components'
+import { protocolsSelect, ipAddress } from '../components'
 import { protocolsValidator } from '../service/validators'
 
 const { t } = useI18n({
@@ -46,7 +50,8 @@ const form = reactive(new ListenData({}))
 const rules = reactive<FormRules<ListenData>>({
   Key: [{ required: true, message: () => t('required'), trigger: 'blur' },
   { min: 1, message: () => t('requiredLength') + '1', trigger: 'blur' },],
-  Protocols: [{ required: true, message: () => t('required'), trigger: 'change' }, protocolsValidator]
+  Protocols: [{ required: true, message: () => t('required'), trigger: 'change' }, protocolsValidator],
+  Address: [{ required: true, message: () => t('required'), trigger: 'change' }]
 })
 
 watchEffect(() => {
