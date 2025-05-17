@@ -12,7 +12,7 @@ address: Address
 edit: Edit
 delete: Delete
 operations: Operations
-sni: Server Name Indication
+sni: Sni
 new: New
 closeLoss: Closing may result in loss of unsaved changes. Are you sure you want to close?
 removeLoss: Are you sure you want to remove

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { globalLoading } from './global-loading';
 import { ElMessage } from 'element-plus'
 
@@ -8,6 +7,9 @@ export const http = async (url: string, op: any) => {
         globalLoading.show(0);
     }
     const response = await fetch(url, op);
+    if(response.status >= 300 || response.status < 200) {
+      throw new Error(await response.text())
+    }
     const  r = await response.text();
     if(r) {
       return JSON.parse(r)
@@ -19,7 +21,8 @@ export const http = async (url: string, op: any) => {
         type: 'error',
         message: error as any,
         duration: 10000
-    });
+    })
+    throw error
   } finally {
     globalLoading.hide();
   }

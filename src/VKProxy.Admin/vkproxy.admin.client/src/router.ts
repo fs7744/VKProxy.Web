@@ -3,7 +3,10 @@ import {
     NoPermission,
     NotFound,
     Listen,
-    Home
+    Home,
+    Cluster,
+    Route,
+    Sni
 } from './page';
 
 const routes: any[] = [
@@ -16,6 +19,21 @@ const routes: any[] = [
         path: '/listen',
         name: 'listen',
         component: Listen,
+    },
+    {
+        path: '/cluster',
+        name: 'cluster',
+        component: Cluster,
+    },
+    {
+        path: '/route',
+        name: 'route',
+        component: Route,
+    },
+    {
+        path: '/sni',
+        name: 'sni',
+        component: Sni,
     },
     {
         path: '/401',

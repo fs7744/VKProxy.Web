@@ -5,12 +5,12 @@ using VKProxy.Config;
 namespace VKProxy.Admin.Server.Controllers
 {
     [ApiController]
-    [Route("api/listen")]
-    public class ListenController : ControllerBase
+    [Route("api/cluster")]
+    public class ClusterController : ControllerBase
     {
         private readonly IStorage storage;
 
-        public ListenController(IStorage storage)
+        public ClusterController(IStorage storage)
         {
             this.storage = storage;
         }
@@ -18,25 +18,25 @@ namespace VKProxy.Admin.Server.Controllers
         [HttpGet("exists")]
         public async Task<bool> ExistsAsync([FromQuery] string key)
         {
-            return await storage.ExistsListenAsync(key);
+            return await storage.ExistsClusterAsync(key);
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ListenConfig>> GetAsync([FromQuery] string? prefix)
+        public async Task<IEnumerable<ClusterConfig>> GetAsync([FromQuery] string? prefix)
         {
-            return await storage.GetListenAsync(prefix);
+            return await storage.GetClusterAsync(prefix);
         }
 
         [HttpPost]
-        public async Task UpdateAsync([FromBody] ListenConfig config)
+        public async Task UpdateAsync([FromBody] ClusterConfig config)
         {
-            await storage.UpdateListenAsync(config);
+            await storage.UpdateClusterAsync(config);
         }
 
         [HttpDelete]
         public async Task<long> DeleteAsync([FromQuery] string key)
         {
-            return await storage.DeleteListenAsync(key);
+            return await storage.DeleteClusterAsync(key);
         }
     }
 }

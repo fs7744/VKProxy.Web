@@ -7,6 +7,7 @@ import { useI18n } from 'vue-i18n'
 import {
   Document,
   MostlyCloudy,
+  MapLocation,
   Location,
   Aim,
   DArrowRight,
@@ -109,7 +110,7 @@ const open = (u: string) => {
         </el-button>
       </div>
       <el-menu :default-active="activeMenu" class="el-menu-vertical" :collapse="isCollapse" :router="true">
-        <el-menu-item index="/401">
+        <el-menu-item index="/route">
           <el-icon>
             <location />
           </el-icon>
@@ -117,12 +118,18 @@ const open = (u: string) => {
             <span>{{ $t('Routes') }}</span>
           </template>
         </el-menu-item>
-        <el-menu-item index="/clusters">
+        <el-menu-item index="/cluster">
           <el-icon>
             <MostlyCloudy />
           </el-icon>
           <template #title>
             <span>{{ $t('Clusters') }}</span>
+          </template>
+        </el-menu-item>
+        <el-menu-item index="/sni">
+          <el-icon><MapLocation /></el-icon>
+          <template #title>
+            <span>{{ $t('sni') }}</span>
           </template>
         </el-menu-item>
         <el-menu-item index="/listen">
