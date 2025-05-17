@@ -1,8 +1,14 @@
-import { http } from './http';
+import { http } from './http'
+import { isBoolean } from 'lodash'
 
 class StorageService {
   getListen(prefix: string) {
-    return http(`/api/listen?prefix=${prefix}`)
+    return http(`/api/listen?prefix=${prefix}`, {})
+  }
+
+  async existsListen(key: string) {
+    const r = await http(`/api/listen/exists?key=${key}`, {})
+    return isBoolean(r) ? r : false
   }
 
   removeListen(key: string) {

@@ -12,23 +12,17 @@
         </template>
       </el-input>
     </div>
-    <div style="height: 400px; width: 100%;">
+    <div style="height: 80vh; width: 100%; display: -webkit-flex;">
       <el-auto-resizer>
         <template #default="{ height, width }">
           <el-table-v2 :width="width" :height="height" :columns="columns" :data="listens">
-            <template #footer>
-              <div style="padding: 8px; border-top: 1px solid var(--el-border-color);">
-                <ElButton size="small" type="primary" @click="doNew()">{{ $t('new') }}</ElButton>
-              </div>
-            </template>
           </el-table-v2>
         </template>
-
       </el-auto-resizer>
     </div>
   </el-card>
   <el-drawer v-model="isEditView" direction="rtl" :before-close="handleClose" :with-header="false">
-    <ListenDetail :data="editData"></ListenDetail>
+    <ListenDetail :data="editData" :done="()=>{isEditView =false;search()}"></ListenDetail>
   </el-drawer>
 </template>
 
@@ -72,7 +66,7 @@ const columns: Column<any>[] = [
   {
     key: 'operations',
     headerCellRenderer: () => (
-      <span> {t('operations')} </span>
+      <ElButton size="small" type="primary" onClick={ () => doNew()}>{ t('new') }</ElButton>
     ),
     cellRenderer: ({ rowData: r }) => (
       <div style="padding-right: 18px;">
@@ -95,6 +89,17 @@ const columns: Column<any>[] = [
     )
   },
   {
+    key: 'Protocols',
+    dataKey: 'Protocols',
+    width: 150,
+    headerCellRenderer: () => (
+      <span> {t('protocols')} </span>
+    ),
+    cellRenderer: ({ cellData: p }) => (
+      <protocols protocols={p}> </protocols>
+    )
+  },
+  {
     key: 'SniId',
     dataKey: 'SniId',
     width: 150,
@@ -108,25 +113,6 @@ const columns: Column<any>[] = [
     width: 100,
     headerCellRenderer: () => (
       <span> {t('Routes')} </span>
-    )
-  },
-  {
-    key: 'Key',
-    dataKey: 'Key',
-    width: 150,
-    headerCellRenderer: () => (
-      <span> {t('key')} </span>
-    )
-  },
-  {
-    key: 'Protocols',
-    dataKey: 'Protocols',
-    width: 150,
-    headerCellRenderer: () => (
-      <span> {t('protocols')} </span>
-    ),
-    cellRenderer: ({ cellData: p }) => (
-      <protocols protocols={p}> </protocols>
     )
   },
   {

@@ -1,6 +1,8 @@
 
 import { GatewayProtocols } from '../ets/GatewayProtocols'
 import { t } from './confirm'
+import { isIp } from './ip'
+import { isInteger, isBoolean } from 'lodash'
 
 export const protocolsValidator = {
   validator: (rule: any, value: GatewayProtocols, callback: any) => {
@@ -23,9 +25,26 @@ export const protocolsValidator = {
       isL7 = true;
     }
 
-    if(isL4 && isL7) {
+    if (isL4 && isL7) {
       callback(new Error(t('bothL47')))
     } else {
+      callback()
+    }
+  }, trigger: 'blur'
+}
+
+export const checkIp = {
+  validator: (rule: any, value: any, callback: any) => {
+    if (!value) {
+      callback(new Error(t('required')))
+    } else {
+      if (!value.ip || !isIp(value.ip)) {
+        return callback(new Error(t('wrongIp')))
+      }
+      if (!value.port || !isInteger(value.port) || value <= 0 || value > 65535) {
+        return callback(new Error(t('wrongPort')))
+      }
+
       callback()
     }
   }, trigger: 'blur'

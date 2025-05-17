@@ -15,6 +15,12 @@ namespace VKProxy.Admin.Server.Controllers
             this.storage = storage;
         }
 
+        [HttpGet("exists")]
+        public async Task<bool> ExistsAsync([FromQuery] string key)
+        {
+            return await storage.ExistsAsync(key);
+        }
+
         [HttpGet]
         public async Task<IEnumerable<ListenConfig>> GetAsync([FromQuery] string? prefix)
         {

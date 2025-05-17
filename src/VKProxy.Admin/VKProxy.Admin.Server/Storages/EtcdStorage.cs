@@ -1,4 +1,5 @@
 ﻿using Etcd;
+using Google.Protobuf;
 using System.Text.Json;
 using VKProxy.Config;
 using VKProxy.Storages.Etcd;
@@ -20,6 +21,16 @@ public class EtcdStorage : IStorage
     {
         var r = await client.DeleteAsync($"{options.Prefix}listen/{key}");
         return r.Deleted;
+    }
+
+    public async Task<bool> ExistsAsync(string key)
+    {
+        var r = await client.RangeAsync(new Etcdserverpb.RangeRequest()
+        {
+            CountOnly = true,
+            Key = ByteString.CopyFromUtf8($"{options.Prefix}listen/{key}")
+        });
+        return r.Count > 0;
     }
 
     public async Task<IEnumerable<ListenConfig>> GetListenAsync(string prefix)

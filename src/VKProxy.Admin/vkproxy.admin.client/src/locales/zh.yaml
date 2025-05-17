@@ -22,3 +22,9 @@ requiredLength: 长度必须大于
 create: 创建
 update: 更新
 bothL47: L4 / L7 协议不能共存
+Ip: Ip
+Port: 端口
+wrongIp: 错误 ip 格式
+wrongPort: 端口必须在 1 到 65535 之间
+wrongSave: 存在错误，无法保存。请检查！
+alreadyExists: 已存在，不能重复

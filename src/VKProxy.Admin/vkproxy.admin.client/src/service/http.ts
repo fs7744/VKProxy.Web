@@ -2,13 +2,16 @@
 import { globalLoading } from './global-loading';
 import { ElMessage } from 'element-plus'
 
-export const http = async (url: string, op: any = null) => {
+export const http = async (url: string, op: any) => {
   try {
     if (op?.noLoading !== true) {
         globalLoading.show(0);
     }
-    const response = await fetch(url);
-    const  r = await response.json();
+    const response = await fetch(url, op);
+    const  r = await response.text();
+    if(r) {
+      return JSON.parse(r)
+    }
     return r;
   } catch(error) {
      ElMessage({

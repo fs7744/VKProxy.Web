@@ -22,3 +22,9 @@ requiredLength: Length should be more than
 create: Create
 update: Update
 bothL47: L4 / L7 protocols cannot coexist
+Ip: Ip
+Port: Port
+wrongIp: Wrong ip format
+wrongPort: Port must be between 1 and 65535
+wrongSave: There is some error, can't save. Please check!
+alreadyExists: Already exists the same value
