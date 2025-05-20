@@ -38,3 +38,17 @@ wronghost: Host格式错误
 wrongport: 端口错误
 wrongpathname: Path格式错误
 wrongsearch: QueryString格式错误
+LoadBalancingPolicy: 负载均衡
+HealthCheck: 健康检查
+None: 无
+Passive: 被动
+Active: 主动
+SecondSuffix: 秒
+FailureRateLimit: 故障率限制
+MinimalTotalCountThreshold: 最少请求总数
+DetectionWindowSize: 检测窗口大小
+ReactivationPeriod: 重新激活期
+FailureRateLimitTip:  未在群集元数据上设置时应用的标记为运行不正常的目标的默认故障率限制。 该值在 (0,1)范围内。 默认值为 0.3（30%）。
+MinimalTotalCountThresholdTip: 在该策略开始评估目标的运行状况并强制执行失败率限制之前，必须代理到检测窗口内目标的最少请求总数。 默认值为 10
+DetectionWindowSizeTip: 在速率计算中保留并考虑检测到的故障的时间段。 默认值为 60
+ReactivationPeriodTip: 经过一段设定的时间后，状态异常的目标服务器的被动健康状态将重置为 Unknown，并开始重新接收流量

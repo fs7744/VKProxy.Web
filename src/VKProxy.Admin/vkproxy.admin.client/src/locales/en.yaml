@@ -38,3 +38,17 @@ wronghost: Wrong host format
 wrongport: Wrong port format
 wrongpathname: Wrong path format
 wrongsearch: Wrong query string format
+LoadBalancingPolicy: Load Balancing
+HealthCheck: Health Check
+None: None
+Passive: Passive
+Active: Active
+SecondSuffix: S
+FailureRateLimit: FailureRateLimit
+MinimalTotalCountThreshold: MinimalTotalCountThreshold
+DetectionWindowSize: DetectionWindowSize
+ReactivationPeriod: ReactivationPeriod
+FailureRateLimitTip:  default failure rate limit for a destination to be marked as unhealthy that is applied if it's not set on a cluster's metadata. The value is in range (0,1). Default is 0.3 (30%).
+MinimalTotalCountThresholdTip: minimal total number of requests which must be proxied to a destination within the detection window before this policy starts evaluating the destination's health and enforcing the failure rate limit. Default is 10.
+DetectionWindowSizeTip: period of time while detected failures are kept and taken into account in the rate calculation. Default is 60
+ReactivationPeriodTip: period after which an unhealthy destination's passive health state is reset to Unknown and it starts receiving traffic again

@@ -60,7 +60,6 @@ const v = reactive({ ips: p(model.value) })
 watch(model, (n) => v.ips = p(n))
 
 function p(n) {
-  console.log(n, filter(map(n, i => parseAddress(i.Address, i.Host)), i => i !== null))
   return filter(map(n, i => parseAddress(i.Address, i.Host)), i => i !== null)
 }
 

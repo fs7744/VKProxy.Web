@@ -2,14 +2,97 @@
   <el-form ref="formRef" :model="form" :rules="rules" label-width="auto">
 
     <el-form-item :label="$t('key')" prop="Key" :rules="checkName" v-if="isNew">
-      <el-input v-model="form.Key"  />
+      <el-input v-model="form.Key" />
     </el-form-item>
     <el-form-item :label="$t('key')" prop="Key" v-else>
-      <el-text >{{ form.Key }}</el-text>
+      <el-text>{{ form.Key }}</el-text>
+    </el-form-item>
+
+    <el-form-item :label="$t('LoadBalancingPolicy')" prop="LoadBalancingPolicy">
+      <el-select v-model="form.LoadBalancingPolicy" default-first-option>
+        <el-option key="Random" label="Random" value="Random" />
+        <el-option key="RoundRobin" label="RoundRobin" value="RoundRobin" />
+        <el-option key="LeastRequests" label="LeastRequests" value="LeastRequests" />
+        <el-option key="PowerOfTwoChoices" label="PowerOfTwoChoices" value="PowerOfTwoChoices" />
+      </el-select>
     </el-form-item>
 
     <el-form-item :label="$t('Destinations')" prop="Destinations">
       <urlAddress v-model="form.Destinations" ref="addressR" />
+    </el-form-item>
+
+    <el-form-item :label="$t('HealthCheck')" prop="HealthCheck">
+      <el-col :span="24">
+        <el-radio-group v-model="form.HealthCheckType"
+          @change="(v) => { if (v === 'None') { form.HealthCheck = null } else if (v === 'Passive') { form.HealthCheck = { Passive: new PassiveHealthCheckConfig({}), Active: null } } else if (v === 'Active') { form.HealthCheck = { Passive: null, Active: new ActiveHealthCheckConfig({}) } } }">
+          <el-radio-button :label="$t('None')" value="None" />
+          <el-radio-button :label="$t('Passive')" value="Passive" />
+          <el-radio-button :label="$t('Active')" value="Active" />
+        </el-radio-group>
+      </el-col>
+      <div v-if="form.HealthCheckType === 'Passive' && form.HealthCheck && form.HealthCheck.Passive" style="display: flex; gap: 16px 8px; margin-top: 8px;">
+        <el-form-item prop="HealthCheck.Passive.MinimalTotalCountThreshold">
+          <template #label>
+            <span>{{ $t('MinimalTotalCountThreshold') }}</span>
+            <el-tooltip placement="top">
+              <template #content> {{ $t('MinimalTotalCountThresholdTip') }} </template>
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
+          </template>
+          <el-input-number v-model="form.HealthCheck.Passive.MinimalTotalCountThreshold" :min="1" controls-position="right">
+          </el-input-number>
+        </el-form-item>
+        <el-form-item prop="HealthCheck.Passive.FailureRateLimit">
+          <template #label>
+            <span>{{ $t('FailureRateLimit') }}</span>
+            <el-tooltip placement="top">
+              <template #content> {{ $t('FailureRateLimitTip') }} </template>
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
+          </template>
+          <el-input-number v-model="form.HealthCheck.Passive.FailureRateLimit" :min="0.01" :precision="2" :step="0.01" :max="1" controls-position="right">
+          </el-input-number>
+        </el-form-item>
+        <el-form-item prop="HealthCheck.Passive.DetectionWindowSize">
+          <template #label>
+            <span>{{ $t('DetectionWindowSize') }}</span>
+            <el-tooltip placement="top">
+              <template #content> {{ $t('DetectionWindowSizeTip') }} </template>
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
+          </template>
+          <el-input-number v-model="form.HealthCheck.Passive.DetectionWindowSize" :min="1" :max="86399" controls-position="right">
+            <template #suffix>
+              <span>{{ $t('SecondSuffix') }}</span>
+            </template>
+          </el-input-number>
+        </el-form-item>
+        <el-form-item prop="HealthCheck.Passive.ReactivationPeriod">
+          <template #label>
+            <span>{{ $t('ReactivationPeriod') }}</span>
+            <el-tooltip placement="top">
+              <template #content> {{ $t('ReactivationPeriodTip') }} </template>
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
+          </template>
+          <el-input-number v-model="form.HealthCheck.Passive.ReactivationPeriod" :min="1" :max="86399" controls-position="right">
+            <template #suffix>
+              <span>{{ $t('SecondSuffix') }}</span>
+            </template>
+          </el-input-number>
+        </el-form-item>
+
+      </div>
+      <div v-else-if="form.HealthCheckType === 'Active' && form.HealthCheck && form.HealthCheck.Active">
+        {{ form.HealthCheck?.Active }}</div>
     </el-form-item>
 
     <!--todo -->
@@ -26,11 +109,12 @@
 
 <script setup lang="ts">
 import { reactive, ref, watchEffect } from 'vue'
-import { ClusterData } from '../ets/ClusterData'
+import { ClusterData, PassiveHealthCheckConfig, ActiveHealthCheckConfig, toServiceCluster } from '../ets/ClusterData'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { useI18n } from 'vue-i18n';
 import { storageService } from '../service/storage'
 import { urlAddress } from '../components'
+import { QuestionFilled } from '@element-plus/icons-vue'
 
 const { t } = useI18n({
   useScope: 'global'
@@ -55,30 +139,35 @@ const rules = reactive<FormRules<ClusterData>>({
   Key: [{ required: true, message: () => t('required'), trigger: 'blur' },
   { min: 1, message: () => t('requiredLength') + '1', trigger: 'blur' },],
   Destinations: [{ required: true, message: () => t('required'), trigger: 'blur' }],
+  LoadBalancingPolicy: [{ required: true, message: () => t('required'), trigger: 'blur' }],
 })
 
 watchEffect(() => {
   isNew.value = props.data.Key == null
   form.Key = props.data.Key
   form.Destinations = props.data.Destinations
+  form.LoadBalancingPolicy = props.data.LoadBalancingPolicy
+  form.HealthCheck = props.data.HealthCheck
+  form.HealthCheckType = props.data.HealthCheckType
+  console.log(form)
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   let invalid = false
-   for (const element of forms) {
-        if (element && element.value) {
-            const v = !await element.value.validate();
-            if (!invalid) {
-                invalid = v
-            }
-        }
+  for (const element of forms) {
+    if (element && element.value) {
+      const v = !await element.value.validate();
+      if (!invalid) {
+        invalid = v
+      }
     }
-  if (invalid || !formEl || !await formEl.validate().catch(() => false)) {
-      ElMessage.error(t('wrongSave'))
-      return
   }
- var r = await storageService.updateCluster(form);
- (props.done as any)()
+  if (invalid || !formEl || !await formEl.validate().catch(() => false)) {
+    ElMessage.error(t('wrongSave'))
+    return
+  }
+  var r = await storageService.updateCluster(toServiceCluster(form));
+  (props.done as any)()
 }
 
 const checkName = [{
@@ -87,7 +176,7 @@ const checkName = [{
       callback(new Error(t('required')))
     } else {
       storageService.existsCluster(value).then(i => {
-        if(i) {
+        if (i) {
           callback(new Error(t('alreadyExists')))
         } else {
           callback()
