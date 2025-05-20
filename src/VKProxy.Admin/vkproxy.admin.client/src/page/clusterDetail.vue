@@ -30,7 +30,8 @@
           <el-radio-button :label="$t('Active')" value="Active" />
         </el-radio-group>
       </el-col>
-      <div v-if="form.HealthCheckType === 'Passive' && form.HealthCheck && form.HealthCheck.Passive" style="display: flex; gap: 16px 8px; margin-top: 8px;">
+      <div v-if="form.HealthCheckType === 'Passive' && form.HealthCheck && form.HealthCheck.Passive"
+        style="display: flex; gap: 16px 8px; margin-top: 8px;">
         <el-form-item prop="HealthCheck.Passive.MinimalTotalCountThreshold">
           <template #label>
             <span>{{ $t('MinimalTotalCountThreshold') }}</span>
@@ -41,7 +42,8 @@
               </el-icon>
             </el-tooltip>
           </template>
-          <el-input-number v-model="form.HealthCheck.Passive.MinimalTotalCountThreshold" :min="1" controls-position="right">
+          <el-input-number v-model="form.HealthCheck.Passive.MinimalTotalCountThreshold" :min="1"
+            controls-position="right">
           </el-input-number>
         </el-form-item>
         <el-form-item prop="HealthCheck.Passive.FailureRateLimit">
@@ -54,7 +56,8 @@
               </el-icon>
             </el-tooltip>
           </template>
-          <el-input-number v-model="form.HealthCheck.Passive.FailureRateLimit" :min="0.01" :precision="2" :step="0.01" :max="1" controls-position="right">
+          <el-input-number v-model="form.HealthCheck.Passive.FailureRateLimit" :min="0.01" :precision="2" :step="0.01"
+            :max="1" controls-position="right">
           </el-input-number>
         </el-form-item>
         <el-form-item prop="HealthCheck.Passive.DetectionWindowSize">
@@ -67,7 +70,8 @@
               </el-icon>
             </el-tooltip>
           </template>
-          <el-input-number v-model="form.HealthCheck.Passive.DetectionWindowSize" :min="1" :max="86399" controls-position="right">
+          <el-input-number v-model="form.HealthCheck.Passive.DetectionWindowSize" :min="1" :max="86399"
+            controls-position="right">
             <template #suffix>
               <span>{{ $t('SecondSuffix') }}</span>
             </template>
@@ -83,16 +87,96 @@
               </el-icon>
             </el-tooltip>
           </template>
-          <el-input-number v-model="form.HealthCheck.Passive.ReactivationPeriod" :min="1" :max="86399" controls-position="right">
+          <el-input-number v-model="form.HealthCheck.Passive.ReactivationPeriod" :min="1" :max="86399"
+            controls-position="right">
             <template #suffix>
               <span>{{ $t('SecondSuffix') }}</span>
             </template>
           </el-input-number>
         </el-form-item>
-
       </div>
       <div v-else-if="form.HealthCheckType === 'Active' && form.HealthCheck && form.HealthCheck.Active">
-        {{ form.HealthCheck?.Active }}</div>
+        <div style="display: flex; gap: 16px 8px; margin-top: 8px;">
+          <el-form-item prop="HealthCheck.Active.Policy" :label="t('Policy')">
+            <el-select v-model="form.HealthCheck.Active.Policy" default-first-option style="min-width: 100px;">
+              <el-option key="Connect" label="Connect" value="connect" />
+              <el-option key="Http" label="Http" value="http" />
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="HealthCheck.Active.Interval">
+            <template #label>
+              <span>{{ $t('Interval') }}</span>
+              <el-tooltip placement="top">
+                <template #content> {{ $t('IntervalTip') }} </template>
+                <el-icon>
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
+            </template>
+            <el-input-number v-model="form.HealthCheck.Active.Interval" :min="1" :max="86399" controls-position="right">
+              <template #suffix>
+                <span>{{ $t('SecondSuffix') }}</span>
+              </template>
+            </el-input-number>
+          </el-form-item>
+
+          <el-form-item prop="HealthCheck.Active.Timeout">
+            <template #label>
+              <span>{{ $t('Timeout') }}</span>
+              <el-tooltip placement="top">
+                <template #content> {{ $t('TimeoutTip') }} </template>
+                <el-icon>
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
+            </template>
+            <el-input-number v-model="form.HealthCheck.Active.Timeout" :min="1" :max="86399" controls-position="right">
+              <template #suffix>
+                <span>{{ $t('SecondSuffix') }}</span>
+              </template>
+            </el-input-number>
+          </el-form-item>
+
+          <el-form-item prop="HealthCheck.Active.Passes">
+            <template #label>
+              <span>{{ $t('Passes') }}</span>
+              <el-tooltip placement="top">
+                <template #content> {{ $t('PassesTip') }} </template>
+                <el-icon>
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
+            </template>
+            <el-input-number v-model="form.HealthCheck.Active.Passes" :min="1" controls-position="right">
+            </el-input-number>
+          </el-form-item>
+
+          <el-form-item prop="HealthCheck.Active.Fails">
+            <template #label>
+              <span>{{ $t('Fails') }}</span>
+              <el-tooltip placement="top">
+                <template #content> {{ $t('FailsTip') }} </template>
+                <el-icon>
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
+            </template>
+            <el-input-number v-model="form.HealthCheck.Active.Fails" :min="1" controls-position="right">
+            </el-input-number>
+          </el-form-item>
+        </div>
+        <div style="display: flex; gap: 16px 8px; margin-top: 8px;" v-if="form.HealthCheck.Active.Policy === 'http'">
+        <el-form-item prop="HealthCheck.Active.Method">
+          <el-input v-model="form.HealthCheck.Active.Method" :placeholder="$t('Method')" style="min-width: 300px;">
+          </el-input></el-form-item>
+        <el-form-item prop="HealthCheck.Active.Path">
+          <el-input v-model="form.HealthCheck.Active.Path" :placeholder="$t('Path')" style="min-width: 300px;">
+          </el-input></el-form-item>
+        <el-form-item prop="HealthCheck.Active.Query">
+          <el-input v-model="form.HealthCheck.Active.Query" :placeholder="$t('QueryString')" style="min-width: 300px;">
+          </el-input></el-form-item>
+          </div>
+      </div>
     </el-form-item>
 
     <!--todo -->
@@ -115,6 +199,7 @@ import { useI18n } from 'vue-i18n';
 import { storageService } from '../service/storage'
 import { urlAddress } from '../components'
 import { QuestionFilled } from '@element-plus/icons-vue'
+import { parseAddress } from '../service/ip';
 
 const { t } = useI18n({
   useScope: 'global'
@@ -140,6 +225,30 @@ const rules = reactive<FormRules<ClusterData>>({
   { min: 1, message: () => t('requiredLength') + '1', trigger: 'blur' },],
   Destinations: [{ required: true, message: () => t('required'), trigger: 'blur' }],
   LoadBalancingPolicy: [{ required: true, message: () => t('required'), trigger: 'blur' }],
+  "HealthCheck.Active.Path": [{ validator: (rule: any, value: any, callback: any) => {
+    if(!value) {
+      callback()
+    } else {
+      const s = parseAddress('http://a:80' + value, '')
+      if (!s || value !== s.pathname) {
+        callback(new Error(t('wrongpathname')))
+      } else {
+        callback()
+      }
+    }
+  }, trigger: 'blur' }],
+  "HealthCheck.Active.Query": [{ validator: (rule: any, value: any, callback: any) => {
+    if(!value) {
+      callback()
+    } else {
+      const s = parseAddress('http://a:80/s' + value, '')
+      if (!s || value !== s.search) {
+        callback(new Error(t('wrongsearch')))
+      } else {
+        callback()
+      }
+    }
+  }, trigger: 'blur' }]
 })
 
 watchEffect(() => {
@@ -149,7 +258,6 @@ watchEffect(() => {
   form.LoadBalancingPolicy = props.data.LoadBalancingPolicy
   form.HealthCheck = props.data.HealthCheck
   form.HealthCheckType = props.data.HealthCheckType
-  console.log(form)
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {

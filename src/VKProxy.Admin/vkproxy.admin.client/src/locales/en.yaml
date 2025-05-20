@@ -43,6 +43,7 @@ HealthCheck: Health Check
 None: None
 Passive: Passive
 Active: Active
+Policy: Policy
 SecondSuffix: S
 FailureRateLimit: FailureRateLimit
 MinimalTotalCountThreshold: MinimalTotalCountThreshold
@@ -52,3 +53,14 @@ FailureRateLimitTip:  default failure rate limit for a destination to be marked 
 MinimalTotalCountThresholdTip: minimal total number of requests which must be proxied to a destination within the detection window before this policy starts evaluating the destination's health and enforcing the failure rate limit. Default is 10.
 DetectionWindowSizeTip: period of time while detected failures are kept and taken into account in the rate calculation. Default is 60
 ReactivationPeriodTip: period after which an unhealthy destination's passive health state is reset to Unknown and it starts receiving traffic again
+Interval: Interval
+IntervalTip: Period of sending health probing requests. Default is 60
+Timeout: Timeout
+TimeoutTip: Probing request timeout. Default is 10
+PolicyTip: Name of a policy evaluating destinations' active health states. Support tcp connect / http
+PathTip: Health check path on all cluster's destinations. 
+QueryStringTip: Health check query on all cluster's destinations. 
+Fails: Fails
+FailsTip: minimal total number of Fails. Default is 1
+PassesTip: minimal total number of Passes. Default is 1
+Passes: Passes

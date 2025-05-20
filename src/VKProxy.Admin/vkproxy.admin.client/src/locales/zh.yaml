@@ -43,6 +43,7 @@ HealthCheck: 健康检查
 None: 无
 Passive: 被动
 Active: 主动
+Policy: 策略
 SecondSuffix: 秒
 FailureRateLimit: 故障率限制
 MinimalTotalCountThreshold: 最少请求总数
@@ -52,3 +53,14 @@ FailureRateLimitTip:  未在群集元数据上设置时应用的标记为运行�
 MinimalTotalCountThresholdTip: 在该策略开始评估目标的运行状况并强制执行失败率限制之前，必须代理到检测窗口内目标的最少请求总数。 默认值为 10
 DetectionWindowSizeTip: 在速率计算中保留并考虑检测到的故障的时间段。 默认值为 60
 ReactivationPeriodTip: 经过一段设定的时间后，状态异常的目标服务器的被动健康状态将重置为 Unknown，并开始重新接收流量
+Interval: 间隔
+IntervalTip: 发送健康探测请求的间隔。 默认 60
+Timeout: 超时
+TimeoutTip: 探测请求超时。 默认 10
+PolicyTip: 用于评估目标的主动运行状况状态的策略名称
+PathTip: 所有群集目标上的运行状况检查路径
+QueryStringTip: 所有群集目标上的运行状况检查查询
+Fails: 失败次数
+FailsTip: 必须达到最少失败总数。 默认值为 1
+Passes: 成功次数
+PassesTip: 必须达到最少成功总数。 默认值为 1

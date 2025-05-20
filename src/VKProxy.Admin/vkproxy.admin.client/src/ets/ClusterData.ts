@@ -1,5 +1,5 @@
 import { parseTimeSpanSeconds, toSecondsTimeSpan } from '@/service/utils';
-import { isString, isArray, isNumber, filter, isBoolean, map } from 'lodash';
+import { isString, isArray, isNumber, filter, isBoolean, map, isInteger } from 'lodash';
 
 export class PassiveHealthCheckConfig {
   MinimalTotalCountThreshold: number
@@ -9,7 +9,7 @@ export class PassiveHealthCheckConfig {
   constructor(data: any) {
     if (!data) data = {}
 
-    if (isNumber(data.MinimalTotalCountThreshold) && data.MinimalTotalCountThreshold > 0) {
+    if (isInteger(data.MinimalTotalCountThreshold) && data.MinimalTotalCountThreshold > 0) {
       this.MinimalTotalCountThreshold = data.MinimalTotalCountThreshold
     } else {
       this.MinimalTotalCountThreshold = 10
@@ -31,8 +31,34 @@ export class PassiveHealthCheckConfig {
 }
 
 export class ActiveHealthCheckConfig {
+  Interval: number
+  Timeout: number
+  Policy: string
+  Passes: number
+  Fails: number
+  Path: string | null
+  Query: string | null
+  Method: string | null
   constructor(data: any) {
     if (!data) data = {}
+    if (isInteger(data.Passes) && data.Passes > 0) {
+      this.Passes = data.Passes
+    } else {
+      this.Passes = 1
+    }
+    if (isInteger(data.Fails) && data.Fails > 0) {
+      this.Fails = data.Fails
+    } else {
+      this.Fails = 1
+    }
+    this.Path = isString(data.Path) ? data.Path : null
+    this.Query = isString(data.Query) ? data.Query : null
+    this.Method = isString(data.Method) ? data.Method : null
+    this.Policy = isString(data.Policy) ? data.Policy.toLocaleLowerCase() : 'connect'
+    let t = data.Interval ? parseTimeSpanSeconds(data.Interval) : null
+    this.Interval = t ? t : 60
+    t = data.Timeout ? parseTimeSpanSeconds(data.Timeout) : null
+    this.Timeout = t ? t : 10
   }
 }
 
@@ -86,7 +112,7 @@ export function toServiceCluster(data: ClusterData): any {
 }
 
 function toServiceHealthCheck(data: HealthCheckConfig): any {
-  if(!data) return null
+  if (!data) return null
   return {
     Active: toServiceHealthCheckActive(data.Active),
     Passive: toServiceHealthCheckPassive(data.Passive),
@@ -94,13 +120,23 @@ function toServiceHealthCheck(data: HealthCheckConfig): any {
 }
 
 function toServiceHealthCheckActive(data: ActiveHealthCheckConfig | null) {
-  if(!data) return null
+  if (!data) return null
+  const p = data.Policy ? data.Policy.toLocaleLowerCase() : data.Policy
+  const isHttp = p === 'http'
   return {
+    Interval: toSecondsTimeSpan(data.Interval),
+    Timeout: toSecondsTimeSpan(data.Timeout),
+    Policy: p,
+    Passes: data.Passes,
+    Fails: data.Fails,
+    Path: isHttp ? data.Path : null,
+    Query: isHttp ? data.Query : null,
+    Method: isHttp && data.Method ? data.Method.toLocaleUpperCase() : null
   }
 }
 
 function toServiceHealthCheckPassive(data: PassiveHealthCheckConfig | null) {
-  if(!data) return null
+  if (!data) return null
   return {
     MinimalTotalCountThreshold: data.MinimalTotalCountThreshold,
     FailureRateLimit: data.FailureRateLimit,
