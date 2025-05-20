@@ -28,3 +28,13 @@ wrongIp: Wrong ip format
 wrongPort: Port must be between 1 and 65535
 wrongSave: There is some error, can't save. Please check!
 alreadyExists: Already exists the same value
+Destinations: Destinations
+Host: Host
+Path: Path /xxx
+QueryString: QueryString ?xx=xx
+wrongFormat: Wrong format
+wrongprotocol: Wrong protocol format
+wronghost: Wrong host format
+wrongport: Wrong port format
+wrongpathname: Wrong path format
+wrongsearch: Wrong query string format

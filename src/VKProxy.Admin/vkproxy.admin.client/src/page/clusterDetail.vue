@@ -8,6 +8,10 @@
       <el-text >{{ form.Key }}</el-text>
     </el-form-item>
 
+    <el-form-item :label="$t('Destinations')" prop="Destinations">
+      <urlAddress v-model="form.Destinations" ref="addressR" />
+    </el-form-item>
+
     <!--todo -->
     <el-form-item>
       <el-button type="primary" @click="submitForm(formRef)">
@@ -26,13 +30,15 @@ import { ClusterData } from '../ets/ClusterData'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { useI18n } from 'vue-i18n';
 import { storageService } from '../service/storage'
+import { urlAddress } from '../components'
 
 const { t } = useI18n({
   useScope: 'global'
 })
 
 const formRef = ref<FormInstance>()
-const forms = []
+const addressR = ref<any>()
+const forms = [addressR]
 const props = defineProps({
   data: {
     type: ClusterData,
@@ -48,11 +54,13 @@ const form = reactive(new ClusterData({}))
 const rules = reactive<FormRules<ClusterData>>({
   Key: [{ required: true, message: () => t('required'), trigger: 'blur' },
   { min: 1, message: () => t('requiredLength') + '1', trigger: 'blur' },],
+  Destinations: [{ required: true, message: () => t('required'), trigger: 'blur' }],
 })
 
 watchEffect(() => {
   isNew.value = props.data.Key == null
   form.Key = props.data.Key
+  form.Destinations = props.data.Destinations
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {

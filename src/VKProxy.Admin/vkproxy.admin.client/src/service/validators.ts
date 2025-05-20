@@ -38,7 +38,7 @@ export const checkIp = {
     if (!value) {
       callback(new Error(t('required')))
     } else {
-      if (!value.ip || !isIp(value.ip)) {
+      if (!value.host || !isIp(value.host)) {
         return callback(new Error(t('wrongIp')))
       }
       if (!value.port || !isInteger(value.port) || value <= 0 || value > 65535) {

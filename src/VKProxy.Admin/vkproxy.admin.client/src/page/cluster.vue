@@ -21,8 +21,8 @@
       </el-auto-resizer>
     </div>
   </el-card>
-  <el-drawer v-model="isEditView" direction="rtl" :before-close="handleClose" :with-header="false">
-    <ClusterDetail :data="editData" :done="()=>{isEditView =false;search()}"></ClusterDetail>
+  <el-drawer v-model="isEditView" direction="rtl" :before-close="handleClose" :with-header="false" size="70%">
+    <ClusterDetail :data="editData" :done="()=>{isEditView =false;search()}" ></ClusterDetail>
   </el-drawer>
 </template>
 

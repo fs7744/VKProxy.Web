@@ -48,7 +48,18 @@ export function parseIpAddress(address: string) {
     ips = ips.substring(1, ips.length - 1)
   if(!(v46Exact.test(ips) || v6t.test(ips))) return null;
   const ports = address.substring(i+ 1)
-  return { ip: ips, port: parseInt(ports) }
+  return { host: ips, port: parseInt(ports) }
+}
+
+export function parseAddress(address: string, replaceHost: string) {
+  if(!address) return null;
+  const i = URL.parse(address)
+  if(i) {
+    return { protocol: i.protocol ? i.protocol.toLocaleLowerCase()+ '//' : i.protocol, host: i.hostname,port: i.port ? parseInt(i.port) :(i.protocol && i.protocol.toLocaleLowerCase() === 'https:' ? 443  : 80), pathname :i.pathname && i.pathname !== '/' ? i.pathname : null, search: i.search ?i.search: null,replaceHost: replaceHost === '' ? null : replaceHost}
+  } else {
+    const j = parseIpAddress(address)
+    return j ? { host: j.host,port: j.port,replaceHost: replaceHost === '' ? null : replaceHost } : null
+  }
 }
 
 
