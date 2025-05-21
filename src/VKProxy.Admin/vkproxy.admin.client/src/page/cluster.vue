@@ -15,14 +15,15 @@
     <div style="height: 80vh; width: 100%; display: -webkit-flex;">
       <el-auto-resizer>
         <template #default="{ height, width }">
-          <el-table-v2 :width="width" :height="height" :columns="columns" :data="listens">
+          <el-table-v2 :width="width" :height="height" :columns="columns" :data="listens" v-model:sort-state="sortState"
+            @column-sort="onSort">
           </el-table-v2>
         </template>
       </el-auto-resizer>
     </div>
   </el-card>
   <el-drawer v-model="isEditView" direction="rtl" :before-close="handleClose" :with-header="false" size="70%">
-    <ClusterDetail :data="editData" :done="()=>{isEditView =false;search()}" ></ClusterDetail>
+    <ClusterDetail :data="editData" :done="() => { isEditView = false; search() }"></ClusterDetail>
   </el-drawer>
 </template>
 
@@ -39,10 +40,11 @@ import {
 } from 'element-plus'
 import { storageService } from '../service/storage'
 import { useRouteQuery } from '@vueuse/router'
-import { isArray, map } from "lodash"
+import { isArray, map, orderBy, keys } from "lodash"
 import { ClusterDetail } from '.'
 import { ClusterData } from '../ets/ClusterData'
 import { handleClose, removeConfirm } from '../service/confirm'
+import { TableV2SortOrder, SortBy, SortState } from 'element-plus'
 
 const k = useRouteQuery('key')
 const isEditView = ref(false)
@@ -65,7 +67,7 @@ const columns: Column<any>[] = [
   {
     key: 'operations',
     headerCellRenderer: () => (
-      <ElButton size="small" type="primary" onClick={ () => doNew()}>{ t('new') }</ElButton>
+      <ElButton size="small" type="primary" onClick={() => doNew()}>{t('new')}</ElButton>
     ),
     cellRenderer: ({ rowData: r }) => (
       <div style="padding-right: 18px;">
@@ -83,6 +85,7 @@ const columns: Column<any>[] = [
     key: 'Key',
     dataKey: 'Key',
     width: 150,
+    sortable: true,
     headerCellRenderer: () => (
       <span> {t('key')} </span>
     )
@@ -121,8 +124,21 @@ const columns: Column<any>[] = [
   } as any,
 ]
 
+const sortState = ref<SortState>({
+  'Key': TableV2SortOrder.ASC,
+})
+
+const onSort = ({ key, order }: SortBy) => {
+  sortState.value[key] = order
+  search()
+}
+
 const search = async () => {
-  listens.value = map((await storageService.getCluster(searchKey.value)) ?? [], i => new ClusterData(i))
+  let data = map((await storageService.getCluster(searchKey.value)) ?? [], i => new ClusterData(i))
+  const ks = keys(sortState.value)
+  console.log(ks, map(ks, (k) => sortState.value[k] === TableV2SortOrder.ASC ? 'asc' : 'desc'))
+  data = orderBy(data, ks, map(ks, (k) => sortState.value[k] === TableV2SortOrder.ASC ? 'asc' : 'desc'))
+  listens.value = data
 }
 
 const edit = async (r) => {
