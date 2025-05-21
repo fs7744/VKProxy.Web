@@ -28,7 +28,7 @@
 
 
 <script setup lang="tsx">
-import { ref ,reactive} from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { Search } from '@element-plus/icons-vue'
 import type { Column } from 'element-plus'
@@ -38,7 +38,6 @@ import {
   TableV2FixedDir
 } from 'element-plus'
 import { storageService } from '../service/storage'
-import { protocols } from '../components'
 import { useRouteQuery } from '@vueuse/router'
 import { isArray, map } from "lodash"
 import { ClusterDetail } from '.'

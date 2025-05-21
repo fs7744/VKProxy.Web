@@ -114,19 +114,36 @@ export class HttpClientConfig {
     this.WebProxy = data.WebProxy ? new WebProxy(data.WebProxy) : null
     this.WebProxyEnable = this.WebProxy !== null
   }
-
-  toString() {
-
-  }
 }
 
 export class Destination {
-   constructor(public Address: string, public Host: string | null) {
-   }
+  constructor(public Address: string, public Host: string | null) {
+  }
 
-   public toString() {
+  public toString() {
     return this.Address;
-   }
+  }
+}
+
+export enum HttpVersionPolicy {
+  RequestVersionOrLower = 0,
+  RequestVersionOrHigher = 1,
+  RequestVersionExact = 2
+}
+
+export class HttpRequestConfig {
+  ActivityTimeout: number
+  Version: string
+  VersionPolicy: HttpVersionPolicy
+  AllowResponseBuffering: boolean
+  constructor(data: any) {
+    if (!data) data = {}
+    this.Version = isString(data.Version) ? data.Version : "2"
+    this.AllowResponseBuffering = isBoolean(data.AllowResponseBuffering) ? data.AllowResponseBuffering : true
+    this.VersionPolicy = data.VersionPolicy ? data.VersionPolicy as HttpVersionPolicy : HttpVersionPolicy.RequestVersionOrLower
+    let t = data.ActivityTimeout ? parseTimeSpanSeconds(data.ActivityTimeout) : null
+    this.ActivityTimeout = t ? t : 100
+  }
 }
 
 export class ClusterData {
@@ -137,11 +154,13 @@ export class ClusterData {
   HealthCheckType: 'None' | 'Passive' | 'Active'
   HttpClientConfig: HttpClientConfig | null
   HttpClientConfigEnable: boolean
+  HttpRequest: HttpRequestConfig | null
+  HttpRequestEnable: boolean
   constructor(data: any) {
     this.Key = isString(data.Key) ? data.Key : null
     this.Destinations = isArray(data.Destinations) ? filter(map(data.Destinations, i => {
       if (i && isString(i.Address)) {
-        return new Destination(i.Address, isString(i.Host) ? i.Host : null )
+        return new Destination(i.Address, isString(i.Host) ? i.Host : null)
       } else {
         return null
       }
@@ -155,6 +174,13 @@ export class ClusterData {
     } else {
       this.HttpClientConfig = null
       this.HttpClientConfigEnable = false
+    }
+    if (data.HttpRequest) {
+      this.HttpRequest = new HttpRequestConfig(data.HttpRequest)
+      this.HttpRequestEnable = true
+    } else {
+      this.HttpRequest = null
+      this.HttpRequestEnable = false
     }
   }
 }
@@ -179,7 +205,13 @@ export function toServiceCluster(data: ClusterData): any {
     Destinations: data.Destinations,
     LoadBalancingPolicy: data.LoadBalancingPolicy,
     HealthCheck: toServiceHealthCheck(data.HealthCheck),
-    HttpClientConfig: data.HttpClientConfig
+    HttpClientConfig: data.HttpClientConfig,
+    HttpRequest: data.HttpRequest ? {
+      ActivityTimeout:  toSecondsTimeSpan(data.HttpRequest.ActivityTimeout),
+      Version: data.HttpRequest.Version,
+      VersionPolicy: data.HttpRequest.VersionPolicy,
+      AllowResponseBuffering: data.HttpRequest.AllowResponseBuffering
+    } : null
   }
 }
 

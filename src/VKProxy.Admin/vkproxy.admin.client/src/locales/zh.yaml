@@ -83,3 +83,12 @@ BypassOnLocal: 绕过本地地址
 BypassOnLocalTip: 指示对本地地址的请求是否应绕过出站代理的布尔值。
 UseDefaultCredentials: 使用当前应用凭据
 UseDefaultCredentialsTip: 指示当前应用程序凭据是否应用于对出站代理进行身份验证。 在出站请求中，ASP.NET Core 不会模拟经过身份验证的用户。
+AllowResponseBuffering: 允许缓冲响应
+AllowResponseBufferingTip: 如果托管服务器支持，则允许在将响应发送回客户端时使用写入缓冲。 注意：启用它可能会破坏 SSE（服务器端事件）场景。
+ActivityTimeout: 活动超时
+ActivityTimeoutTip: 允许请求在任何操作完成之间保持空闲的最长时间，超过此时间后请求将被取消。 默认值为 100 秒。 收到响应标头或成功读取或写入任何请求、响应或流数据（如 gRPC 或 WebSocket）后，超时将重置。 TCP 保持连接和 HTTP/2 协议 ping 将不会重置超时，但 WebSocket ping 将会重置超时。
+Version: 版本
+VersionTip: 传出请求版本。 目前支持的值为 1.0、1.1、2 和 3。 默认值为 2。
+VersionPolicy: 版本策略
+VersionPolicyTip: 定义如何为传出请求选择最终版本。支持 RequestVersionOrLower/RequestVersionOrHigher/RequestVersionExact。 默认值为 RequestVersionOrLower。
+HttpRequest: Http请求

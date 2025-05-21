@@ -303,9 +303,80 @@
           </div>
         </el-form-item>
       </el-col>
-      {{ form.HttpClientConfig }}
     </el-form-item>
-    <!--todo -->
+    <el-form-item :label="$t('HttpRequest')" prop="HttpRequest">
+      <el-col :span="24">
+        <el-checkbox v-model="form.HttpRequestEnable" :label="t('Enable')"
+          @change="(b) => { form.HttpRequest = b ? (form.HttpRequest ? form.HttpRequest : new HttpRequestConfig({})) : null }" />
+      </el-col>
+      <div v-if="form.HttpRequest && form.HttpRequestEnable" class="form-item-flex">
+
+        <el-form-item prop="HttpRequest.Version">
+          <template #label>
+            <span>{{ $t('Version') }}</span>
+            <el-tooltip placement="top">
+              <template #content> {{ $t('VersionTip') }} </template>
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
+          </template>
+          <el-select v-model="form.HttpRequest.Version" style="min-width: 100px;">
+            <el-option key="1.0" label="1.0" value="1.0" />
+            <el-option key="1.1" label="1.1" value="1.1" />
+            <el-option key="2" label="2" value="2" />
+            <el-option key="3" label="3" value="3" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item prop="HttpRequest.VersionPolicy">
+          <template #label>
+            <span>{{ $t('VersionPolicy') }}</span>
+            <el-tooltip placement="top">
+              <template #content> {{ $t('VersionPolicyTip') }} </template>
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
+          </template>
+          <el-select v-model="form.HttpRequest.VersionPolicy" style="min-width: 200px;">
+            <el-option key="RequestVersionOrLower" label="RequestVersionOrLower" :value="0" />
+            <el-option key="RequestVersionOrHigher" label="RequestVersionOrHigher" :value="1" />
+            <el-option key="RequestVersionExact" label="RequestVersionExact" :value="2" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item prop="HttpRequest.ActivityTimeout">
+          <template #label>
+            <span>{{ $t('ActivityTimeout') }}</span>
+            <el-tooltip placement="top">
+              <template #content> {{ $t('ActivityTimeoutTip') }} </template>
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
+          </template>
+          <el-input-number v-model="form.HttpRequest.ActivityTimeout" :min="1" :max="86399" controls-position="right">
+            <template #suffix>
+              <span>{{ $t('SecondSuffix') }}</span>
+            </template>
+          </el-input-number>
+        </el-form-item>
+
+        <el-form-item prop="HttpRequest.AllowResponseBuffering">
+          <template #label>
+            <span>{{ $t('AllowResponseBuffering') }}</span>
+            <el-tooltip placement="top">
+              <template #content> {{ $t('AllowResponseBufferingTip') }} </template>
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
+          </template>
+          <el-checkbox v-model="form.HttpRequest.AllowResponseBuffering" />
+        </el-form-item>
+      </div>
+    </el-form-item>
     <el-form-item>
       <template #label>
         <el-button type="primary" @click="submitForm(formRef)">
@@ -321,7 +392,7 @@
 
 <script setup lang="ts">
 import { reactive, ref, watchEffect } from 'vue'
-import { ClusterData, PassiveHealthCheckConfig, ActiveHealthCheckConfig, toServiceCluster, HttpClientConfig, WebProxy } from '../ets/ClusterData'
+import { ClusterData, PassiveHealthCheckConfig, ActiveHealthCheckConfig, toServiceCluster, HttpClientConfig, WebProxy, HttpRequestConfig } from '../ets/ClusterData'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { useI18n } from 'vue-i18n';
 import { storageService } from '../service/storage'
@@ -406,6 +477,8 @@ watchEffect(() => {
   form.HealthCheckType = props.data.HealthCheckType
   form.HttpClientConfig = props.data.HttpClientConfig
   form.HttpClientConfigEnable = props.data.HttpClientConfigEnable
+  form.HttpRequest = props.data.HttpRequest
+  form.HttpRequestEnable = props.data.HttpRequestEnable
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {

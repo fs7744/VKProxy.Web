@@ -83,3 +83,12 @@ BypassOnLocal: BypassOnLocal
 BypassOnLocalTip: A bool indicating if requests to local addresses should bypass the outbound proxy.
 UseDefaultCredentials: UseDefaultCredentials
 UseDefaultCredentialsTip: A bool indicating if the current application credentials should be use to authenticate to the outbound proxy. ASP.NET Core does not impersonate authenticated users for outbound requests.
+AllowResponseBuffering: AllowResponseBuffering
+AllowResponseBufferingTip: Allows to use write buffering when sending a response back to the client, if the server hosting supports it. NOTE enabling it can break SSE (server side event) scenarios.
+ActivityTimeout: ActivityTimeout
+ActivityTimeoutTip: How long a request is allowed to remain idle between any operation completing, after which it will be canceled. The default is 100 seconds. The timeout will reset when response headers are received or after successfully reading or writing any request, response, or streaming data like gRPC or WebSockets. TCP keep-alives and HTTP/2 protocol pings will not reset the timeout, but WebSocket pings will.
+Version: Version
+VersionTip: Outgoing request version. The supported values at the moment are 1.0, 1.1, 2 and 3. Default value is 2.
+VersionPolicy: VersionPolicy
+VersionPolicyTip: Defines how the final version is selected for the outgoing requests. Support RequestVersionOrLower/RequestVersionOrHigher/RequestVersionExact. The default value is RequestVersionOrLower.
+HttpRequest: HttpRequest
