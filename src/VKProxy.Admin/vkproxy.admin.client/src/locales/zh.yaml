@@ -64,3 +64,22 @@ Fails: 失败次数
 FailsTip: 必须达到最少失败总数。 默认值为 1
 Passes: 成功次数
 PassesTip: 必须达到最少成功总数。 默认值为 1
+HttpClientConfig: Http客户端
+IngoreCertificate: 忽略证书有效性
+IngoreCertificateTip: 指示客户端是否检查了服务器 SSL 证书的有效性。 将其设置为 true 完全禁用验证。 默认值为 false。
+MaxConnections: 最大连接数
+MaxConnectionsTip: 同时对同一服务器开放的最大 HTTP 1.1 连接数。
+AllowAutoRedirect: 允许自动跳转
+AllowAutoRedirectTip: 自动遵循重定向响应
+MultipleHttp2: MultipleHttp2Connections
+MultipleHttp2Tip: 当所有现有连接上达到最大并发流数时，启用与同一服务器的附加 HTTP/2 连接。 默认值为 true
+MultipleHttp3: MultipleHttp3Connections
+MultipleHttp3Tip: 当所有现有连接上达到最大并发流数时，启用与同一服务器的附加 HTTP/3 连接。 默认值为 true
+SslProtocols: SSL协议
+SslProtocolsTip: 在给定 HTTP 客户端上启用的 SSL 协议
+Enable: 启用
+WebProxy: HTTP代理
+BypassOnLocal: 绕过本地地址
+BypassOnLocalTip: 指示对本地地址的请求是否应绕过出站代理的布尔值。
+UseDefaultCredentials: 使用当前应用凭据
+UseDefaultCredentialsTip: 指示当前应用程序凭据是否应用于对出站代理进行身份验证。 在出站请求中，ASP.NET Core 不会模拟经过身份验证的用户。

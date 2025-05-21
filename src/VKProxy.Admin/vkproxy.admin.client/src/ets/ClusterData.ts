@@ -67,17 +67,81 @@ export type HealthCheckConfig = {
   Active: ActiveHealthCheckConfig | null
 } | null
 
+export enum SslProtocols {
+  None = 0,
+  Ssl2 = 12,
+  Ssl3 = 48,
+  Tls = 192,
+  Default = 240,
+  Tls11 = 768,
+  Tls12 = 3072,
+  Tls13 = 12288
+}
+
+export class WebProxy {
+  Address: string
+  BypassOnLocal: boolean
+  UseDefaultCredentials: boolean
+  constructor(data: any) {
+    if (!data) data = {}
+    this.Address = isString(data.Address) ? data.Address : null
+    this.BypassOnLocal = isBoolean(data.BypassOnLocal) ? data.BypassOnLocal : false
+    this.UseDefaultCredentials = isBoolean(data.UseDefaultCredentials) ? data.UseDefaultCredentials : false
+  }
+}
+
+export class HttpClientConfig {
+  DangerousAcceptAnyServerCertificate: boolean
+  MaxConnectionsPerServer: number | null
+  EnableMultipleHttp2Connections: boolean
+  EnableMultipleHttp3Connections: boolean
+  AllowAutoRedirect: boolean
+  RequestHeaderEncoding: string | null
+  ResponseHeaderEncoding: string | null
+  SslProtocols: SslProtocols
+  WebProxy: WebProxy | null
+  WebProxyEnable: boolean
+  constructor(data: any) {
+    if (!data) data = {}
+    this.MaxConnectionsPerServer = isInteger(data.MaxConnectionsPerServer) ? data.MaxConnectionsPerServer : null
+    this.DangerousAcceptAnyServerCertificate = isBoolean(data.DangerousAcceptAnyServerCertificate) ? data.DangerousAcceptAnyServerCertificate : false
+    this.EnableMultipleHttp2Connections = isBoolean(data.EnableMultipleHttp2Connections) ? data.EnableMultipleHttp2Connections : true
+    this.EnableMultipleHttp3Connections = isBoolean(data.EnableMultipleHttp3Connections) ? data.EnableMultipleHttp3Connections : true
+    this.AllowAutoRedirect = isBoolean(data.AllowAutoRedirect) ? data.AllowAutoRedirect : false
+    this.SslProtocols = data.SslProtocols ? data.SslProtocols as SslProtocols : SslProtocols.None
+    this.RequestHeaderEncoding = isString(data.RequestHeaderEncoding) ? data.RequestHeaderEncoding : null
+    this.ResponseHeaderEncoding = isString(data.ResponseHeaderEncoding) ? data.ResponseHeaderEncoding : null
+    this.WebProxy = data.WebProxy ? new WebProxy(data.WebProxy) : null
+    this.WebProxyEnable = this.WebProxy !== null
+  }
+
+  toString() {
+
+  }
+}
+
+export class Destination {
+   constructor(public Address: string, public Host: string | null) {
+   }
+
+   public toString() {
+    return this.Address;
+   }
+}
+
 export class ClusterData {
   Key: string
-  Destinations: { Address: string, Host: string }[]
+  Destinations: Destination[]
   LoadBalancingPolicy: string
   HealthCheck: HealthCheckConfig
   HealthCheckType: 'None' | 'Passive' | 'Active'
+  HttpClientConfig: HttpClientConfig | null
+  HttpClientConfigEnable: boolean
   constructor(data: any) {
     this.Key = isString(data.Key) ? data.Key : null
     this.Destinations = isArray(data.Destinations) ? filter(map(data.Destinations, i => {
       if (i && isString(i.Address)) {
-        return { Address: i.Address, Host: isString(i.Host) ? i.Host : null }
+        return new Destination(i.Address, isString(i.Host) ? i.Host : null )
       } else {
         return null
       }
@@ -85,6 +149,13 @@ export class ClusterData {
     this.LoadBalancingPolicy = isString(data.LoadBalancingPolicy) && data.LoadBalancingPolicy !== '' ? data.LoadBalancingPolicy : 'Random'
     this.HealthCheck = data.HealthCheck ? convertHealthCheck(data.HealthCheck) : null
     this.HealthCheckType = this.HealthCheck !== null && (this.HealthCheck.Passive !== null || this.HealthCheck.Active !== null) ? (this.HealthCheck.Passive !== null ? 'Passive' : 'Active') : 'None'
+    if (data.HttpClientConfig) {
+      this.HttpClientConfig = new HttpClientConfig(data.HttpClientConfig)
+      this.HttpClientConfigEnable = true
+    } else {
+      this.HttpClientConfig = null
+      this.HttpClientConfigEnable = false
+    }
   }
 }
 
@@ -107,7 +178,8 @@ export function toServiceCluster(data: ClusterData): any {
     Key: data.Key,
     Destinations: data.Destinations,
     LoadBalancingPolicy: data.LoadBalancingPolicy,
-    HealthCheck: toServiceHealthCheck(data.HealthCheck)
+    HealthCheck: toServiceHealthCheck(data.HealthCheck),
+    HttpClientConfig: data.HttpClientConfig
   }
 }
 
@@ -143,4 +215,42 @@ function toServiceHealthCheckPassive(data: PassiveHealthCheckConfig | null) {
     DetectionWindowSize: toSecondsTimeSpan(data.DetectionWindowSize),
     ReactivationPeriod: toSecondsTimeSpan(data.ReactivationPeriod),
   }
+}
+
+export function toSslProtocols(v: SslProtocols) {
+  const vv = []
+  if (v & SslProtocols.None) {
+    vv.push(SslProtocols.None)
+  }
+  if (v & SslProtocols.Ssl2) {
+    vv.push(SslProtocols.Ssl2)
+  }
+  if (v & SslProtocols.Ssl3) {
+    vv.push(SslProtocols.Ssl3)
+  }
+  if (v & SslProtocols.Tls) {
+    vv.push(SslProtocols.Tls)
+  }
+  if (v & SslProtocols.Tls11) {
+    vv.push(SslProtocols.Tls11)
+  }
+  if (v & SslProtocols.Tls12) {
+    vv.push(SslProtocols.Tls12)
+  }
+  if (v & SslProtocols.Tls13) {
+    vv.push(SslProtocols.Tls13)
+  }
+  return vv
+}
+
+export function unionSslProtocols(v: SslProtocols[]) {
+  let i;
+  for (const vv of v) {
+    if (i) {
+      i |= vv;
+    } else {
+      i = vv;
+    }
+  }
+  return i;
 }

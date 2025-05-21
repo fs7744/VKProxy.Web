@@ -31,7 +31,7 @@
         </el-radio-group>
       </el-col>
       <div v-if="form.HealthCheckType === 'Passive' && form.HealthCheck && form.HealthCheck.Passive"
-        style="display: flex; gap: 16px 8px; margin-top: 8px;">
+        class="form-item-flex">
         <el-form-item prop="HealthCheck.Passive.MinimalTotalCountThreshold">
           <template #label>
             <span>{{ $t('MinimalTotalCountThreshold') }}</span>
@@ -96,7 +96,7 @@
         </el-form-item>
       </div>
       <div v-else-if="form.HealthCheckType === 'Active' && form.HealthCheck && form.HealthCheck.Active">
-        <div style="display: flex; gap: 16px 8px; margin-top: 8px;">
+        <div class="form-item-flex">
           <el-form-item prop="HealthCheck.Active.Policy" :label="t('Policy')">
             <el-select v-model="form.HealthCheck.Active.Policy" default-first-option style="min-width: 100px;">
               <el-option key="Connect" label="Connect" value="connect" />
@@ -165,26 +165,154 @@
             </el-input-number>
           </el-form-item>
         </div>
-        <div style="display: flex; gap: 16px 8px; margin-top: 8px;" v-if="form.HealthCheck.Active.Policy === 'http'">
-        <el-form-item prop="HealthCheck.Active.Method">
-          <el-input v-model="form.HealthCheck.Active.Method" :placeholder="$t('Method')" style="min-width: 300px;">
-          </el-input></el-form-item>
-        <el-form-item prop="HealthCheck.Active.Path">
-          <el-input v-model="form.HealthCheck.Active.Path" :placeholder="$t('Path')" style="min-width: 300px;">
-          </el-input></el-form-item>
-        <el-form-item prop="HealthCheck.Active.Query">
-          <el-input v-model="form.HealthCheck.Active.Query" :placeholder="$t('QueryString')" style="min-width: 300px;">
-          </el-input></el-form-item>
-          </div>
+        <div class="form-item-flex" v-if="form.HealthCheck.Active.Policy === 'http'">
+          <el-form-item prop="HealthCheck.Active.Method">
+            <el-input v-model="form.HealthCheck.Active.Method" :placeholder="$t('Method')" style="min-width: 300px;">
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="HealthCheck.Active.Path">
+            <el-input v-model="form.HealthCheck.Active.Path" :placeholder="$t('Path')" style="min-width: 300px;">
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="HealthCheck.Active.Query">
+            <el-input v-model="form.HealthCheck.Active.Query" :placeholder="$t('QueryString')"
+              style="min-width: 300px;">
+            </el-input>
+          </el-form-item>
+        </div>
       </div>
     </el-form-item>
 
+    <el-form-item :label="$t('HttpClientConfig')" prop="HttpClientConfig">
+      <el-col :span="24">
+        <el-checkbox v-model="form.HttpClientConfigEnable" :label="t('Enable')"
+          @change="(b) => { form.HttpClientConfig = b ? (form.HttpClientConfig ? form.HttpClientConfig : new HttpClientConfig({})) : null }" />
+      </el-col>
+      <div v-if="form.HttpClientConfigEnable && form.HttpClientConfig" class="form-item-flex">
+        <el-form-item prop="HttpClientConfig.MaxConnectionsPerServer">
+          <template #label>
+            <span>{{ $t('MaxConnections') }}</span>
+            <el-tooltip placement="top">
+              <template #content> {{ $t('MaxConnectionsTip') }} </template>
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
+          </template>
+          <el-input-number v-model="form.HttpClientConfig.MaxConnectionsPerServer" :min="1" controls-position="right">
+          </el-input-number>
+        </el-form-item>
+        <el-form-item prop="HttpClientConfig.AllowAutoRedirect">
+          <template #label>
+            <span>{{ $t('AllowAutoRedirect') }}</span>
+            <el-tooltip placement="top">
+              <template #content> {{ $t('AllowAutoRedirectTip') }} </template>
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
+          </template>
+          <el-checkbox v-model="form.HttpClientConfig.AllowAutoRedirect" style="margin-right: 32px;" />
+        </el-form-item>
+        <el-form-item prop="HttpClientConfig.EnableMultipleHttp2Connections">
+          <template #label>
+            <span>{{ $t('MultipleHttp2') }}</span>
+            <el-tooltip placement="top">
+              <template #content> {{ $t('MultipleHttp2Tip') }} </template>
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
+          </template>
+          <el-checkbox v-model="form.HttpClientConfig.EnableMultipleHttp2Connections" style="margin-right: 32px;" />
+        </el-form-item>
+        <el-form-item prop="HttpClientConfig.EnableMultipleHttp3Connections">
+          <template #label>
+            <span>{{ $t('MultipleHttp3') }}</span>
+            <el-tooltip placement="top">
+              <template #content> {{ $t('MultipleHttp3Tip') }} </template>
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
+          </template>
+          <el-checkbox v-model="form.HttpClientConfig.EnableMultipleHttp3Connections" style="margin-right: 32px;" />
+        </el-form-item>
+      </div>
+      <div v-if="form.HttpClientConfigEnable && form.HttpClientConfig" class="form-item-flex">
+        <el-form-item prop="HttpClientConfig.DangerousAcceptAnyServerCertificate">
+          <template #label>
+            <span>{{ $t('IngoreCertificate') }}</span>
+            <el-tooltip placement="top">
+              <template #content> {{ $t('IngoreCertificateTip') }} </template>
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
+          </template>
+          <el-checkbox v-model="form.HttpClientConfig.DangerousAcceptAnyServerCertificate" />
+        </el-form-item>
+        <el-form-item prop="HttpClientConfig.SslProtocols">
+          <template #label>
+            <span>{{ $t('SslProtocols') }}</span>
+            <el-tooltip placement="top">
+              <template #content> {{ $t('SslProtocolsTip') }} </template>
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
+          </template>
+          <sslProtocols v-model="form.HttpClientConfig.SslProtocols" />
+        </el-form-item>
+      </div>
+      <el-col :span="24" v-if="form.HttpClientConfigEnable && form.HttpClientConfig">
+        <el-form-item prop="HttpClientConfig.WebProxy" :label="t('WebProxy')">
+          <el-checkbox v-model="form.HttpClientConfig.WebProxyEnable" :label="t('Enable')"
+            @change="(b) => { form.HttpClientConfig.WebProxy = b ? (form.HttpClientConfig.WebProxy ? form.HttpClientConfig.WebProxy : new WebProxy({})) : null }" />
+          <div v-if="form.HttpClientConfig && form.HttpClientConfig.WebProxy && form.HttpClientConfig.WebProxyEnable"
+            style="margin-left: 8px;" class="form-item-flex">
+            <el-form-item prop="HttpClientConfig.WebProxy.Address">
+              <el-input v-model="form.HttpClientConfig.WebProxy.Address" :placeholder="$t('address')"
+                style="min-width: 300px;">
+              </el-input>
+            </el-form-item>
+            <el-form-item prop="HttpClientConfig.WebProxy.BypassOnLocal">
+              <template #label>
+                <span>{{ $t('BypassOnLocal') }}</span>
+                <el-tooltip placement="top">
+                  <template #content> {{ $t('BypassOnLocalTip') }} </template>
+                  <el-icon>
+                    <QuestionFilled />
+                  </el-icon>
+                </el-tooltip>
+              </template>
+              <el-checkbox v-model="form.HttpClientConfig.WebProxy.BypassOnLocal" />
+            </el-form-item>
+            <el-form-item prop="HttpClientConfig.WebProxy.UseDefaultCredentials">
+              <template #label>
+                <span>{{ $t('UseDefaultCredentials') }}</span>
+                <el-tooltip placement="top">
+                  <template #content> {{ $t('UseDefaultCredentialsTip') }} </template>
+                  <el-icon>
+                    <QuestionFilled />
+                  </el-icon>
+                </el-tooltip>
+              </template>
+              <el-checkbox v-model="form.HttpClientConfig.WebProxy.UseDefaultCredentials" />
+            </el-form-item>
+          </div>
+        </el-form-item>
+      </el-col>
+      {{ form.HttpClientConfig }}
+    </el-form-item>
     <!--todo -->
     <el-form-item>
-      <el-button type="primary" @click="submitForm(formRef)">
-        <el-text v-model="form.Key" v-if="isNew">{{ $t('create') }}</el-text>
-        <el-text v-else>{{ $t('update') }}</el-text>
-      </el-button>
+      <template #label>
+        <el-button type="primary" @click="submitForm(formRef)">
+          <el-text v-model="form.Key" v-if="isNew">{{ $t('create') }}</el-text>
+          <el-text v-else>{{ $t('update') }}</el-text>
+        </el-button>
+      </template>
     </el-form-item>
   </el-form>
 </template>
@@ -193,13 +321,13 @@
 
 <script setup lang="ts">
 import { reactive, ref, watchEffect } from 'vue'
-import { ClusterData, PassiveHealthCheckConfig, ActiveHealthCheckConfig, toServiceCluster } from '../ets/ClusterData'
+import { ClusterData, PassiveHealthCheckConfig, ActiveHealthCheckConfig, toServiceCluster, HttpClientConfig, WebProxy } from '../ets/ClusterData'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { useI18n } from 'vue-i18n';
 import { storageService } from '../service/storage'
-import { urlAddress } from '../components'
+import { urlAddress, sslProtocols } from '../components'
 import { QuestionFilled } from '@element-plus/icons-vue'
-import { parseAddress } from '../service/ip';
+import { parseAddress } from '../service/ip'
 
 const { t } = useI18n({
   useScope: 'global'
@@ -225,30 +353,48 @@ const rules = reactive<FormRules<ClusterData>>({
   { min: 1, message: () => t('requiredLength') + '1', trigger: 'blur' },],
   Destinations: [{ required: true, message: () => t('required'), trigger: 'blur' }],
   LoadBalancingPolicy: [{ required: true, message: () => t('required'), trigger: 'blur' }],
-  "HealthCheck.Active.Path": [{ validator: (rule: any, value: any, callback: any) => {
-    if(!value) {
-      callback()
-    } else {
-      const s = parseAddress('http://a:80' + value, '')
-      if (!s || value !== s.pathname) {
-        callback(new Error(t('wrongpathname')))
-      } else {
+  "HealthCheck.Active.Path": [{
+    validator: (rule: any, value: any, callback: any) => {
+      if (!value) {
         callback()
-      }
-    }
-  }, trigger: 'blur' }],
-  "HealthCheck.Active.Query": [{ validator: (rule: any, value: any, callback: any) => {
-    if(!value) {
-      callback()
-    } else {
-      const s = parseAddress('http://a:80/s' + value, '')
-      if (!s || value !== s.search) {
-        callback(new Error(t('wrongsearch')))
       } else {
-        callback()
+        const s = parseAddress('http://a:80' + value, '')
+        if (!s || value !== s.pathname) {
+          callback(new Error(t('wrongpathname')))
+        } else {
+          callback()
+        }
       }
-    }
-  }, trigger: 'blur' }]
+    }, trigger: 'blur'
+  }],
+  "HealthCheck.Active.Query": [{
+    validator: (rule: any, value: any, callback: any) => {
+      if (!value) {
+        callback()
+      } else {
+        const s = parseAddress('http://a:80/s' + value, '')
+        if (!s || value !== s.search) {
+          callback(new Error(t('wrongsearch')))
+        } else {
+          callback()
+        }
+      }
+    }, trigger: 'blur'
+  }],
+  "HttpClientConfig.WebProxy.Address": [{
+    validator: (rule: any, value: any, callback: any) => {
+      if (!value) {
+        callback()
+      } else {
+        const s = URL.parse(value)
+        if (!s) {
+          callback(new Error(t('wrongFormat')))
+        } else {
+          callback()
+        }
+      }
+    }, trigger: 'blur'
+  }]
 })
 
 watchEffect(() => {
@@ -258,6 +404,8 @@ watchEffect(() => {
   form.LoadBalancingPolicy = props.data.LoadBalancingPolicy
   form.HealthCheck = props.data.HealthCheck
   form.HealthCheckType = props.data.HealthCheckType
+  form.HttpClientConfig = props.data.HttpClientConfig
+  form.HttpClientConfigEnable = props.data.HttpClientConfigEnable
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {

@@ -88,6 +88,38 @@ const columns: Column<any>[] = [
       <span> {t('key')} </span>
     )
   },
+  {
+    key: 'LoadBalancingPolicy',
+    dataKey: 'LoadBalancingPolicy',
+    width: 150,
+    headerCellRenderer: () => (
+      <span> {t('LoadBalancingPolicy')} </span>
+    )
+  },
+  {
+    key: 'HealthCheckType',
+    dataKey: 'HealthCheckType',
+    width: 150,
+    headerCellRenderer: () => (
+      <span> {t('HealthCheck')} </span>
+    )
+  },
+  {
+    key: 'HttpClientConfigEnable',
+    dataKey: 'HttpClientConfigEnable',
+    width: 150,
+    headerCellRenderer: () => (
+      <span> {t('HttpClientConfig')} </span>
+    )
+  },
+  {
+    key: 'Destinations',
+    dataKey: 'Destinations',
+    minWidth: 150,
+    headerCellRenderer: () => (
+      <span> {t('Destinations')} </span>
+    )
+  } as any,
 ]
 
 const search = async () => {
