@@ -17,10 +17,12 @@
     </el-form-item>
     <!--todo sni and route-->
     <el-form-item>
-      <el-button type="primary" @click="submitForm(formRef)">
-        <el-text v-model="form.Key" v-if="isNew">{{ $t('create') }}</el-text>
-        <el-text v-else>{{ $t('update') }}</el-text>
-      </el-button>
+      <template #label>
+        <el-button type="primary" @click="submitForm(formRef)">
+          <el-text v-model="form.Key" v-if="isNew">{{ $t('create') }}</el-text>
+          <el-text v-else>{{ $t('update') }}</el-text>
+        </el-button>
+      </template>
     </el-form-item>
   </el-form>
 </template>

@@ -22,7 +22,7 @@
       </el-auto-resizer>
     </div>
   </el-card>
-  <el-drawer v-model="isEditView" direction="rtl" :before-close="handleClose" :with-header="false">
+  <el-drawer v-model="isEditView" direction="rtl" :before-close="handleClose" :title="$t('Routes')" >
     <RouteDetail :data="editData" :done="() => { isEditView = false; search() }"></RouteDetail>
   </el-drawer>
 </template>

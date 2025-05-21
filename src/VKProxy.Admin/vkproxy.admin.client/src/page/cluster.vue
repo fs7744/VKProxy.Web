@@ -22,7 +22,7 @@
       </el-auto-resizer>
     </div>
   </el-card>
-  <el-drawer v-model="isEditView" direction="rtl" :before-close="handleClose" :with-header="false" size="70%">
+  <el-drawer v-model="isEditView" direction="rtl" :before-close="handleClose" :title="$t('Clusters')"  size="70%">
     <ClusterDetail :data="editData" :done="() => { isEditView = false; search() }"></ClusterDetail>
   </el-drawer>
 </template>
@@ -136,7 +136,6 @@ const onSort = ({ key, order }: SortBy) => {
 const search = async () => {
   let data = map((await storageService.getCluster(searchKey.value)) ?? [], i => new ClusterData(i))
   const ks = keys(sortState.value)
-  console.log(ks, map(ks, (k) => sortState.value[k] === TableV2SortOrder.ASC ? 'asc' : 'desc'))
   data = orderBy(data, ks, map(ks, (k) => sortState.value[k] === TableV2SortOrder.ASC ? 'asc' : 'desc'))
   listens.value = data
 }
