@@ -29,7 +29,7 @@ wrongPort: 端口必须在 1 到 65535 之间
 wrongSave: 存在错误，无法保存。请检查！
 alreadyExists: 已存在，不能重复
 Destinations: 目标地址
-Host: Host
+Host: 域名
 Path: Path /xxx
 QueryString: QueryString ?xx=xx
 wrongFormat: 格式错误
@@ -76,7 +76,7 @@ MultipleHttp2Tip: 当所有现有连接上达到最大并发流数时，启用�
 MultipleHttp3: MultipleHttp3Connections
 MultipleHttp3Tip: 当所有现有连接上达到最大并发流数时，启用与同一服务器的附加 HTTP/3 连接。 默认值为 true
 SslProtocols: SSL协议
-SslProtocolsTip: 在给定 HTTP 客户端上启用的 SSL 协议
+SslProtocolsTip: 启用的 SSL 协议
 Enable: 启用
 WebProxy: HTTP代理
 BypassOnLocal: 绕过本地地址
@@ -92,3 +92,19 @@ VersionTip: 传出请求版本。 目前支持的值为 1.0、1.1、2 和 3。 �
 VersionPolicy: 版本策略
 VersionPolicyTip: 定义如何为传出请求选择最终版本。支持 RequestVersionOrLower/RequestVersionOrHigher/RequestVersionExact。 默认值为 RequestVersionOrLower。
 HttpRequest: Http请求
+Order: 优先级
+OrderTip: 数字越小，优先级越高
+Passthrough: 直连
+PassthroughTip: 不检查 SSL 证书，由后端检查。此功能仅适用于 sni (TCP) 代理
+HandshakeTimeout: 握手超时
+checkCertificateRevocation: 检查证书吊销
+checkCertificateRevocationTip: 该值指定身份验证期间是否检查证书吊销列表。
+ClientCertificateMode: 证书要求
+ClientCertificateModeTip: 客户端证书要求
+Certificate: 证书
+PEM: PEM
+PEMTip: PEM格式X.509证书文件内容
+PEMKey: 密钥
+PEMKeyTip: PEM格式X.509证书密钥文件内容
+Password: 密码
+PasswordTip: 访问 X.509 证书数据需要密码

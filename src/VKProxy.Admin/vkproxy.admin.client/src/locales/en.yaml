@@ -76,7 +76,7 @@ MultipleHttp2Tip: Enables opening additional HTTP/2 connections to the same serv
 MultipleHttp3: MultipleHttp3Connections
 MultipleHttp3Tip: Enables opening additional HTTP/3 connections to the same server when the maximum number of concurrent streams is reached on all existing connections. The default is true.
 SslProtocols: SslProtocols
-SslProtocolsTip: SSL protocols enabled on the given HTTP client.
+SslProtocolsTip: SSL protocols enabled
 Enable: Enable
 WebProxy: HTTPProxy
 BypassOnLocal: BypassOnLocal
@@ -92,3 +92,19 @@ VersionTip: Outgoing request version. The supported values at the moment are 1.0
 VersionPolicy: VersionPolicy
 VersionPolicyTip: Defines how the final version is selected for the outgoing requests. Support RequestVersionOrLower/RequestVersionOrHigher/RequestVersionExact. The default value is RequestVersionOrLower.
 HttpRequest: HttpRequest
+Order: Order
+OrderTip: Lower numbers have higher precedence
+Passthrough: Passthrough
+PassthroughTip: No check SSL certificate, check by backend. This only work on sni (TCP) proxy
+HandshakeTimeout: HandshakeTimeout
+checkCertificateRevocation: CheckRevocation
+checkCertificateRevocationTip: specifies whether the certificate revocation list is checked during authentication.
+ClientCertificateMode: CertificateRequirements
+ClientCertificateModeTip: Client certificate requirements.
+Certificate: Certificate
+PEM: PEM
+PEMTip: PEM format X.509 certificate file content
+PEMKey: Key
+PEMKeyTip: PEM format X.509 certificate key file content
+Password: Password
+PasswordTip: Password required to access the X.509 certificate data

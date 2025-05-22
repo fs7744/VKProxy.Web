@@ -15,7 +15,7 @@
     <div style="height: 80vh; width: 100%; display: -webkit-flex;">
       <el-auto-resizer>
         <template #default="{ height, width }">
-          <el-table-v2 :width="width" :height="height" :columns="columns" :data="listens" v-model:sort-state="sortState"
+          <el-table-v2 :width="width" :height="height" :columns="columns" :data="listens" :sort-by="sortState"
             @column-sort="onSort">
           </el-table-v2>
         </template>
@@ -90,21 +90,45 @@ const columns: Column<any>[] = [
       <span> {t('key')} </span>
     )
   },
+  {
+    key: 'Order',
+    dataKey: 'Order',
+    sortable: true,
+    width: 150,
+    headerCellRenderer: () => (
+      <span> {t('Order')} </span>
+    )
+  },
+  {
+    key: 'Passthrough',
+    dataKey: 'Passthrough',
+    width: 150,
+    headerCellRenderer: () => (
+      <span> {t('Passthrough')} </span>
+    )
+  },
+  {
+    key: 'Host',
+    dataKey: 'Host',
+    minWidth: 150,
+    headerCellRenderer: () => (
+      <span> {t('Host')} </span>
+    )
+  } as any,
 ]
 
-const sortState = ref<SortState>({
-  'Key': TableV2SortOrder.ASC,
+const sortState = ref<SortBy>({
+  key:'Order',  order: TableV2SortOrder.ASC
 })
 
-const onSort = ({ key, order }: SortBy) => {
-  sortState.value[key] = order
+const onSort = (sortBy: SortBy) => {
+  sortState.value = sortBy
   search()
 }
 
 const search = async () => {
   let data = map((await storageService.getSni(searchKey.value)) ?? [], i => new SniData(i))
-  const ks = keys(sortState.value)
-  data = orderBy(data, ks, map(ks, (k) => sortState.value[k] === TableV2SortOrder.ASC ? 'asc' : 'desc'))
+  data = orderBy(data, [sortState.value.key], [sortState.value.order === TableV2SortOrder.ASC ? 'asc' : 'desc'])
   listens.value = data
 }
 
