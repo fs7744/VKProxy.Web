@@ -108,6 +108,14 @@ const columns: Column<any>[] = [
     )
   },
   {
+    key: 'RouteId',
+    dataKey: 'RouteId',
+    width: 100,
+    headerCellRenderer: () => (
+      <span> {t('Routes')} </span>
+    )
+  },
+  {
     key: 'Host',
     dataKey: 'Host',
     minWidth: 150,
