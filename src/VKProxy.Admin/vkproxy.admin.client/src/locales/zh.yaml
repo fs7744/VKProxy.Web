@@ -108,3 +108,6 @@ PEMKey: 密钥
 PEMKeyTip: PEM格式X.509证书密钥文件内容
 Password: 密码
 PasswordTip: 访问 X.509 证书数据需要密码
+UseSni: sni代理
+UseSniTip: 服务器名称指示 (SNI) 可用于承载相同 IP 地址和端口上的多个域。 SNI 可用于通过从一台服务器为多个站点提供服务来节省资源。只支持 tcp.
+UseSniError: sni 只支持 tcp.

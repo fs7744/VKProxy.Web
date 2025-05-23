@@ -108,3 +108,6 @@ PEMKey: Key
 PEMKeyTip: PEM format X.509 certificate key file content
 Password: Password
 PasswordTip: Password required to access the X.509 certificate data
+UseSni: sni proxy
+UseSniTip: Server Name Indication (SNI) can be used to host multiple domains on the same IP address and port. SNI can be used to conserve resources by serving multiple sites from one server.Only support tcp.
+UseSniError: sni only support tcp.
