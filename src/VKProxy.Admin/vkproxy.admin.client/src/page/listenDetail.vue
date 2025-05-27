@@ -27,6 +27,26 @@
       </template>
       <el-checkbox v-model="form.UseSni" @change="(v) => { if (v) { form.SniId = null; form.RouteId = null; } }" />
     </el-form-item>
+    <div v-if="!form.UseSni">
+      <el-form-item prop="Routes">
+        <template #label>
+          <span>{{ $t('Routes') }}</span>
+          <el-tooltip placement="top">
+            <template #content> {{ $t('RoutesTip') }} </template>
+            <el-icon>
+              <QuestionFilled />
+            </el-icon>
+          </el-tooltip>
+        </template>
+        <RouteDetail v-if="form.Route" :data="form.Route" :done="() => { }"></RouteDetail>
+        <div v-else>
+          <el-button :icon="CirclePlusFilled" @click="() => { dialogSelectRoute = true; }" />
+          <el-dialog v-model="dialogSelectRoute">
+            new
+          </el-dialog>
+        </div>
+      </el-form-item>
+    </div>
     <!--todo sni and route-->
     {{ form }}
     <el-form-item>
@@ -50,13 +70,14 @@ import { useI18n } from 'vue-i18n';
 import { protocolsSelect, ipAddress } from '../components'
 import { protocolsValidator } from '../service/validators'
 import { storageService } from '../service/storage'
-import { QuestionFilled } from '@element-plus/icons-vue'
-import { GatewayProtocols } from '../ets/GatewayProtocols';
+import { QuestionFilled, CirclePlusFilled } from '@element-plus/icons-vue'
+import { GatewayProtocols } from '../ets/GatewayProtocols'
+import RouteDetail from './routeDetail.vue'
 
 const { t } = useI18n({
   useScope: 'global'
 })
-
+const dialogSelectRoute = ref(false)
 const formRef = ref<FormInstance>()
 const address = ref<any>()
 const forms = [address]
