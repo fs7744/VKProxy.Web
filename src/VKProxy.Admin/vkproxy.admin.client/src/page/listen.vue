@@ -22,7 +22,7 @@
       </el-auto-resizer>
     </div>
   </el-card>
-  <el-drawer v-model="isEditView" direction="rtl" :before-close="handleClose" :title="$t('Listen')" >
+  <el-drawer v-model="isEditView" direction="rtl" :before-close="handleClose" :title="$t('Listen')" size="70%">
     <ListenDetail :data="editData" :done="() => { isEditView = false; search() }"></ListenDetail>
   </el-drawer>
 </template>

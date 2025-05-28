@@ -16,3 +16,8 @@
 .form-item-flex {
   display: flex; gap: 16px 8px; margin-top: 8px ;
 }
+
+
+.el-form-item .el-form-item {
+  margin-bottom: 16px !important;
+}

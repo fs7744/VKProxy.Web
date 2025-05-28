@@ -9,7 +9,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Address: typeof import('./src/components/address.vue')['default']
-    copy: typeof import('./src/components/protocols copy.vue')['default']
+    copy: typeof import('./src/components/selectRoute copy.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAutoResizer: typeof import('element-plus/es')['ElAutoResizer']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
@@ -62,6 +62,8 @@ declare module 'vue' {
     ProtocolsSelect: typeof import('./src/components/protocolsSelect.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SelectRoute: typeof import('./src/components/selectRoute.vue')['default']
+    SelectSni: typeof import('./src/components/selectSni.vue')['default']
     SslProtocols: typeof import('./src/components/sslProtocols.vue')['default']
     TheWelcome: typeof import('./src/components/TheWelcome.vue')['default']
     UrlAddress: typeof import('./src/components/urlAddress.vue')['default']

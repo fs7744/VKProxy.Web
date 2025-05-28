@@ -112,3 +112,9 @@ UseSni: sni代理
 UseSniTip: 服务器名称指示 (SNI) 可用于承载相同 IP 地址和端口上的多个域。 SNI 可用于通过从一台服务器为多个站点提供服务来节省资源。只支持 tcp.
 UseSniError: sni 只支持 tcp.
 RoutesTip: 当指定路由时，对应端口将只服务于此路由
+SelectRoute: 选择路由
+NewRoute: 新建路由
+Cancel: 取消
+Confirm: 确认
+UdpResponses: udp响应数量
+UdpResponsesTip: 如果使用 UDP 协议，则设置代理服务器响应客户端数据报时预期的数据报数量。

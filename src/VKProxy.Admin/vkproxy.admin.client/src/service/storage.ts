@@ -44,8 +44,8 @@ class StorageService {
     })
   }
 
-  getRoute(prefix: string) {
-    return http(`/api/route?prefix=${prefix}`, {})
+  getRoute(prefix: string, noLoading: boolean = false) {
+    return http(`/api/route?prefix=${prefix}`, { noLoading })
   }
 
   async existsRoute(key: string) {
@@ -65,8 +65,8 @@ class StorageService {
     })
   }
 
-  getSni(prefix: string) {
-    return http(`/api/sni?prefix=${prefix}`, {})
+  getSni(prefix: string, noLoading: boolean = false) {
+    return http(`/api/sni?prefix=${prefix}`, { noLoading })
   }
 
   async existsSni(key: string) {

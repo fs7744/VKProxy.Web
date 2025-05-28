@@ -23,7 +23,7 @@
     </div>
   </el-card>
   <el-drawer v-model="isEditView" direction="rtl" :before-close="handleClose" :title="$t('Routes')" >
-    <RouteDetail :data="editData" :done="() => { isEditView = false; search() }"></RouteDetail>
+    <RouteDetail :data="editData" :done="() => { isEditView = false; search() }" :allowUpdate="true"></RouteDetail>
   </el-drawer>
 </template>
 

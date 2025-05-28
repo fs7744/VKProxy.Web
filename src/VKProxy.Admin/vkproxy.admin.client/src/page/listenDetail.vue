@@ -25,7 +25,7 @@
           </el-icon>
         </el-tooltip>
       </template>
-      <el-checkbox v-model="form.UseSni" @change="(v) => { if (v) { form.SniId = null; form.RouteId = null; } }" />
+      <el-checkbox v-model="form.UseSni" @change="(v) => { if (v) { form.SniId = null; form.RouteId = null; form.Route = null;} }" />
     </el-form-item>
     <div v-if="!form.UseSni">
       <el-form-item prop="Routes">
@@ -38,17 +38,25 @@
             </el-icon>
           </el-tooltip>
         </template>
-        <RouteDetail v-if="form.Route" :data="form.Route" :done="() => { }"></RouteDetail>
+        <div v-if="form.Route" style="width: 100%;">
+          <el-button :icon="RemoveFilled" @click="() => { form.RouteId = null; form.Route = null; }" />
+          <RouteDetail :data="form.Route" :done="() => { }" :allowUpdate="false" style="gap: 16px 8px;" ref="routeForm" :protocols="form.Protocols"></RouteDetail>
+        </div>
         <div v-else>
           <el-button :icon="CirclePlusFilled" @click="() => { dialogSelectRoute = true; }" />
           <el-dialog v-model="dialogSelectRoute">
-            new
+            <selectRoute v-model="selectedRoute" ></selectRoute>
+            <el-button @click="() => { dialogSelectRoute = false; selectedRoute = null; }">{{ $t('Cancel') }}</el-button>
+            <el-button type="primary" @click="() => { dialogSelectRoute = false; form.Route = selectedRoute; selectedRoute = null;}">
+              {{ $t('Confirm') }}
+            </el-button>
           </el-dialog>
         </div>
       </el-form-item>
     </div>
     <!--todo sni and route-->
-    {{ form }}
+    {{ form }} <br/>
+          {{ selectedRoute }}
     <el-form-item>
       <template #label>
         <el-button type="primary" @click="submitForm(formRef)">
@@ -60,19 +68,21 @@
   </el-form>
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>
 
 <script setup lang="ts">
 import { reactive, ref, watchEffect } from 'vue'
 import { ListenData } from '../ets/ListenData';
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { useI18n } from 'vue-i18n';
-import { protocolsSelect, ipAddress } from '../components'
+import { protocolsSelect, ipAddress, selectRoute } from '../components'
 import { protocolsValidator } from '../service/validators'
 import { storageService } from '../service/storage'
-import { QuestionFilled, CirclePlusFilled } from '@element-plus/icons-vue'
+import { QuestionFilled, CirclePlusFilled, RemoveFilled } from '@element-plus/icons-vue'
 import { GatewayProtocols } from '../ets/GatewayProtocols'
 import RouteDetail from './routeDetail.vue'
+import { RouteData } from '../ets/RouteData';
 
 const { t } = useI18n({
   useScope: 'global'
@@ -80,7 +90,8 @@ const { t } = useI18n({
 const dialogSelectRoute = ref(false)
 const formRef = ref<FormInstance>()
 const address = ref<any>()
-const forms = [address]
+const routeForm = ref<any>()
+const forms = [address, routeForm]
 const props = defineProps({
   data: {
     type: ListenData,
@@ -90,7 +101,7 @@ const props = defineProps({
   done: {
   }
 })
-
+const selectedRoute = ref<RouteData>(null)
 const isNew = ref(false)
 const form = reactive(new ListenData({}))
 const rules = reactive<FormRules<ListenData>>({
