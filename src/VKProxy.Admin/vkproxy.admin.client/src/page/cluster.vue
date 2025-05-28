@@ -23,7 +23,7 @@
     </div>
   </el-card>
   <el-drawer v-model="isEditView" direction="rtl" :before-close="handleClose" :title="$t('Clusters')"  size="70%">
-    <ClusterDetail :data="editData" :done="() => { isEditView = false; search() }"></ClusterDetail>
+    <ClusterDetail :data="editData" :done="() => { isEditView = false; search() }" :allow-update="true"></ClusterDetail>
   </el-drawer>
 </template>
 

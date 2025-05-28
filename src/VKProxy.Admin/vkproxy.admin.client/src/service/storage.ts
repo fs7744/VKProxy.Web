@@ -23,8 +23,8 @@ class StorageService {
     })
   }
 
-  getCluster(prefix: string) {
-    return http(`/api/cluster?prefix=${prefix}`, {})
+  getCluster(prefix: string, noLoading: boolean = false) {
+    return http(`/api/cluster?prefix=${prefix}`, { noLoading })
   }
 
   async existsCluster(key: string) {

@@ -377,7 +377,7 @@
         </el-form-item>
       </div>
     </el-form-item>
-    <el-form-item>
+    <el-form-item v-if="allowUpdate">
       <template #label>
         <el-button type="primary" @click="submitForm(formRef)">
           <el-text v-model="form.Key" v-if="isNew">{{ $t('create') }}</el-text>
@@ -414,6 +414,9 @@ const props = defineProps({
     required: true,
   },
   done: {
+  },
+  allowUpdate: {
+    type: Boolean,
   }
 })
 
@@ -485,9 +488,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   let invalid = false
   for (const element of forms) {
     if (element && element.value) {
-      const v = !await element.value.validate();
-      if (!invalid) {
-        invalid = v
+      const v = await element.value.validate();
+      if (!v) {
+        invalid = true
       }
     }
   }
@@ -516,5 +519,32 @@ const checkName = [{
     }
   }, trigger: 'blur'
 }]
+
+const model = defineModel<ClusterData>({ required: false, default: null })
+
+const validate = async () => {
+  let invalid = false
+  for (const element of forms) {
+    if (element && element.value) {
+      const v = await element.value.validate();
+      if (!v) {
+        invalid = true
+      }
+    }
+  }
+  if (!formRef.value || !await formRef.value.validate().catch(() => false)) {
+    invalid = true
+  }
+
+  if (invalid) {
+    return false
+  }
+  model.value = new ClusterData(form)
+  return true
+}
+
+defineExpose({
+  validate
+})
 
 </script>

@@ -73,7 +73,7 @@
 
 <script setup lang="ts">
 import { reactive, ref, watchEffect } from 'vue'
-import { ListenData } from '../ets/ListenData';
+import { ListenData, toServiceListen } from '../ets/ListenData';
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { useI18n } from 'vue-i18n';
 import { protocolsSelect, ipAddress, selectRoute } from '../components'
@@ -142,9 +142,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   let invalid = false
   for (const element of forms) {
     if (element && element.value) {
-      const v = !await element.value.validate();
-      if (!invalid) {
-        invalid = v
+      const v = await element.value.validate();
+      if (!v) {
+        invalid = true
       }
     }
   }
@@ -152,7 +152,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     ElMessage.error(t('wrongSave'))
     return
   }
-  var r = await storageService.updateListen(form);
+  var r = await storageService.updateListen(toServiceListen(form));
   (props.done as any)()
 }
 

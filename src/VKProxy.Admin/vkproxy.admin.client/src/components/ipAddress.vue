@@ -85,6 +85,7 @@ defineExpose({
 
 const add = () => {
   v.ips.push({ host: '0.0.0.0', port: 80 })
+  validate()
 }
 
 const remove = (n) => {

@@ -1,4 +1,7 @@
+using Etcdserverpb;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using VKProxy.Admin.Server.Config;
 using VKProxy.Admin.Server.Storages;
 using VKProxy.Config;
 
@@ -28,9 +31,35 @@ namespace VKProxy.Admin.Server.Controllers
         }
 
         [HttpPost]
-        public async Task UpdateAsync([FromBody] ListenConfig config)
+        public async Task UpdateAsync([FromBody] ListenConfigData config)
         {
+            if (config.Route != null)
+            {
+                config.Route.Key = config.RouteId;
+                await UpdateRoute(config.Route);
+            }
+            if (config.Sni != null)
+            {
+                if (config.Sni.Route != null)
+                {
+                    config.Sni.Route.Key = config.Sni.RouteId;
+                    await UpdateRoute(config.Sni.Route);
+                }
+                config.Sni.Key = config.SniId;
+                await storage.UpdateSniAsync(config.Sni);
+            }
             await storage.UpdateListenAsync(config);
+
+            async Task UpdateRoute(RouteConfigData route)
+            {
+                var cluster = route.Cluster;
+                if (cluster != null)
+                {
+                    cluster.Key = route.ClusterId;
+                    await storage.UpdateClusterAsync(cluster);
+                }
+                await storage.UpdateRouteAsync(config.Route);
+            }
         }
 
         [HttpDelete]

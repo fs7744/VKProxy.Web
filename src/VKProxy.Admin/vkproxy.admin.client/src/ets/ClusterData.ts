@@ -157,6 +157,7 @@ export class ClusterData {
   HttpRequest: HttpRequestConfig | null
   HttpRequestEnable: boolean
   constructor(data: any) {
+    if (!data) data = {}
     this.Key = isString(data.Key) ? data.Key : null
     this.Destinations = isArray(data.Destinations) ? filter(map(data.Destinations, i => {
       if (i && isString(i.Address)) {

@@ -1,6 +1,6 @@
-import { parseTimeSpanSeconds } from '@/service/utils';
+import { parseTimeSpanSeconds, toSecondsTimeSpan } from '@/service/utils';
 import { isString, isArray, isNumber, filter, isInteger, type Dictionary, map, keys, reduce } from 'lodash';
-import type { ClusterData } from './ClusterData';
+import { ClusterData, toServiceCluster } from './ClusterData';
 
 export class RouteMatch {
   Hosts: string[] | null
@@ -34,7 +34,7 @@ export class RouteData {
     this.Timeout = t ? t : 300
     this.UdpResponses = isInteger(data.UdpResponses) ? data.UdpResponses : 0
     this.ClusterId = isString(data.ClusterId) ? data.ClusterId : null
-    this.Cluster = null
+    this.Cluster = data.Cluster ? new ClusterData(data.Cluster) : null
     this.Match = data.Match ? new RouteMatch(data.Match) : null
     this.Metadata = data.Metadata && keys(data.Metadata) ? reduce(keys(data.Metadata), (r, k) => {
       const v = data.Metadata[k]
@@ -61,3 +61,17 @@ export class RouteData {
       : null
   }
 }
+
+export function toServiceRoute(data: RouteData): any {
+  return {
+    Key: data.Key,
+    Order: data.Order,
+    Timeout: toSecondsTimeSpan(data.Timeout),
+    UdpResponses: data.UdpResponses,
+    Metadata: data.Metadata,
+    Transforms: data.Transforms,
+    Match: data.Match,
+    Cluster: data.Cluster ? toServiceCluster(data.Cluster) : null
+  }
+}
+

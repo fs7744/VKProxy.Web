@@ -62,6 +62,7 @@ declare module 'vue' {
     ProtocolsSelect: typeof import('./src/components/protocolsSelect.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SelectCluster: typeof import('./src/components/selectCluster.vue')['default']
     SelectRoute: typeof import('./src/components/selectRoute.vue')['default']
     SelectSni: typeof import('./src/components/selectSni.vue')['default']
     SslProtocols: typeof import('./src/components/sslProtocols.vue')['default']

@@ -114,6 +114,10 @@ UseSniError: sni 只支持 tcp.
 RoutesTip: 当指定路由时，对应端口将只服务于此路由
 SelectRoute: 选择路由
 NewRoute: 新建路由
+SelectCluster: 选择后端服务
+NewCluster: 新建后端服务
+SelectSni: 选择服务器名称指示
+NewSni: 新建服务器名称指示
 Cancel: 取消
 Confirm: 确认
 UdpResponses: udp响应数量
