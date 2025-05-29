@@ -47,7 +47,7 @@
       </template>
       <div v-if="form.Cluster" style="width: 100%;">
         <el-button :icon="RemoveFilled" @click="() => { form.ClusterId = null; form.Cluster = null; }" />
-        <ClusterDetail :data="form.Cluster" :done="() => { }" :allowUpdate="false" ref="clusterformRef"></ClusterDetail>
+        <ClusterDetail :data="form.Cluster" :done="() => { }" :allowUpdate="false" ref="clusterformRef" v-model="form.Cluster"></ClusterDetail>
       </div>
       <div v-else>
         <el-button :icon="CirclePlusFilled" @click="() => { dialogSelectCluster = true; }" />
@@ -178,7 +178,7 @@ const validate = async () => {
   if (!formRef.value || !await formRef.value.validate().catch(() => false)) {
     invalid = true
   }
-  if (!invalid) {
+  if (invalid) {
     return false
   }
   model.value = new RouteData(form)

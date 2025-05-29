@@ -40,7 +40,7 @@
         </template>
         <div v-if="form.Route" style="width: 100%;">
           <el-button :icon="RemoveFilled" @click="() => { form.RouteId = null; form.Route = null; }" />
-          <RouteDetail :data="form.Route" :done="() => { }" :allowUpdate="false" style="gap: 16px 8px;" ref="routeForm" :protocols="form.Protocols"></RouteDetail>
+          <RouteDetail :data="form.Route" v-model="form.Route" :done="() => { }" :allowUpdate="false" style="gap: 16px 8px;" ref="routeForm" :protocols="form.Protocols"></RouteDetail>
         </div>
         <div v-else>
           <el-button :icon="CirclePlusFilled" @click="() => { dialogSelectRoute = true; }" />
@@ -116,7 +116,6 @@ const rules = reactive<FormRules<ListenData>>({
       }
     }, trigger: 'blur'
   }],
-  Address: [{ required: true, message: () => t('required'), trigger: 'change' }],
   UseSni: [{
     validator: (rule: any, value: any, callback: any) => {
       if (value && (form.Protocols & GatewayProtocols.HTTP1 || form.Protocols & GatewayProtocols.HTTP2 || form.Protocols & GatewayProtocols.HTTP3 || form.Protocols & GatewayProtocols.HTTP3)) {
@@ -136,6 +135,7 @@ watchEffect(() => {
   form.RouteId = props.data.RouteId
   form.SniId = props.data.SniId
   form.UseSni = props.data.UseSni
+  form.Route = props.data.Route
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {
@@ -152,6 +152,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     ElMessage.error(t('wrongSave'))
     return
   }
+  form.RouteId = form.Route?.Key
   var r = await storageService.updateListen(toServiceListen(form));
   (props.done as any)()
 }

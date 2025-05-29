@@ -71,6 +71,7 @@ export function toServiceRoute(data: RouteData): any {
     Metadata: data.Metadata,
     Transforms: data.Transforms,
     Match: data.Match,
+    ClusterId: data.ClusterId,
     Cluster: data.Cluster ? toServiceCluster(data.Cluster) : null
   }
 }

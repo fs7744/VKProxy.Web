@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="formRef" :model="v" label-width="auto">
+  <el-form ref="formRef" :model="v" label-width="auto" :rules="checks">
     <div v-for="(node, index) of v.ips" :key="index" style="margin-bottom: 16px;">
       <el-form-item :label="''" :prop="`ips[${Number(index)}]`" :rules="checkIps">
         <div style="display: flex; gap: 16px 8px;">
@@ -21,14 +21,16 @@
             </template>
           </el-input>
         </div>
-
       </el-form-item>
     </div>
+
+    <el-form-item prop="ips" style="margin-bottom: 0px !important;">
     <el-button @click="add">
       <el-icon>
         <Plus />
       </el-icon>
     </el-button>
+    </el-form-item >
   </el-form>
 
 
@@ -68,9 +70,16 @@ const validate = async () => {
   return false
 }
 
+const checks= {
+ ips: [{ required: true, message: () => t('required'), trigger: 'blur' },]
+}
+
 const checkIps = [checkIp, {
   validator: (rule: any, value: any, callback: any) => {
-    if (v.ips.find(x => value !== x && value.host === x.host && value.port === x.port)) {
+    if(v.ips.length == 0) {
+      callback(new Error(t('required')))
+    }
+    else if (v.ips.find(x => value !== x && value.host === x.host && value.port === x.port)) {
       callback(new Error(t('alreadyExists')))
     } else {
       callback()
