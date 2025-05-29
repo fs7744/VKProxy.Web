@@ -46,6 +46,8 @@ import { ListenDetail } from '.'
 import { ListenData } from '../ets/ListenData'
 import { handleClose, removeConfirm } from '../service/confirm'
 import { TableV2SortOrder, SortBy, SortState } from 'element-plus'
+import { RouteData } from '../ets/RouteData'
+import { ClusterData } from '../ets/ClusterData'
 
 const k = useRouteQuery('key')
 const isEditView = ref(false)
@@ -145,6 +147,13 @@ const search = async () => {
 }
 
 const edit = async (r) => {
+  if (r.RouteId) {
+    let f = new RouteData((await storageService.getRoute(r.RouteId))[0]);
+    if (f.ClusterId) {
+      f.Cluster = new ClusterData((await storageService.getCluster(f.ClusterId))[0])
+    }
+    r.Route = f
+  }
   editData.value = r
   isEditView.value = true
 }

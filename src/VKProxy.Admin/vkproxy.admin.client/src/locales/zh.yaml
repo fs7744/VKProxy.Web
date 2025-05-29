@@ -122,3 +122,4 @@ Cancel: 取消
 Confirm: 确认
 UdpResponses: udp响应数量
 UdpResponsesTip: 如果使用 UDP 协议，则设置代理服务器响应客户端数据报时预期的数据报数量。
+ClustersTip: 配置后端服务负载均衡策略

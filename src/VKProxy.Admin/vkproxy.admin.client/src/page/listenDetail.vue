@@ -54,9 +54,7 @@
         </div>
       </el-form-item>
     </div>
-    <!--todo sni and route-->
-    {{ form }} <br/>
-          {{ selectedRoute }}
+    <!--todo sni -->
     <el-form-item>
       <template #label>
         <el-button type="primary" @click="submitForm(formRef)">
@@ -136,6 +134,7 @@ watchEffect(() => {
   form.SniId = props.data.SniId
   form.UseSni = props.data.UseSni
   form.Route = props.data.Route
+  form.Sni = props.data.Sni
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {
@@ -174,5 +173,4 @@ const checkName = [{
     }
   }, trigger: 'blur'
 }]
-
 </script>

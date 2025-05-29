@@ -1,6 +1,7 @@
 import { GatewayProtocols } from "./GatewayProtocols"
 import { isString, isArray, isNumber, filter, isBoolean } from 'lodash';
 import { RouteData, toServiceRoute } from "./RouteData";
+import { SniData, toServiceSni } from "./SniData";
 
 export class ListenData {
   Key: string
@@ -10,6 +11,7 @@ export class ListenData {
   SniId: string
   RouteId: string
   Route: RouteData | null
+  Sni: SniData | null
   constructor(data: any) {
     if (!data) data = {}
     this.Key = isString(data.Key) ? data.Key: null
@@ -19,6 +21,7 @@ export class ListenData {
     this.SniId = isString(data.SniId) ? data.SniId: null
     this.RouteId = isString(data.RouteId) ? data.RouteId: null
     this.Route = data.Route ? new RouteData(data.Route): null
+    this.Sni = data.Sni ? new SniData(data.Sni): null
   }
 }
 
@@ -30,6 +33,7 @@ export function toServiceListen(data: ListenData): any {
     UseSni: data.UseSni,
     SniId: data.SniId,
     RouteId: data.RouteId,
-    Route: data.Route ? toServiceRoute(data.Route) : null
+    Route: data.Route ? toServiceRoute(data.Route) : null,
+    Sni: data.Sni ? toServiceSni(data.Sni) : null
   }
 }

@@ -22,7 +22,7 @@
       </el-auto-resizer>
     </div>
   </el-card>
-  <el-drawer v-model="isEditView" direction="rtl" :before-close="handleClose" :title="$t('Routes')" >
+  <el-drawer v-model="isEditView" direction="rtl" :before-close="handleClose" :title="$t('Routes')" size="70%">
     <RouteDetail :data="editData" :done="() => { isEditView = false; search() }" :allowUpdate="true"></RouteDetail>
   </el-drawer>
 </template>
@@ -45,6 +45,7 @@ import { RouteDetail } from '.'
 import { RouteData } from '../ets/RouteData'
 import { handleClose, removeConfirm } from '../service/confirm'
 import { TableV2SortOrder, SortBy, SortState } from 'element-plus'
+import { ClusterData } from '../ets/ClusterData'
 
 const k = useRouteQuery('key')
 const isEditView = ref(false)
@@ -109,6 +110,9 @@ const search = async () => {
 }
 
 const edit = async (r) => {
+  if (r.ClusterId) {
+    r.Cluster = new ClusterData((await storageService.getCluster(r.ClusterId))[0])
+  }
   editData.value = r
   isEditView.value = true
 }

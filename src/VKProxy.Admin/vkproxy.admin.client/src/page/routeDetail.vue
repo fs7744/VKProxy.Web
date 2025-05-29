@@ -125,7 +125,9 @@ const rules = reactive<FormRules<RouteData>>({
 
 watchEffect(() => {
   isNew.value = props.data.Key == null
-  form.Key = props.data.Key
+  for (const k of ['Key', 'Order', 'Timeout', 'UdpResponses', 'ClusterId', 'Cluster', 'Match', 'Metadata', 'Transforms']) {
+    form[k] = props.data[k]
+  }
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {
