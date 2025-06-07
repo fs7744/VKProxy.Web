@@ -116,8 +116,8 @@ SelectRoute: Select Route
 NewRoute: New Route
 SelectCluster: Select Cluster
 NewCluster: New Cluster
-SelectSni: Select Sni
-NewSni: New Sni
+SelectSni: Select Certificate
+NewSni: New Certificate
 Cancel: Cancel
 Confirm: Confirm
 UdpResponses: Responses for udp

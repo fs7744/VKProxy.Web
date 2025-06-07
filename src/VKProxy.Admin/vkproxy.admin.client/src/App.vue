@@ -129,7 +129,7 @@ const open = (u: string) => {
         <el-menu-item index="/sni">
           <el-icon><MapLocation /></el-icon>
           <template #title>
-            <span>{{ $t('sni') }}</span>
+            <span>{{ $t('Certificate') }}</span>
           </template>
         </el-menu-item>
         <el-menu-item index="/listen">

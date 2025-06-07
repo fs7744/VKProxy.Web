@@ -2,7 +2,7 @@
   <el-card style="margin: 0; padding: 0;">
     <el-page-header @back="goBack" style="padding-bottom: 8px;">
       <template #content>
-        <span> {{ $t('sni') }} </span>
+        <span> {{ $t('Certificate') }} </span>
       </template>
     </el-page-header>
     <div style="padding-bottom: 8px;">

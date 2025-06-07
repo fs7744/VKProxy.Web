@@ -116,8 +116,8 @@ SelectRoute: 选择路由
 NewRoute: 新建路由
 SelectCluster: 选择后端服务
 NewCluster: 新建后端服务
-SelectSni: 选择服务器名称指示
-NewSni: 新建服务器名称指示
+SelectSni: 选择证书
+NewSni: 新建证书
 Cancel: 取消
 Confirm: 确认
 UdpResponses: udp响应数量
