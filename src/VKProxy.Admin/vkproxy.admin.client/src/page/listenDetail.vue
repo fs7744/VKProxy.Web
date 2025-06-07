@@ -9,40 +9,13 @@
     </el-form-item>
 
     <el-form-item :label="$t('protocols')" prop="Protocols">
-      <protocolsSelect v-model="form.Protocols" />
+      <protocolsSelect v-model="form.Protocols" @changeProtocols="i => changeProtocols(i, form.UseSni)" />
     </el-form-item>
 
     <el-form-item :label="$t('address')" prop="Address">
       <ipAddress v-model="form.Address" ref="address" />
     </el-form-item>
-    <div v-if="!form.UseSni">
-      <el-form-item prop="Sni">
-        <template #label>
-          <span>{{ $t('sni') }}</span>
-          <el-tooltip placement="top">
-            <template #content> {{ $t('SniTip') }} </template>
-            <el-icon>
-              <QuestionFilled />
-            </el-icon>
-          </el-tooltip>
-        </template>
-        <div v-if="form.Sni" style="width: 100%;">
-          <el-button :icon="RemoveFilled" @click="() => { form.SniId = null; form.Sni = null; }" />
-          <SniDetail :data="form.Sni" v-model="form.Sni" :done="() => { }" :allowUpdate="false" style="gap: 16px 8px;" ref="sniForm" ></SniDetail>
-        </div>
-        <div v-else>
-          <el-button :icon="CirclePlusFilled" @click="() => { dialogSelectSni = true; }" />
-          <el-dialog v-model="dialogSelectSni">
-            <selectSni v-model="selectedSni" ></selectSni>
-            <el-button @click="() => { dialogSelectSni = false; selectedSni = null; }">{{ $t('Cancel') }}</el-button>
-            <el-button type="primary" @click="() => { dialogSelectSni = false; form.Sni = selectedSni; selectedSni = null;}">
-              {{ $t('Confirm') }}
-            </el-button>
-          </el-dialog>
-        </div>
-      </el-form-item>
-    </div>
-    <el-form-item prop="UseSni">
+    <el-form-item prop="UseSni" v-if="hasSniProxy">
       <template #label>
         <span>{{ $t('UseSni') }}</span>
         <el-tooltip placement="top">
@@ -52,9 +25,33 @@
           </el-icon>
         </el-tooltip>
       </template>
-      <el-checkbox v-model="form.UseSni" @change="(v) => { if (v) { form.SniId = null; form.RouteId = null; form.Route = null;} }" />
+      <el-checkbox v-model="form.UseSni"
+        @change="(v) => { changeProtocols(form.Protocols, v) }" />
     </el-form-item>
-    <div v-if="!form.UseSni">
+    <div v-if="hasSni">
+      <el-form-item prop="Sni">
+        <template #label>
+          <span>{{ $t('Certificate') }}</span>
+        </template>
+        <div v-if="form.Sni" style="width: 100%;">
+          <el-button :icon="RemoveFilled" @click="() => { form.SniId = null; form.Sni = null; }" />
+          <SniDetail :data="form.Sni" v-model="form.Sni" :done="() => { }" :allowUpdate="false" style="gap: 16px 8px;"
+            ref="sniForm"></SniDetail>
+        </div>
+        <div v-else>
+          <el-button :icon="CirclePlusFilled" @click="() => { dialogSelectSni = true; }" />
+          <el-dialog v-model="dialogSelectSni">
+            <selectSni v-model="selectedSni"></selectSni>
+            <el-button @click="() => { dialogSelectSni = false; selectedSni = null; }">{{ $t('Cancel') }}</el-button>
+            <el-button type="primary"
+              @click="() => { dialogSelectSni = false; form.Sni = selectedSni; selectedSni = null; }">
+              {{ $t('Confirm') }}
+            </el-button>
+          </el-dialog>
+        </div>
+      </el-form-item>
+    </div>
+    <div v-if="hasRoute">
       <el-form-item prop="Route">
         <template #label>
           <span>{{ $t('Routes') }}</span>
@@ -67,14 +64,17 @@
         </template>
         <div v-if="form.Route" style="width: 100%;">
           <el-button :icon="RemoveFilled" @click="() => { form.RouteId = null; form.Route = null; }" />
-          <RouteDetail :data="form.Route" v-model="form.Route" :done="() => { }" :allowUpdate="false" style="gap: 16px 8px;" ref="routeForm" :protocols="form.Protocols"></RouteDetail>
+          <RouteDetail :data="form.Route" v-model="form.Route" :done="() => { }" :allowUpdate="false"
+            style="gap: 16px 8px;" ref="routeForm" :protocols="form.Protocols"></RouteDetail>
         </div>
         <div v-else>
           <el-button :icon="CirclePlusFilled" @click="() => { dialogSelectRoute = true; }" />
           <el-dialog v-model="dialogSelectRoute">
-            <selectRoute v-model="selectedRoute" ></selectRoute>
-            <el-button @click="() => { dialogSelectRoute = false; selectedRoute = null; }">{{ $t('Cancel') }}</el-button>
-            <el-button type="primary" @click="() => { dialogSelectRoute = false; form.Route = selectedRoute; selectedRoute = null;}">
+            <selectRoute v-model="selectedRoute"></selectRoute>
+            <el-button @click="() => { dialogSelectRoute = false; selectedRoute = null; }">{{ $t('Cancel')
+              }}</el-button>
+            <el-button type="primary"
+              @click="() => { dialogSelectRoute = false; form.Route = selectedRoute; selectedRoute = null; }">
               {{ $t('Confirm') }}
             </el-button>
           </el-dialog>
@@ -92,8 +92,7 @@
   </el-form>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
 
 <script setup lang="ts">
 import { reactive, ref, watchEffect } from 'vue'
@@ -131,6 +130,9 @@ const props = defineProps({
 })
 const selectedSni = ref<SniData>(null)
 const selectedRoute = ref<RouteData>(null)
+const hasRoute = ref(false)
+const hasSni = ref(false)
+const hasSniProxy = ref(false)
 const isNew = ref(false)
 const form = reactive(new ListenData({}))
 const rules = reactive<FormRules<ListenData>>({
@@ -156,6 +158,40 @@ const rules = reactive<FormRules<ListenData>>({
   }]
 })
 
+const changeProtocols = (p: GatewayProtocols, useSni: boolean) => {
+  if (!p) {
+    hasRoute.value = false
+    hasSni.value = false
+    hasSniProxy.value = false
+  } else if (p === GatewayProtocols.TCP) {
+    hasRoute.value = true
+    hasSniProxy.value = true
+    hasSni.value = useSni
+    if (!useSni) {
+      form.Sni = null
+      form.SniId = null
+    }
+  } else if (p === GatewayProtocols.UDP || p === (GatewayProtocols.UDP | GatewayProtocols.TCP)) {
+    hasRoute.value = true
+    hasSniProxy.value = false
+    hasSni.value = false
+    if (form.UseSni === true) {
+      form.UseSni = false
+    }
+  } else {
+    hasSniProxy.value = false
+    hasSni.value = true
+    hasRoute.value = false
+    if (form.UseSni) {
+      form.UseSni = false
+    }
+    if (form.Route) {
+      form.Route = null
+      form.RouteId = null
+    }
+  }
+}
+
 watchEffect(() => {
   isNew.value = props.data.Key == null
   form.Key = props.data.Key
@@ -166,6 +202,7 @@ watchEffect(() => {
   form.UseSni = props.data.UseSni
   form.Route = props.data.Route
   form.Sni = props.data.Sni
+  changeProtocols(props.data.Protocols, props.data.UseSni)
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {
@@ -204,4 +241,5 @@ const checkName = [{
     }
   }, trigger: 'blur'
 }]
+
 </script>

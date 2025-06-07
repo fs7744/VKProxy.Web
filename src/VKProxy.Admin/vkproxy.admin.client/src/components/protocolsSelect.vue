@@ -19,6 +19,9 @@ import { GatewayProtocols, toGatewayProtocols, unionGatewayProtocols } from '../
 import { ref,watch  } from 'vue';
 
 const model = defineModel({ required: true, default: GatewayProtocols.HTTP1 })
+const emit = defineEmits<{
+  (e: 'changeProtocols', data: GatewayProtocols): void
+}>()
 
 const v = ref(toGatewayProtocols(model.value))
 
@@ -27,6 +30,10 @@ watch(model, (n) => {
 })
 
 const changeV = (vv: any) => {
-  model.value = unionGatewayProtocols(vv)
+  const n = unionGatewayProtocols(vv)
+  model.value = n
+  emit('changeProtocols', n)
 }
+
+
 </script>
