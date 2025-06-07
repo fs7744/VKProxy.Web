@@ -44,6 +44,7 @@ export class SniData {
   RouteId: string | null
   Certificate: CertificateConfig | null
   constructor(data: any) {
+    if (!data) data = {}
     this.Key = isString(data.Key) ? data.Key : null
     this.Order = isInteger(data.Order) ? data.Order : 0
     this.Passthrough = isBoolean(data.Passthrough) ? data.Passthrough : false

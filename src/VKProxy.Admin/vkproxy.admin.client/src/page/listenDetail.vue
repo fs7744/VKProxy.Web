@@ -15,6 +15,33 @@
     <el-form-item :label="$t('address')" prop="Address">
       <ipAddress v-model="form.Address" ref="address" />
     </el-form-item>
+    <div v-if="!form.UseSni">
+      <el-form-item prop="Sni">
+        <template #label>
+          <span>{{ $t('sni') }}</span>
+          <el-tooltip placement="top">
+            <template #content> {{ $t('SniTip') }} </template>
+            <el-icon>
+              <QuestionFilled />
+            </el-icon>
+          </el-tooltip>
+        </template>
+        <div v-if="form.Sni" style="width: 100%;">
+          <el-button :icon="RemoveFilled" @click="() => { form.SniId = null; form.Sni = null; }" />
+          <SniDetail :data="form.Sni" v-model="form.Sni" :done="() => { }" :allowUpdate="false" style="gap: 16px 8px;" ref="sniForm" ></SniDetail>
+        </div>
+        <div v-else>
+          <el-button :icon="CirclePlusFilled" @click="() => { dialogSelectSni = true; }" />
+          <el-dialog v-model="dialogSelectSni">
+            <selectSni v-model="selectedSni" ></selectSni>
+            <el-button @click="() => { dialogSelectSni = false; selectedSni = null; }">{{ $t('Cancel') }}</el-button>
+            <el-button type="primary" @click="() => { dialogSelectSni = false; form.Sni = selectedSni; selectedSni = null;}">
+              {{ $t('Confirm') }}
+            </el-button>
+          </el-dialog>
+        </div>
+      </el-form-item>
+    </div>
     <el-form-item prop="UseSni">
       <template #label>
         <span>{{ $t('UseSni') }}</span>
@@ -28,7 +55,7 @@
       <el-checkbox v-model="form.UseSni" @change="(v) => { if (v) { form.SniId = null; form.RouteId = null; form.Route = null;} }" />
     </el-form-item>
     <div v-if="!form.UseSni">
-      <el-form-item prop="Routes">
+      <el-form-item prop="Route">
         <template #label>
           <span>{{ $t('Routes') }}</span>
           <el-tooltip placement="top">
@@ -54,7 +81,6 @@
         </div>
       </el-form-item>
     </div>
-    <!--todo sni -->
     <el-form-item>
       <template #label>
         <el-button type="primary" @click="submitForm(formRef)">
@@ -74,22 +100,26 @@ import { reactive, ref, watchEffect } from 'vue'
 import { ListenData, toServiceListen } from '../ets/ListenData';
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { useI18n } from 'vue-i18n';
-import { protocolsSelect, ipAddress, selectRoute } from '../components'
+import { protocolsSelect, ipAddress, selectRoute, selectSni } from '../components'
 import { protocolsValidator } from '../service/validators'
 import { storageService } from '../service/storage'
 import { QuestionFilled, CirclePlusFilled, RemoveFilled } from '@element-plus/icons-vue'
 import { GatewayProtocols } from '../ets/GatewayProtocols'
 import RouteDetail from './routeDetail.vue'
+import SniDetail from './sniDetail.vue'
 import { RouteData } from '../ets/RouteData';
+import { SniData } from '../ets/SniData';
 
 const { t } = useI18n({
   useScope: 'global'
 })
 const dialogSelectRoute = ref(false)
+const dialogSelectSni = ref(false)
 const formRef = ref<FormInstance>()
 const address = ref<any>()
 const routeForm = ref<any>()
-const forms = [address, routeForm]
+const sniForm = ref<any>()
+const forms = [address, routeForm, sniForm]
 const props = defineProps({
   data: {
     type: ListenData,
@@ -99,6 +129,7 @@ const props = defineProps({
   done: {
   }
 })
+const selectedSni = ref<SniData>(null)
 const selectedRoute = ref<RouteData>(null)
 const isNew = ref(false)
 const form = reactive(new ListenData({}))

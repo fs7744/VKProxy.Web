@@ -143,7 +143,7 @@
       </el-form-item>
 
     </div>
-    <el-form-item>
+    <el-form-item v-if="allowUpdate">
       <template #label>
         <el-button type="primary" @click="submitForm(formRef)">
           <el-text v-model="form.Key" v-if="isNew">{{ $t('create') }}</el-text>
@@ -176,9 +176,14 @@ const props = defineProps({
     validator: v => v != null,
     required: true,
   },
+  allowUpdate: {
+    type: Boolean,
+  },
   done: {
   }
 })
+
+const model = defineModel<SniData>({ required: false, default: null })
 
 const isNew = ref(false)
 const form = reactive(new SniData({}))
@@ -231,5 +236,29 @@ const checkName = [{
     }
   }, trigger: 'blur'
 }]
+
+const validate = async () => {
+  let invalid = false
+  for (const element of forms) {
+    if (element && element.value) {
+      const v = await element.value.validate();
+      if (!v) {
+        invalid = true
+      }
+    }
+  }
+  if (!formRef.value || !await formRef.value.validate().catch(() => false)) {
+    invalid = true
+  }
+  if (invalid) {
+    return false
+  }
+  model.value = new SniData(form)
+  return true
+}
+
+defineExpose({
+  validate
+})
 
 </script>
