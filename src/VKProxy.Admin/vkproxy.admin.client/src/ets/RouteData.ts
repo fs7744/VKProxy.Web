@@ -16,6 +16,11 @@ export class RouteMatch {
   }
 }
 
+export type KV = {
+  Key: string
+  Value: string
+}
+
 export class RouteData {
   Key: string
   Order: number
@@ -23,8 +28,8 @@ export class RouteData {
   UdpResponses: number
   ClusterId: string
   Cluster: ClusterData | null
-  Metadata: Dictionary<string> | null
-  Transforms: Dictionary<string>[] | null
+  Metadata: KV[] | null
+  Transforms: KV[][] | null
   Match: RouteMatch | null
   constructor(data: any) {
     if (!data) data = {}
@@ -39,10 +44,10 @@ export class RouteData {
     this.Metadata = data.Metadata && keys(data.Metadata) ? reduce(keys(data.Metadata), (r, k) => {
       const v = data.Metadata[k]
       if (isString(v)) {
-        r[k] = v
+        r.push({ Key: k, Value: v })
       }
       return r
-    }, {} as any) : null
+    }, [] as KV[]) : null
 
     this.Transforms = data.Transforms && isArray(data.Transforms) ?
       filter(map(data.Transforms, v => {
@@ -50,10 +55,10 @@ export class RouteData {
           return reduce(keys(v), (r, k) => {
             const vv = v[k]
             if (isString(v)) {
-              r[k] = vv
+              r.push({ Key: k, Value: v })
             }
             return r
-          }, {} as any)
+          }, [] as KV[])
         } else {
           return null
         }
@@ -68,11 +73,19 @@ export function toServiceRoute(data: RouteData): any {
     Order: data.Order,
     Timeout: toSecondsTimeSpan(data.Timeout),
     UdpResponses: data.UdpResponses,
-    Metadata: data.Metadata,
-    Transforms: data.Transforms,
+    Metadata: toServiceKV(data.Metadata),
+    Transforms: filter(map(data.Transforms, toServiceKV), i => i != null),
     Match: data.Match,
     ClusterId: data.ClusterId,
     Cluster: data.Cluster ? toServiceCluster(data.Cluster) : null
   }
 }
 
+export function toServiceKV(kvs : KV[] | null): any {
+  if(!kvs || kvs.length === 0) return null;
+  const r = {} as any;
+  kvs.forEach(element => {
+    r[element.Key] = element.Value;
+  });
+  return r;
+}

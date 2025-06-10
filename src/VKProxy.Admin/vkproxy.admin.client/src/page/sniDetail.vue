@@ -143,6 +143,36 @@
       </el-form-item>
 
     </div>
+    <div v-if="allowRoute">
+      <el-form-item prop="Route">
+        <template #label>
+          <span>{{ $t('Routes') }}</span>
+          <el-tooltip placement="top">
+            <template #content> {{ $t('RoutesTip') }} </template>
+            <el-icon>
+              <QuestionFilled />
+            </el-icon>
+          </el-tooltip>
+        </template>
+        <div v-if="form.Route" style="width: 100%;">
+          <el-button :icon="RemoveFilled" @click="() => { form.RouteId = null; form.Route = null; }" />
+          <RouteDetail :data="form.Route" v-model="form.Route" :done="() => { }" :allowUpdate="false"
+            style="gap: 16px 8px;" ref="routeForm" :protocols="GatewayProtocols.TCP"></RouteDetail>
+        </div>
+        <div v-else>
+          <el-button :icon="CirclePlusFilled" @click="() => { dialogSelectRoute = true; }" />
+          <el-dialog v-model="dialogSelectRoute">
+            <selectRoute v-model="selectedRoute"></selectRoute>
+            <el-button @click="() => { dialogSelectRoute = false; selectedRoute = null; }">{{ $t('Cancel')
+            }}</el-button>
+            <el-button type="primary"
+              @click="() => { dialogSelectRoute = false; form.Route = selectedRoute; selectedRoute = null; }">
+              {{ $t('Confirm') }}
+            </el-button>
+          </el-dialog>
+        </div>
+      </el-form-item>
+    </div>
     <el-form-item v-if="allowUpdate">
       <template #label>
         <el-button type="primary" @click="submitForm(formRef)">
@@ -161,15 +191,19 @@ import { reactive, ref, watchEffect } from 'vue'
 import { SniData, toServiceSni, CertificateConfig } from '../ets/SniData'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { useI18n } from 'vue-i18n'
-import { QuestionFilled } from '@element-plus/icons-vue'
+import { QuestionFilled, CirclePlusFilled, RemoveFilled } from '@element-plus/icons-vue'
 import { storageService } from '../service/storage'
+import { RouteData } from '../ets/RouteData'
+import RouteDetail from './routeDetail.vue'
+import { GatewayProtocols } from '../ets/GatewayProtocols'
 
 const { t } = useI18n({
   useScope: 'global'
 })
+const routeForm = ref<any>()
 
 const formRef = ref<FormInstance>()
-const forms = []
+const forms = [routeForm]
 const props = defineProps({
   data: {
     type: SniData,
@@ -179,12 +213,17 @@ const props = defineProps({
   allowUpdate: {
     type: Boolean,
   },
+  allowRoute: {
+    type: Boolean,
+  },
   done: {
   }
 })
 
 const model = defineModel<SniData>({ required: false, default: null })
 
+const dialogSelectRoute = ref(false)
+const selectedRoute = ref<RouteData>(null)
 const isNew = ref(false)
 const form = reactive(new SniData({}))
 const rules = reactive<FormRules<SniData>>({
@@ -196,13 +235,17 @@ const rules = reactive<FormRules<SniData>>({
 
 watchEffect(() => {
   isNew.value = props.data.Key == null
-  for (const k of ['Key', 'Order', 'Host', 'Passthrough', 'HandshakeTimeout', 'Protocols', 'CheckCertificateRevocation', 'ClientCertificateMode', 'RouteId', 'Certificate']) {
+  for (const k of ['Key', 'Order', 'Host', 'Passthrough', 'HandshakeTimeout', 'Protocols', 'CheckCertificateRevocation', 'ClientCertificateMode', 'RouteId', 'Route', 'Certificate']) {
     form[k] = props.data[k]
   }
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   let invalid = false
+  if(!props.allowRoute) {
+    form.Route = null
+    form.RouteId = null
+  }
   for (const element of forms) {
     if (element && element.value) {
       const v = !await element.value.validate();

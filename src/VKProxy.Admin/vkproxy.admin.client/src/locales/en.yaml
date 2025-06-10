@@ -123,3 +123,9 @@ Confirm: Confirm
 UdpResponses: Responses for udp
 UdpResponsesTip: Sets the number of datagrams expected from the proxied server in response to a client datagram if the UDP protocol is used.
 ClustersTip: Configure the backend service load balancing strategy
+Match: Match
+Statement: Statement
+StatementTip: Method = 'GET' OR Method = 'POST'
+Paths: Paths
+Methods: Methods
+Metadata: Metadata

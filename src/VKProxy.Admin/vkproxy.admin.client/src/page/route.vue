@@ -23,7 +23,9 @@
     </div>
   </el-card>
   <el-drawer v-model="isEditView" direction="rtl" :before-close="handleClose" :title="$t('Routes')" size="70%">
-    <RouteDetail :data="editData" :done="() => { isEditView = false; search() }" :allowUpdate="true"></RouteDetail>
+    <RouteDetail :data="editData" :done="() => { isEditView = false; search() }" :allowUpdate="true"
+      :protocols="GatewayProtocols.TCP | GatewayProtocols.UDP | GatewayProtocols.HTTP1 | GatewayProtocols.HTTP2 | GatewayProtocols.HTTP3">
+    </RouteDetail>
   </el-drawer>
 </template>
 
@@ -46,6 +48,7 @@ import { RouteData } from '../ets/RouteData'
 import { handleClose, removeConfirm } from '../service/confirm'
 import { TableV2SortOrder, SortBy, SortState } from 'element-plus'
 import { ClusterData } from '../ets/ClusterData'
+import { GatewayProtocols } from '../ets/GatewayProtocols'
 
 const k = useRouteQuery('key')
 const isEditView = ref(false)

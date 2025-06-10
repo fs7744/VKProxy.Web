@@ -1,6 +1,7 @@
 import { isString, isArray, isNumber, filter, isBoolean, isInteger } from 'lodash';
 import { SslProtocols } from './ClusterData';
 import { parseTimeSpanSeconds, toSecondsTimeSpan } from '@/service/utils';
+import { RouteData, toServiceRoute } from './RouteData';
 
 export enum ClientCertificateMode {
   NoCertificate = 0,
@@ -42,6 +43,7 @@ export class SniData {
   CheckCertificateRevocation: boolean
   ClientCertificateMode: ClientCertificateMode
   RouteId: string | null
+  Route: RouteData| null
   Certificate: CertificateConfig | null
   constructor(data: any) {
     if (!data) data = {}
@@ -52,6 +54,7 @@ export class SniData {
     this.Protocols = data.Protocols ? data.Protocols as SslProtocols : SslProtocols.None
     this.ClientCertificateMode = data.ClientCertificateMode ? data.ClientCertificateMode as ClientCertificateMode : ClientCertificateMode.DelayCertificate
     this.RouteId = isString(data.RouteId) ? data.RouteId : null
+    this.Route = data.Route ? new RouteData(data.Route): null
     let t = data.HandshakeTimeout ? parseTimeSpanSeconds(data.HandshakeTimeout) : null
     this.HandshakeTimeout = t ? t : 10
     this.Host = isArray(data.Host) ? filter(data.Host, isString) : []
@@ -69,6 +72,7 @@ export function toServiceSni(data: SniData): any {
     CheckCertificateRevocation: data.CheckCertificateRevocation,
     ClientCertificateMode: data.ClientCertificateMode,
     RouteId: data.RouteId,
+    Route: data.Route ? toServiceRoute(data.Route) : null,
     HandshakeTimeout: toSecondsTimeSpan(data.HandshakeTimeout),
     Certificate: data.Certificate
   }

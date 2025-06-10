@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using VKProxy.Admin.Server.Config;
 using VKProxy.Admin.Server.Storages;
 using VKProxy.Config;
 
@@ -28,8 +29,14 @@ namespace VKProxy.Admin.Server.Controllers
         }
 
         [HttpPost]
-        public async Task UpdateAsync([FromBody] RouteConfig config)
+        public async Task UpdateAsync([FromBody] RouteConfigData config)
         {
+            var cluster = config.Cluster;
+            if (cluster != null)
+            {
+                cluster.Key = config.ClusterId;
+                await storage.UpdateClusterAsync(cluster);
+            }
             await storage.UpdateRouteAsync(config);
         }
 

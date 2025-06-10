@@ -25,8 +25,7 @@
           </el-icon>
         </el-tooltip>
       </template>
-      <el-checkbox v-model="form.UseSni"
-        @change="(v) => { changeProtocols(form.Protocols, v) }" />
+      <el-checkbox v-model="form.UseSni" @change="(v) => { changeProtocols(form.Protocols, v) }" />
     </el-form-item>
     <div v-if="hasSni">
       <el-form-item prop="Sni">
@@ -35,8 +34,8 @@
         </template>
         <div v-if="form.Sni" style="width: 100%;">
           <el-button :icon="RemoveFilled" @click="() => { form.SniId = null; form.Sni = null; }" />
-          <SniDetail :data="form.Sni" v-model="form.Sni" :done="() => { }" :allowUpdate="false" style="gap: 16px 8px;"
-            ref="sniForm"></SniDetail>
+          <SniDetail :data="form.Sni" v-model="form.Sni" :done="() => { }" :allowUpdate="false"
+            :allowRoute="allowSniRoute" style="gap: 16px 8px;" ref="sniForm"></SniDetail>
         </div>
         <div v-else>
           <el-button :icon="CirclePlusFilled" @click="() => { dialogSelectSni = true; }" />
@@ -132,6 +131,7 @@ const selectedSni = ref<SniData>(null)
 const selectedRoute = ref<RouteData>(null)
 const hasRoute = ref(false)
 const hasSni = ref(false)
+const allowSniRoute = ref(false)
 const hasSniProxy = ref(false)
 const isNew = ref(false)
 const form = reactive(new ListenData({}))
@@ -159,26 +159,32 @@ const rules = reactive<FormRules<ListenData>>({
 })
 
 const changeProtocols = (p: GatewayProtocols, useSni: boolean) => {
-  if (!p) {
-    hasRoute.value = false
-    hasSni.value = false
-    hasSniProxy.value = false
-  } else if (p === GatewayProtocols.TCP) {
+  if (p === GatewayProtocols.TCP) {
     hasRoute.value = true
     hasSniProxy.value = true
     hasSni.value = useSni
     if (!useSni) {
+      allowSniRoute.value = false
       form.Sni = null
       form.SniId = null
+    } else if (useSni === true) {
+      allowSniRoute.value = true
+      hasRoute.value = false
+      if (form.Route) {
+        form.Route = null
+        form.RouteId = null
+      }
     }
   } else if (p === GatewayProtocols.UDP || p === (GatewayProtocols.UDP | GatewayProtocols.TCP)) {
     hasRoute.value = true
     hasSniProxy.value = false
     hasSni.value = false
+    allowSniRoute.value = false
     if (form.UseSni === true) {
       form.UseSni = false
     }
   } else {
+    allowSniRoute.value = false
     hasSniProxy.value = false
     hasSni.value = true
     hasRoute.value = false

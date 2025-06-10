@@ -35,6 +35,56 @@
       </el-input-number>
     </el-form-item>
 
+    <el-form-item prop="Timeout" :label="$t('Timeout')">
+      <el-input-number v-model="form.Timeout" :min="1" :max="86399" controls-position="right">
+        <template #suffix>
+          <span>{{ $t('SecondSuffix') }}</span>
+        </template>
+      </el-input-number>
+    </el-form-item>
+
+    <el-form-item prop="RouteMatch" :label="$t('Match')"
+      v-if="props.protocols && ((props.protocols & GatewayProtocols.HTTP1) || (props.protocols & GatewayProtocols.HTTP2) || (props.protocols & GatewayProtocols.HTTP3))">
+      <div v-if="form.Match" style="width: 100%;">
+        <el-button :icon="RemoveFilled" @click="() => { form.Match = null; }" />
+
+        <el-form-item prop="Hosts" :label="$t('Host')">
+          <el-select v-model="form.Match.Hosts" multiple allow-create filterable>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="Paths" :label="$t('Paths')">
+          <el-select v-model="form.Match.Paths" multiple allow-create filterable :placeholder="$t('Path')">
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="Methods" :label="$t('Methods')">
+          <el-select v-model="form.Match.Methods" multiple allow-create filterable>
+            <el-option key="GET" label="GET" value="GET" />
+            <el-option key="POST" label="POST" value="POST" />
+            <el-option key="PUT" label="PUT" value="PUT" />
+            <el-option key="PATCH" label="PATCH" value="PATCH" />
+            <el-option key="DELETE" label="DELETE" value="DELETE" />
+            <el-option key="HEAD" label="HEAD" value="HEAD" />
+            <el-option key="OPTIONS" label="OPTIONS" value="OPTIONS" />
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="Statement">
+          <template #label>
+            <span>{{ $t('Statement') }}</span>
+            <el-tooltip placement="top">
+              <template #content> {{ $t('StatementTip') }} </template>
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
+          </template>
+          <el-input v-model="form.Match.Statement" :placeholder="$t('StatementTip')" />
+        </el-form-item>
+      </div>
+      <div v-else>
+        <el-button :icon="CirclePlusFilled" @click="() => { form.Match = new RouteMatch({}); }" />
+      </div>
+    </el-form-item>
+
     <el-form-item prop="ClusterId">
       <template #label>
         <span>{{ $t('Clusters') }}</span>
@@ -47,14 +97,15 @@
       </template>
       <div v-if="form.Cluster" style="width: 100%;">
         <el-button :icon="RemoveFilled" @click="() => { form.ClusterId = null; form.Cluster = null; }" />
-        <ClusterDetail :data="form.Cluster" :done="() => { }" :allowUpdate="false" ref="clusterformRef" v-model="form.Cluster"></ClusterDetail>
+        <ClusterDetail :data="form.Cluster" :done="() => { }" :allowUpdate="false" ref="clusterformRef"
+          v-model="form.Cluster"></ClusterDetail>
       </div>
       <div v-else>
         <el-button :icon="CirclePlusFilled" @click="() => { dialogSelectCluster = true; }" />
         <el-dialog v-model="dialogSelectCluster">
           <selectCluster v-model="selectedCluster"></selectCluster>
           <el-button @click="() => { dialogSelectCluster = false; selectedCluster = null; }">{{ $t('Cancel')
-            }}</el-button>
+          }}</el-button>
           <el-button type="primary"
             @click="() => { dialogSelectCluster = false; form.Cluster = selectedCluster; selectedCluster = null; }">
             {{ $t('Confirm') }}
@@ -62,8 +113,35 @@
         </el-dialog>
       </div>
     </el-form-item>
+    <el-form-item prop="Metadata" :label="$t('Metadata')">
+      <div v-if="form.Metadata" style="width: 100%;">
+        <el-button :icon="RemoveFilled" @click="() => { form.Metadata = null; }" style="margin-bottom: 16px;" />
+        <div v-for="(node, index) of form.Metadata" :key="index" style="margin-bottom: 16px;">
+          <el-form-item :label="''" :prop="`Metadata[${Number(index)}]`">
+            <div style="display: flex; gap: 16px 8px;">
+              <el-button type="danger" @click="(n) => { form.Metadata.splice(n, 1) }">
+                <el-icon>
+                  <Delete />
+                </el-icon>
+              </el-button>
+              <el-input v-model="node.Key" :placeholder="$t('Key')" />
+              <el-input v-model="node.Value" :placeholder="$t('Value')" />
+            </div>
+          </el-form-item>
+        </div>
+        <div>
+          <el-button @click="() => { form.Metadata.push({ Key: '', Value: '' }) }">
+            <el-icon>
+              <Plus />
+            </el-icon>
+          </el-button>
+        </div>
+      </div>
+      <div v-else>
+        <el-button :icon="CirclePlusFilled" @click="() => { form.Metadata = [{ Key: '', Value: '' }]; }" />
+      </div>
+    </el-form-item>
 
-    <!--todo -->
     <el-form-item v-if="allowUpdate">
       <template #label>
         <el-button type="primary" @click="submitForm(formRef)">
@@ -79,11 +157,11 @@
 
 <script setup lang="ts">
 import { reactive, ref, watchEffect } from 'vue'
-import { RouteData } from '../ets/RouteData';
+import { RouteData, RouteMatch, toServiceRoute } from '../ets/RouteData';
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { useI18n } from 'vue-i18n';
 import { storageService } from '../service/storage'
-import { QuestionFilled, RemoveFilled, CirclePlusFilled } from '@element-plus/icons-vue'
+import { QuestionFilled, RemoveFilled, CirclePlusFilled, Delete, Plus } from '@element-plus/icons-vue'
 import { GatewayProtocols } from '../ets/GatewayProtocols';
 import ClusterDetail from './clusterDetail.vue';
 import { ClusterData } from '../ets/ClusterData';
@@ -144,7 +222,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     ElMessage.error(t('wrongSave'))
     return
   }
-  var r = await storageService.updateRoute(form);
+  var r = await storageService.updateRoute(toServiceRoute(form));
   (props.done as any)()
 }
 
