@@ -29,7 +29,7 @@ export class RouteData {
   ClusterId: string
   Cluster: ClusterData | null
   Metadata: KV[] | null
-  Transforms: KV[][] | null
+  Transforms: any[] | null
   Match: RouteMatch | null
   constructor(data: any) {
     if (!data) data = {}
@@ -55,10 +55,10 @@ export class RouteData {
           return reduce(keys(v), (r, k) => {
             const vv = v[k]
             if (isString(v)) {
-              r.push({ Key: k, Value: v })
+              r[k] = v
             }
             return r
-          }, [] as KV[])
+          }, {} as any)
         } else {
           return null
         }
@@ -74,7 +74,7 @@ export function toServiceRoute(data: RouteData): any {
     Timeout: toSecondsTimeSpan(data.Timeout),
     UdpResponses: data.UdpResponses,
     Metadata: toServiceKV(data.Metadata),
-    Transforms: filter(map(data.Transforms, toServiceKV), i => i != null),
+    Transforms: filter(data.Transforms, i => i != null),
     Match: data.Match,
     ClusterId: data.ClusterId,
     Cluster: data.Cluster ? toServiceCluster(data.Cluster) : null

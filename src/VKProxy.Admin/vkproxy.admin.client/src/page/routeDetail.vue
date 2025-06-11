@@ -105,7 +105,7 @@
         <el-dialog v-model="dialogSelectCluster">
           <selectCluster v-model="selectedCluster"></selectCluster>
           <el-button @click="() => { dialogSelectCluster = false; selectedCluster = null; }">{{ $t('Cancel')
-          }}</el-button>
+            }}</el-button>
           <el-button type="primary"
             @click="() => { dialogSelectCluster = false; form.Cluster = selectedCluster; selectedCluster = null; }">
             {{ $t('Confirm') }}
@@ -141,7 +141,43 @@
         <el-button :icon="CirclePlusFilled" @click="() => { form.Metadata = [{ Key: '', Value: '' }]; }" />
       </div>
     </el-form-item>
-
+    <el-form-item prop="Transforms" :label="$t('Transforms')">
+      <div v-if="form.Transforms" style="width: 100%;">
+        <el-button :icon="RemoveFilled" @click="() => { form.Transforms = null; }" style="margin-bottom: 16px;" />
+        <div v-for="(node, index) of form.Transforms" :key="index" style="margin-bottom: 16px;">
+          <el-form-item :label="''" :prop="`Transforms[${Number(index)}]`">
+            <el-button type="danger" @click="() => { form.Transforms.splice(index, 1) }" style="margin-right: 8px;">
+              <el-icon>
+                <Delete />
+              </el-icon>
+            </el-button>
+            <span v-for="(v, i) of keys(node)" style="margin-right: 8px;">
+              {{ v }} : {{ node[v] }}
+            </span>
+          </el-form-item>
+        </div>
+        <div>
+          <el-button @click="() => { selectedTransform = {}; selectedTransformWay = ''; dialogSelectTransform = true; }">
+            <el-icon>
+              <Plus />
+            </el-icon>
+          </el-button>
+          <el-dialog v-model="dialogSelectTransform" :title="$t('Transforms')" :close-on-click-modal="false">
+            <selectTransform v-model:model="selectedTransform" v-model:way="selectedTransformWay"
+              ref="selectTransformRef">
+            </selectTransform>
+            <el-button type="primary"
+              @click="async () => { if (await selectTransformRef.validate()) { dialogSelectTransform = false; form.Transforms.push(selectedTransform); } }">
+              {{ $t('Confirm') }}
+            </el-button>
+          </el-dialog>
+        </div>
+      </div>
+      <div v-else>
+        <el-button :icon="CirclePlusFilled" @click="() => { form.Transforms = []; }" />
+      </div>
+    </el-form-item>
+{{ form.Transforms }}
     <el-form-item v-if="allowUpdate">
       <template #label>
         <el-button type="primary" @click="submitForm(formRef)">
@@ -165,15 +201,18 @@ import { QuestionFilled, RemoveFilled, CirclePlusFilled, Delete, Plus } from '@e
 import { GatewayProtocols } from '../ets/GatewayProtocols';
 import ClusterDetail from './clusterDetail.vue';
 import { ClusterData } from '../ets/ClusterData';
-import { selectCluster } from '../components';
+import { selectCluster, selectTransform } from '../components';
+import { keys } from 'lodash';
 
 const { t } = useI18n({
   useScope: 'global'
 })
 
+const dialogSelectTransform = ref(false)
 const dialogSelectCluster = ref(false)
 const selectedCluster = ref<ClusterData>(null)
 const formRef = ref<FormInstance>()
+const selectTransformRef = ref<any>()
 const clusterformRef = ref<any>()
 const forms = [clusterformRef]
 const props = defineProps({
@@ -193,7 +232,8 @@ const props = defineProps({
 })
 
 const model = defineModel<RouteData>({ required: false, default: null })
-
+const selectedTransform = ref({} as any)
+const selectedTransformWay = ref('')
 const isNew = ref(false)
 const form = reactive(new RouteData({}))
 const rules = reactive<FormRules<RouteData>>({

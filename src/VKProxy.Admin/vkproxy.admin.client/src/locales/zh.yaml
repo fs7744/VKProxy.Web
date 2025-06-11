@@ -129,3 +129,4 @@ StatementTip: Method = 'GET' OR Method = 'POST'
 Paths: Paths
 Methods: Methods
 Metadata: 元数据
+Transforms: 转换

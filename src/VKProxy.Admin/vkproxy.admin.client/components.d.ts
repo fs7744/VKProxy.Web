@@ -67,6 +67,8 @@ declare module 'vue' {
     SelectSni: typeof import('./src/components/selectSni.vue')['default']
     SslProtocols: typeof import('./src/components/sslProtocols.vue')['default']
     TheWelcome: typeof import('./src/components/TheWelcome.vue')['default']
+    Transform: typeof import('./src/components/transform.vue')['default']
+    Transforms: typeof import('./src/components/transforms.vue')['default']
     UrlAddress: typeof import('./src/components/urlAddress.vue')['default']
     WelcomeItem: typeof import('./src/components/WelcomeItem.vue')['default']
   }
