@@ -1,4 +1,4 @@
-FROM a.newegg.org/docker-microsoft-mcr/dotnet/aspnet:9.0-alpine
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
 MAINTAINER Victor.x.qu
 
 ENV ETCD_CONNECTION_STRING=http://127.0.0.1:2379
