@@ -14,4 +14,8 @@
     <ProjectReference Include="..\..\..\..\VKProxy\src\VKProxy.Storages.Etcd\VKProxy.Storages.Etcd.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<Content Update="wwwroot\local\**\*.*" CopyToPublishDirectory="Never" />
+	</ItemGroup>
+
 </Project>

@@ -140,7 +140,7 @@ const open = (u: string) => {
             <span>{{ $t('Listen') }}</span>
           </template>
         </el-menu-item>
-        <el-menu-item index="" @click="open('https://fs7744.github.io/vkproxy.doc/')">
+        <el-menu-item index="" @click="open('https://fs7744.github.io/VKProxy.Doc/')">
           <el-icon>
             <document />
           </el-icon>

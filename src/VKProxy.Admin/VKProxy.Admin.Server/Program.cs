@@ -1,4 +1,6 @@
+using Microsoft.Extensions.FileProviders;
 using System.Text.Json;
+using VKProxy.Admin.Server;
 using VKProxy.Admin.Server.Storages;
 using VKProxy.Core.Hosting;
 using VKProxy.Storages.Etcd;
@@ -27,5 +29,12 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseDefaultFiles();
+app.UseStaticFiles(new StaticFileOptions()
+{
+    ServeUnknownFileTypes = true,
+    FileProvider = new IndexFallbackFileProvider(app.Environment.ContentRootPath),
+    DefaultContentType = "text/html",
+});
 
 app.Run();

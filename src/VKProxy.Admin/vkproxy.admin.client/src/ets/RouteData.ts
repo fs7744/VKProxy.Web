@@ -63,7 +63,6 @@ export class RouteData {
             }
             return r
           }, {} as any)
-          console.log(d)
           return d
         } else {
           return null
