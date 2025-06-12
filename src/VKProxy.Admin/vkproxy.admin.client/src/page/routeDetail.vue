@@ -177,7 +177,6 @@
         <el-button :icon="CirclePlusFilled" @click="() => { form.Transforms = []; }" />
       </div>
     </el-form-item>
-{{ form.Transforms }}
     <el-form-item v-if="allowUpdate">
       <template #label>
         <el-button type="primary" @click="submitForm(formRef)">

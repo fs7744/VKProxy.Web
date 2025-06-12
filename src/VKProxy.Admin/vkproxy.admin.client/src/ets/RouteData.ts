@@ -52,13 +52,19 @@ export class RouteData {
     this.Transforms = data.Transforms && isArray(data.Transforms) ?
       filter(map(data.Transforms, v => {
         if (v) {
-          return reduce(keys(v), (r, k) => {
+          const d = reduce(keys(v), (r, k) => {
             const vv = v[k]
-            if (isString(v)) {
-              r[k] = v
+            if (isString(vv)) {
+              if (k === 'X-Forwarded') {
+                r.XForwarded = vv
+              } else {
+                r[k] = vv
+              }
             }
             return r
           }, {} as any)
+          console.log(d)
+          return d
         } else {
           return null
         }
@@ -81,11 +87,16 @@ export function toServiceRoute(data: RouteData): any {
   }
 }
 
-export function toServiceKV(kvs : KV[] | null): any {
-  if(!kvs || kvs.length === 0) return null;
+export function toServiceKV(kvs: KV[] | null): any {
+  if (!kvs || kvs.length === 0) return null;
   const r = {} as any;
   kvs.forEach(element => {
-    r[element.Key] = element.Value;
+    if (element.Key === 'XForwarded') {
+      r['X-Forwarded'] = element.Value;
+    } else {
+      r[element.Key] = element.Value;
+    }
+
   });
   return r;
 }
