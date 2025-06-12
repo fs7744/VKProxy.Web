@@ -24,7 +24,7 @@
     <el-form-item :label="$t('HealthCheck')" prop="HealthCheck">
       <el-col :span="24">
         <el-radio-group v-model="form.HealthCheckType"
-          @change="(v) => { if (v === 'None') { form.HealthCheck = null } else if (v === 'Passive') { form.HealthCheck = { Passive: new PassiveHealthCheckConfig({}), Active: null } } else if (v === 'Active') { form.HealthCheck = { Passive: null, Active: new ActiveHealthCheckConfig({}) } } }">
+          @change="(v: any) => { if (v === 'None') { form.HealthCheck = null } else if (v === 'Passive') { form.HealthCheck = { Passive: new PassiveHealthCheckConfig({}), Active: null } } else if (v === 'Active') { form.HealthCheck = { Passive: null, Active: new ActiveHealthCheckConfig({}) } } }">
           <el-radio-button :label="$t('None')" value="None" />
           <el-radio-button :label="$t('Passive')" value="Passive" />
           <el-radio-button :label="$t('Active')" value="Active" />
@@ -186,7 +186,7 @@
     <el-form-item :label="$t('HttpClientConfig')" prop="HttpClientConfig">
       <el-col :span="24">
         <el-checkbox v-model="form.HttpClientConfigEnable" :label="t('Enable')"
-          @change="(b) => { form.HttpClientConfig = b ? (form.HttpClientConfig ? form.HttpClientConfig : new HttpClientConfig({})) : null }" />
+          @change="(b: any) => { form.HttpClientConfig = b ? (form.HttpClientConfig ? form.HttpClientConfig : new HttpClientConfig({})) : null }" />
       </el-col>
       <div v-if="form.HttpClientConfigEnable && form.HttpClientConfig" class="form-item-flex">
         <el-form-item prop="HttpClientConfig.MaxConnectionsPerServer">
@@ -268,7 +268,7 @@
       <el-col :span="24" v-if="form.HttpClientConfigEnable && form.HttpClientConfig">
         <el-form-item prop="HttpClientConfig.WebProxy" :label="t('WebProxy')">
           <el-checkbox v-model="form.HttpClientConfig.WebProxyEnable" :label="t('Enable')"
-            @change="(b) => { form.HttpClientConfig.WebProxy = b ? (form.HttpClientConfig.WebProxy ? form.HttpClientConfig.WebProxy : new WebProxy({})) : null }" />
+            @change="(b: any) => { form.HttpClientConfig.WebProxy = b ? (form.HttpClientConfig.WebProxy ? form.HttpClientConfig.WebProxy : new WebProxy({})) : null }" />
           <div v-if="form.HttpClientConfig && form.HttpClientConfig.WebProxy && form.HttpClientConfig.WebProxyEnable"
             style="margin-left: 8px;" class="form-item-flex">
             <el-form-item prop="HttpClientConfig.WebProxy.Address">
@@ -307,7 +307,7 @@
     <el-form-item :label="$t('HttpRequest')" prop="HttpRequest">
       <el-col :span="24">
         <el-checkbox v-model="form.HttpRequestEnable" :label="t('Enable')"
-          @change="(b) => { form.HttpRequest = b ? (form.HttpRequest ? form.HttpRequest : new HttpRequestConfig({})) : null }" />
+          @change="(b: any) => { form.HttpRequest = b ? (form.HttpRequest ? form.HttpRequest : new HttpRequestConfig({})) : null }" />
       </el-col>
       <div v-if="form.HttpRequest && form.HttpRequestEnable" class="form-item-flex">
 

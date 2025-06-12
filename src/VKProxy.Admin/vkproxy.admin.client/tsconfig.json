@@ -10,6 +10,7 @@
   ],
   "include": ["src/*", "src/**/*.vue", "src/**/*.tsx", "src/**/*.jsx", "src/**/*.ts", "src/**/*.js"],
   "compilerOptions": {
+    "outDir": "./build",
      // add this
      "jsx": "preserve",
      "noImplicitAny": false,

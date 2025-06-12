@@ -9,7 +9,7 @@ export class ListenData {
   Address: string[]
   UseSni: boolean
   SniId: string
-  RouteId: string
+  RouteId: string | null
   Route: RouteData | null
   Sni: SniData | null
   constructor(data: any) {

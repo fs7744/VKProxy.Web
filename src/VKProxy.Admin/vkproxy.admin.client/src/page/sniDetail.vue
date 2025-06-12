@@ -35,7 +35,7 @@
         </el-tooltip>
       </template>
       <el-checkbox v-model="form.Passthrough"
-        @change="(v) => { form.Certificate = v ? null : (form.Certificate ?? new CertificateConfig({})) }" />
+        @change="(v: any) => { form.Certificate = v ? null : (form.Certificate ?? new CertificateConfig({})) }" />
     </el-form-item>
     <div v-if="form.Passthrough"></div>
     <div v-else>
@@ -223,7 +223,7 @@ const props = defineProps({
 const model = defineModel<SniData>({ required: false, default: null })
 
 const dialogSelectRoute = ref(false)
-const selectedRoute = ref<RouteData>(null)
+const selectedRoute = ref<RouteData | null>(null)
 const isNew = ref(false)
 const form = reactive(new SniData({}))
 const rules = reactive<FormRules<SniData>>({
@@ -235,8 +235,9 @@ const rules = reactive<FormRules<SniData>>({
 
 watchEffect(() => {
   isNew.value = props.data.Key == null
+  const f = form as any
   for (const k of ['Key', 'Order', 'Host', 'Passthrough', 'HandshakeTimeout', 'Protocols', 'CheckCertificateRevocation', 'ClientCertificateMode', 'RouteId', 'Route', 'Certificate']) {
-    form[k] = props.data[k]
+    f[k] = props.data[k] as any
   }
 })
 

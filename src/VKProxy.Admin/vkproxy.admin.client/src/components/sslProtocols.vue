@@ -1,5 +1,5 @@
 <template>
-  <el-select v-model="v" @change="vv => changeV(vv)" multiple style="min-width: 200px;">
+  <el-select v-model="v" @change="(vv: any) => changeV(vv)" multiple style="min-width: 200px;">
       <el-option key="None" label="None" :value="0" />
       <el-option key="Ssl2" label="Ssl2" :value="12" />
       <el-option key="Ssl3" label="Ssl3" :value="48" />

@@ -1,6 +1,6 @@
 <template>
   <div style="margin-bottom: 16px;">
-    <el-radio-group v-model="c" @change="(v) => { model = v === true ? null : new RouteData(null); }" style="margin-bottom: 16px;">
+    <el-radio-group v-model="c" @change="(v: any) => { model = v === true ? null : new RouteData(null); }" style="margin-bottom: 16px;">
       <el-radio-button :label="$t('SelectRoute')" :value="true" />
       <el-radio-button :label="$t('NewRoute')" :value="false" />
     </el-radio-group>

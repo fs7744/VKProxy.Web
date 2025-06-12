@@ -239,7 +239,7 @@
 <style scoped></style>
 
 <script setup lang="ts">
-import { FormInstance, FormRules } from 'element-plus';
+import type { FormInstance, FormRules } from 'element-plus';
 import { reactive, ref, watch, watchEffect } from 'vue';
 import { t } from '../service/confirm';
 
@@ -247,7 +247,7 @@ const formRef = ref<FormInstance>()
 const model = defineModel('model', { required: true, default: {} as any })
 const way = defineModel('way', { required: true, default: '' })
 
-const changeWay = (w) => {
+const changeWay = (w: any) => {
   if (w === 'PathPrefix') {
     model.value = { PathPrefix: '' }
   } else if (w === 'PathRemovePrefix') {

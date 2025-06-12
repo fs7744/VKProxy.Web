@@ -44,7 +44,8 @@ import { isArray, map, orderBy, keys } from "lodash"
 import { ClusterDetail } from '.'
 import { ClusterData } from '../ets/ClusterData'
 import { handleClose, removeConfirm } from '../service/confirm'
-import { TableV2SortOrder, SortBy, SortState } from 'element-plus'
+import { TableV2SortOrder } from 'element-plus'
+import type { SortBy, SortState } from 'element-plus'
 
 const k = useRouteQuery('key')
 const isEditView = ref(false)
@@ -140,12 +141,12 @@ const search = async () => {
   listens.value = data
 }
 
-const edit = async (r) => {
+const edit = async (r: any) => {
   editData.value = r
   isEditView.value = true
 }
 
-const remove = async (r) => {
+const remove = async (r: any) => {
   await removeConfirm(r.Key, async () => {
     await storageService.removeCluster(r.Key)
     await search()

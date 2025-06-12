@@ -1,5 +1,5 @@
 <template>
-  <el-select v-model="v" @change="vv => changeV(vv)" multiple>
+  <el-select v-model="v" @change="(vv: any) => changeV(vv)" multiple>
     <el-option-group key="Layer 4" label="Layer 4">
       <el-option key="TCP" label="TCP" :value="1" />
       <el-option key="UDP" label="UDP" :value="2" />

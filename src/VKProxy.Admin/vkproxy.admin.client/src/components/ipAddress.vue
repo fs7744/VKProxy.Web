@@ -97,7 +97,7 @@ const add = () => {
   validate()
 }
 
-const remove = (n) => {
+const remove = (n: any) => {
   v.ips.splice(n, 1)
 }
 

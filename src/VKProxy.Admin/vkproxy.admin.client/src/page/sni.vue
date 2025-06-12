@@ -40,11 +40,12 @@ import {
 } from 'element-plus'
 import { storageService } from '../service/storage'
 import { useRouteQuery } from '@vueuse/router'
-import { isArray, map, orderBy, keys } from "lodash"
+import { isArray, map, orderBy } from "lodash"
 import { SniDetail } from '.'
 import { SniData } from '../ets/SniData'
 import { handleClose, removeConfirm } from '../service/confirm'
-import { TableV2SortOrder, SortBy, SortState } from 'element-plus'
+import type { SortBy } from 'element-plus'
+import { TableV2SortOrder } from 'element-plus'
 import { RouteData } from '../ets/RouteData'
 import { ClusterData } from '../ets/ClusterData'
 
@@ -142,7 +143,7 @@ const search = async () => {
   listens.value = data
 }
 
-const edit = async (r) => {
+const edit = async (r: any) => {
   if (r.RouteId) {
     let f = new RouteData((await storageService.getRoute(r.RouteId))[0]);
     if (f.ClusterId) {
@@ -154,7 +155,7 @@ const edit = async (r) => {
   isEditView.value = true
 }
 
-const remove = async (r) => {
+const remove = async (r: any) => {
   await removeConfirm(r.Key, async () => {
     await storageService.removeSni(r.Key)
     await search()

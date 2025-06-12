@@ -21,7 +21,7 @@
       </el-input-number>
     </el-form-item>
 
-    <el-form-item prop="UdpResponses" v-if="protocols & GatewayProtocols.UDP">
+    <el-form-item prop="UdpResponses" v-if="protocols && (protocols & GatewayProtocols.UDP)">
       <template #label>
         <span>{{ $t('UdpResponses') }}</span>
         <el-tooltip placement="top">
@@ -119,7 +119,7 @@
         <div v-for="(node, index) of form.Metadata" :key="index" style="margin-bottom: 16px;">
           <el-form-item :label="''" :prop="`Metadata[${Number(index)}]`">
             <div style="display: flex; gap: 16px 8px;">
-              <el-button type="danger" @click="(n) => { form.Metadata.splice(n, 1) }">
+              <el-button type="danger" @click="(n: any) => { form.Metadata?.splice(n, 1) }">
                 <el-icon>
                   <Delete />
                 </el-icon>
@@ -130,7 +130,7 @@
           </el-form-item>
         </div>
         <div>
-          <el-button @click="() => { form.Metadata.push({ Key: '', Value: '' }) }">
+          <el-button @click="() => { form.Metadata?.push({ Key: '', Value: '' }) }">
             <el-icon>
               <Plus />
             </el-icon>
@@ -146,7 +146,7 @@
         <el-button :icon="RemoveFilled" @click="() => { form.Transforms = null; }" style="margin-bottom: 16px;" />
         <div v-for="(node, index) of form.Transforms" :key="index" style="margin-bottom: 16px;">
           <el-form-item :label="''" :prop="`Transforms[${Number(index)}]`">
-            <el-button type="danger" @click="() => { form.Transforms.splice(index, 1) }" style="margin-right: 8px;">
+            <el-button type="danger" @click="() => { form.Transforms?.splice(index, 1) }" style="margin-right: 8px;">
               <el-icon>
                 <Delete />
               </el-icon>
@@ -167,7 +167,7 @@
               ref="selectTransformRef">
             </selectTransform>
             <el-button type="primary"
-              @click="async () => { if (await selectTransformRef.validate()) { dialogSelectTransform = false; form.Transforms.push(selectedTransform); } }">
+              @click="async () => { if (await selectTransformRef.validate()) { dialogSelectTransform = false; form.Transforms?.push(selectedTransform); } }">
               {{ $t('Confirm') }}
             </el-button>
           </el-dialog>
@@ -209,7 +209,7 @@ const { t } = useI18n({
 
 const dialogSelectTransform = ref(false)
 const dialogSelectCluster = ref(false)
-const selectedCluster = ref<ClusterData>(null)
+const selectedCluster = ref<ClusterData | null>(null)
 const formRef = ref<FormInstance>()
 const selectTransformRef = ref<any>()
 const clusterformRef = ref<any>()
@@ -242,8 +242,9 @@ const rules = reactive<FormRules<RouteData>>({
 
 watchEffect(() => {
   isNew.value = props.data.Key == null
+  const f = form as any
   for (const k of ['Key', 'Order', 'Timeout', 'UdpResponses', 'ClusterId', 'Cluster', 'Match', 'Metadata', 'Transforms']) {
-    form[k] = props.data[k]
+    f[k] = props.data[k]
   }
 })
 

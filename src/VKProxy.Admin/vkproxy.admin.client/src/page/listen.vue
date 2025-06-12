@@ -146,7 +146,7 @@ const search = async () => {
   listens.value = data
 }
 
-const edit = async (r) => {
+const edit = async (r: any) => {
   if (r.RouteId) {
     let f = new RouteData((await storageService.getRoute(r.RouteId))[0]);
     if (f.ClusterId) {
@@ -158,7 +158,7 @@ const edit = async (r) => {
   isEditView.value = true
 }
 
-const remove = async (r) => {
+const remove = async (r: any) => {
   await removeConfirm(r.Key, async () => {
     await storageService.removeListen(r.Key)
     await search()

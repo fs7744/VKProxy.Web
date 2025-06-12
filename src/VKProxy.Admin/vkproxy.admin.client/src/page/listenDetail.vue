@@ -25,7 +25,7 @@
           </el-icon>
         </el-tooltip>
       </template>
-      <el-checkbox v-model="form.UseSni" @change="(v) => { changeProtocols(form.Protocols, v) }" />
+      <el-checkbox v-model="form.UseSni" @change="(v: any) => { changeProtocols(form.Protocols, v) }" />
     </el-form-item>
     <div v-if="hasSni">
       <el-form-item prop="Sni">
@@ -127,8 +127,8 @@ const props = defineProps({
   done: {
   }
 })
-const selectedSni = ref<SniData>(null)
-const selectedRoute = ref<RouteData>(null)
+const selectedSni = ref<SniData| null>(null)
+const selectedRoute = ref<RouteData| null>(null)
 const hasRoute = ref(false)
 const hasSni = ref(false)
 const allowSniRoute = ref(false)

@@ -43,8 +43,7 @@
 import { map, filter } from 'lodash'
 import { reactive, ref, watch } from 'vue'
 import { isIpv6, parseAddress } from '../service/ip'
-import { checkIp } from '../service/validators'
-import { FormInstance } from 'element-plus'
+import type { FormInstance } from 'element-plus'
 import { Plus, Delete } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 
@@ -59,7 +58,7 @@ const v = reactive({ ips: p(model.value) })
 
 watch(model, (n) => v.ips = p(n))
 
-function p(n) {
+function p(n: any) {
   return filter(map(n, i => parseAddress(i.Address, i.Host)), i => i !== null)
 }
 
@@ -108,10 +107,10 @@ const add = () => {
     protocol: 'https://',
     host: '0.0.0.0', port: 443,
     replaceHost: null
-  })
+  } as any)
 }
 
-const remove = (n) => {
+const remove = (n: any) => {
   v.ips.splice(n, 1)
 }
 
