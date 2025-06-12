@@ -23,7 +23,7 @@ jobs:
     - name: Setup Node.js environment
       uses: actions/setup-node@v4.4.0
       with:
-        node-version: 16.17.0
+        node-version: 22.15.x
     - name: Restore dependencies
       run: cd src/VKProxy.Admin/VKProxy.Admin.Server && dotnet restore
     - name: Build
