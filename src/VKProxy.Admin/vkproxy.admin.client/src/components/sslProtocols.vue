@@ -24,6 +24,6 @@ watch(model, (n) => {
 })
 
 const changeV = (vv: any) => {
-  model.value = unionSslProtocols(vv)
+  model.value = unionSslProtocols(vv) as SslProtocols
 }
 </script>

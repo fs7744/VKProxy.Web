@@ -30,7 +30,7 @@ watch(model, (n) => {
 })
 
 const changeV = (vv: any) => {
-  const n = unionGatewayProtocols(vv)
+  const n = unionGatewayProtocols(vv) as GatewayProtocols
   model.value = n
   emit('changeProtocols', n)
 }

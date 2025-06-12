@@ -53,7 +53,7 @@ const { t } = useI18n({
 
 const formRef = ref<FormInstance>()
 
-const model = defineModel({ required: true, default: [] })
+const model = defineModel({ required: true, default: [] as string[] })
 const v = reactive({ ips: p(model.value) })
 
 watch(model, (n) => v.ips = p(n))

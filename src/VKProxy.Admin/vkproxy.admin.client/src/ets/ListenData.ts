@@ -8,7 +8,7 @@ export class ListenData {
   Protocols: GatewayProtocols
   Address: string[]
   UseSni: boolean
-  SniId: string
+  SniId: string | null
   RouteId: string | null
   Route: RouteData | null
   Sni: SniData | null

@@ -53,7 +53,7 @@ const { t } = useI18n({
 
 const formRef = ref<FormInstance>()
 
-const model = defineModel({ required: true, default: [] })
+const model = defineModel({ required: true, default: [] as any })
 const v = reactive({ ips: p(model.value) })
 
 watch(model, (n) => v.ips = p(n))
@@ -64,7 +64,7 @@ function p(n: any) {
 
 const validate = async () => {
   if (await formRef?.value?.validate().catch(() => false)) {
-    model.value = map(v.ips, i => { return { Address: toUrl(i), Host: i.replaceHost === '' ? null : i.replaceHost } })
+    model.value = map(v.ips, i => { return { Address: toUrl(i), Host: i.replaceHost === '' ? null : i.replaceHost } }) as any
     return true
   }
   return false
