@@ -29,7 +29,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore --configuration Release
     - name: build ui
-      run: cd src/VKProxy.Admin/vkproxy.admin.client && npm run build
+      run: cd ../vkproxy.admin.client && npm run build
     - name: CP ui 
-      run: cp -r src/VKProxy.Admin/vkproxy.admin.client/dist src/VKProxy.Admin/VKProxy.Admin.Server/bin/Release/net9.0/wwwroot
+      run: cd ../ && cp -r vkproxy.admin.client/dist VKProxy.Admin.Server/bin/Release/net9.0/wwwroot
 
