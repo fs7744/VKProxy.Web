@@ -8,10 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.5" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\VKProxy\src\VKProxy.Storages.Etcd\VKProxy.Storages.Etcd.csproj" />
+    <PackageReference Include="VKProxy.Storages.Etcd" Version="0.0.0.5" />
   </ItemGroup>
 
 	<ItemGroup>
