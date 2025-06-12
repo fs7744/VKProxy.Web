@@ -44,8 +44,8 @@ jobs:
     - name: Docker Login
       uses: docker/login-action@v3.4.0
       with:
-        username: $DOCKER_N
-        password: $DOCKER_P
+        username: ${{ secrets.DOCKER_N }}
+        password: ${{ secrets.DOCKER_P }}
     - name: push img
       run: docker push vkproxy/ui:$RELEASE_VERSION
           
