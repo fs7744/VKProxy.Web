@@ -31,5 +31,9 @@ jobs:
     - name: build ui
       run: cd src/VKProxy.Admin/vkproxy.admin.client && npm i npm-run-all --save-dev && npm install && npm run build
     - name: CP ui 
-      run: cd src/VKProxy.Admin && cp -r vkproxy.admin.client/dist VKProxy.Admin.Server/bin/Release/net9.0/wwwroot
-
+      run: cd src/VKProxy.Admin && cp -r vkproxy.admin.client/dist VKProxy.Admin.Server/bin/Release/net9.0/wwwroot && ls VKProxy.Admin.Server/bin/Release/net9.0/wwwroot
+    - name: Docker Setup Docker
+      uses: docker/setup-docker-action@v4.3.0
+    - name: build img
+      run: cd src/VKProxy.Admin && docker build -t vkproxy/ui:0.0.0.1 .
+          
