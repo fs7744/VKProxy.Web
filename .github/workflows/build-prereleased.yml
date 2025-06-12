@@ -4,9 +4,9 @@
 name: .NET
 
 on:
-  push:
-    tags:
-      - '*.*.*.*'
+  release:
+    types: 
+      - prereleased
 
 jobs:
   build:
@@ -15,7 +15,7 @@ jobs:
 
     steps:
     - name: Set env
-      run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV 
+      run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}-beta" >> $GITHUB_ENV 
     - name: Test
       run: |
         echo $RELEASE_VERSION
