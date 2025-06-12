@@ -24,12 +24,12 @@ jobs:
       uses: actions/setup-node@v4.4.0
       with:
         node-version: 16.17.0
-    - name: build ui
-      run: rm -rf src/VKProxy.Admin/vkproxy.admin.client/dist && rm -rf src/VKProxy.Admin/VKProxy.Admin.Server/bin/Release && cd src/VKProxy.Admin/vkproxy.admin.client && npm run build
     - name: Restore dependencies
-      run: cd ../VKProxy.Admin.Server && dotnet restore
+      run: cd src/VKProxy.Admin/VKProxy.Admin.Server && dotnet restore
     - name: Build
       run: dotnet build --no-restore --configuration Release
+    - name: build ui
+      run: cd src/VKProxy.Admin/vkproxy.admin.client && npm run build
     - name: CP ui 
-      run: cd ../ && cp -r vkproxy.admin.client/dist VKProxy.Admin.Server/bin/Release/net9.0/wwwroot
+      run: cp -r src/VKProxy.Admin/vkproxy.admin.client/dist src/VKProxy.Admin/VKProxy.Admin.Server/bin/Release/net9.0/wwwroot
 
