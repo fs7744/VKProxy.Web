@@ -46,7 +46,8 @@ import { isArray, map, orderBy, keys } from "lodash"
 import { RouteDetail } from '.'
 import { RouteData } from '../ets/RouteData'
 import { handleClose, removeConfirm } from '../service/confirm'
-import { TableV2SortOrder, SortBy, SortState } from 'element-plus'
+import { TableV2SortOrder } from 'element-plus'
+import type { SortBy, SortState } from 'element-plus'
 import { ClusterData } from '../ets/ClusterData'
 import { GatewayProtocols } from '../ets/GatewayProtocols'
 
@@ -112,7 +113,7 @@ const search = async () => {
   listens.value = data
 }
 
-const edit = async (r) => {
+const edit = async (r: any) => {
   if (r.ClusterId) {
     r.Cluster = new ClusterData((await storageService.getCluster(r.ClusterId))[0])
   }
@@ -120,7 +121,7 @@ const edit = async (r) => {
   isEditView.value = true
 }
 
-const remove = async (r) => {
+const remove = async (r: any) => {
   await removeConfirm(r.Key, async () => {
     await storageService.removeRoute(r.Key)
     await search()

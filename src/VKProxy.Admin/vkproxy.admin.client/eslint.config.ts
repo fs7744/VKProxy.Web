@@ -11,9 +11,9 @@ export default defineConfigWithVueTs(
   {
     name: 'app/files-to-lint',
     files: ['**/*.{ts,mts,tsx,vue}'],
-  rules: {
-    "@typescript-eslint/no-explicit-any": "never"
-  }
+    rules: {
+      "@typescript-eslint/no-explicit-any": "never"
+    } as any
   },
 
   globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**']),

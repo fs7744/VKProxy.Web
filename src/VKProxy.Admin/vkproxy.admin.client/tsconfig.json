@@ -12,5 +12,6 @@
   "compilerOptions": {
      // add this
      "jsx": "preserve",
+     "noImplicitAny": false,
   }
 }
