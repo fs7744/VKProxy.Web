@@ -29,7 +29,7 @@ interface ListItem {
 }
 
 const c = ref(true)
-const model = defineModel({ required: true, default: null as SniData})
+const model = defineModel<SniData| null>({ required: true, default: null})
 const options = ref<ListItem[]>([])
 const loading = ref(false)
 

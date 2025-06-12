@@ -71,7 +71,7 @@
           <el-dialog v-model="dialogSelectRoute">
             <selectRoute v-model="selectedRoute"></selectRoute>
             <el-button @click="() => { dialogSelectRoute = false; selectedRoute = null; }">{{ $t('Cancel')
-              }}</el-button>
+            }}</el-button>
             <el-button type="primary"
               @click="() => { dialogSelectRoute = false; form.Route = selectedRoute; selectedRoute = null; }">
               {{ $t('Confirm') }}
@@ -127,8 +127,8 @@ const props = defineProps({
   done: {
   }
 })
-const selectedSni = ref<SniData| null>(null)
-const selectedRoute = ref<RouteData| null>(null)
+const selectedSni = ref<SniData | null>(null)
+const selectedRoute = ref<RouteData | null>(null)
 const hasRoute = ref(false)
 const hasSni = ref(false)
 const allowSniRoute = ref(false)
@@ -225,7 +225,11 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     ElMessage.error(t('wrongSave'))
     return
   }
-  form.RouteId = form.Route?.Key
+  if (form.Route?.Key) {
+    form.RouteId = form.Route?.Key
+  } else {
+    form.RouteId = null
+  }
   var r = await storageService.updateListen(toServiceListen(form));
   (props.done as any)()
 }

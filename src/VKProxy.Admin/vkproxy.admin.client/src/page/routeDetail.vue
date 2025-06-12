@@ -294,7 +294,12 @@ const validate = async () => {
       }
     }
   }
-  form.ClusterId = form.Cluster?.Key
+  if(form.Cluster?.Key) {
+    form.ClusterId = form.Cluster?.Key
+  } else {
+    form.ClusterId = null
+  }
+
   if (!formRef.value || !await formRef.value.validate().catch(() => false)) {
     invalid = true
   }
