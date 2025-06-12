@@ -8,9 +8,11 @@
       "path": "./tsconfig.app.json"
     }
   ],
-  "include": ["src/*", "src/**/*.vue", "src/**/*.tsx", "src/**/*.jsx", "src/**/*.ts", "src/**/*.js"],
+  "include": ["src/**/*.tsx", "src/**/*.jsx", "src/**/*.js"],
   "compilerOptions": {
     "outDir": "./build",
+    "composite": true,
+    "emitDeclarationOnly":true,
      // add this
      "jsx": "preserve",
      "noImplicitAny": false,
