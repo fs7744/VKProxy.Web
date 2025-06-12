@@ -23,13 +23,13 @@ jobs:
     - name: Setup Node.js environment
       uses: actions/setup-node@v4.4.0
       with:
-        node-version: 16.17.0
+        node-version: 22.15.x
     - name: Restore dependencies
       run: cd src/VKProxy.Admin/VKProxy.Admin.Server && dotnet restore
     - name: Build
       run: dotnet build --no-restore --configuration Release
     - name: build ui
-      run: cd src/VKProxy.Admin/vkproxy.admin.client && npm run build
+      run: cd src/VKProxy.Admin/vkproxy.admin.client && npm i npm-run-all --save-dev && npm install && npm run build
     - name: CP ui 
-      run: cp -r src/VKProxy.Admin/vkproxy.admin.client/dist src/VKProxy.Admin/VKProxy.Admin.Server/bin/Release/net9.0/wwwroot
+      run: cd src/VKProxy.Admin && cp -r vkproxy.admin.client/dist VKProxy.Admin.Server/bin/Release/net9.0/wwwroot
 
