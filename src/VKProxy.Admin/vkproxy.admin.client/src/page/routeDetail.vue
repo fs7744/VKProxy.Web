@@ -244,7 +244,7 @@ watchEffect(() => {
   isNew.value = props.data.Key == null
   const f = form as any
   for (const k of ['Key', 'Order', 'Timeout', 'UdpResponses', 'ClusterId', 'Cluster', 'Match', 'Metadata', 'Transforms']) {
-    f[k] = props.data[k]
+    f[k] = (props.data as any)[k]
   }
 })
 

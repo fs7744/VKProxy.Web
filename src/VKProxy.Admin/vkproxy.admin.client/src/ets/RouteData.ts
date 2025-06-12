@@ -26,7 +26,7 @@ export class RouteData {
   Order: number
   Timeout: number
   UdpResponses: number
-  ClusterId: string
+  ClusterId: string | null
   Cluster: ClusterData | null
   Metadata: KV[] | null
   Transforms: any[] | null

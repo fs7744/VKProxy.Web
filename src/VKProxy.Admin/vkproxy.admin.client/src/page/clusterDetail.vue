@@ -267,8 +267,8 @@
       </div>
       <el-col :span="24" v-if="form.HttpClientConfigEnable && form.HttpClientConfig">
         <el-form-item prop="HttpClientConfig.WebProxy" :label="t('WebProxy')">
-          <el-checkbox v-if="form.HttpClientConfig" v-model="form.HttpClientConfig.WebProxyEnable" :label="t('Enable')"
-            @change="(b: any) => { form.HttpClientConfig.WebProxy = b ? (form.HttpClientConfig.WebProxy ? form.HttpClientConfig.WebProxy : new WebProxy({})) : null }" />
+          <el-checkbox v-model="form.HttpClientConfig.WebProxyEnable" :label="t('Enable')"
+            @change="(b: any) => { if(form.HttpClientConfig) { form.HttpClientConfig.WebProxy = b ? (form.HttpClientConfig.WebProxy ? form.HttpClientConfig.WebProxy : new WebProxy({})) : null } }" />
           <div v-if="form.HttpClientConfig && form.HttpClientConfig.WebProxy && form.HttpClientConfig.WebProxyEnable"
             style="margin-left: 8px;" class="form-item-flex">
             <el-form-item prop="HttpClientConfig.WebProxy.Address">

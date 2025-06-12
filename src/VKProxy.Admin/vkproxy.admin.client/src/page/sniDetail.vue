@@ -237,7 +237,7 @@ watchEffect(() => {
   isNew.value = props.data.Key == null
   const f = form as any
   for (const k of ['Key', 'Order', 'Host', 'Passthrough', 'HandshakeTimeout', 'Protocols', 'CheckCertificateRevocation', 'ClientCertificateMode', 'RouteId', 'Route', 'Certificate']) {
-    f[k] = props.data[k] as any
+    f[k] = (props.data as any)[k]
   }
 })
 

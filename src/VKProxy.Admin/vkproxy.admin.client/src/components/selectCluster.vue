@@ -29,7 +29,7 @@ interface ListItem {
 }
 
 const c = ref(true)
-const model = defineModel({ required: true, default: null as ClusterData | null })
+const model = defineModel({ required: true, default: null as ClusterData})
 const options = ref<ListItem[]>([])
 const loading = ref(false)
 
