@@ -140,7 +140,7 @@ const rules = reactive<FormRules<ListenData>>({
   { min: 1, message: () => t('requiredLength') + '1', trigger: 'blur' },],
   Protocols: [{ required: true, message: () => t('required'), trigger: 'change' }, protocolsValidator, {
     validator: (rule: any, value: any, callback: any) => {
-      if (form.UseSni && (value & GatewayProtocols.HTTP1 || value & GatewayProtocols.HTTP2 || value & GatewayProtocols.HTTP3 || value & GatewayProtocols.HTTP3)) {
+      if (form.UseSni && (value & GatewayProtocols.UDP)) {
         callback(new Error(t('UseSniError')))
       } else {
         callback()
@@ -149,7 +149,7 @@ const rules = reactive<FormRules<ListenData>>({
   }],
   UseSni: [{
     validator: (rule: any, value: any, callback: any) => {
-      if (value && (form.Protocols & GatewayProtocols.HTTP1 || form.Protocols & GatewayProtocols.HTTP2 || form.Protocols & GatewayProtocols.HTTP3 || form.Protocols & GatewayProtocols.HTTP3)) {
+      if (value && (form.Protocols & GatewayProtocols.UDP)) {
         callback(new Error(t('UseSniError')))
       } else {
         callback()
@@ -188,7 +188,7 @@ const changeProtocols = (p: GatewayProtocols, useSni: boolean) => {
     hasSniProxy.value = false
     hasSni.value = true
     hasRoute.value = false
-    if (form.UseSni) {
+    if (form.UseSni && !form.Sni) {
       form.UseSni = false
     }
     if (form.Route) {
@@ -231,6 +231,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   }
   if (form.Sni?.Key) {
     form.SniId = form.Sni?.Key
+    form.UseSni = true
   } else {
     form.SniId = null
   }
