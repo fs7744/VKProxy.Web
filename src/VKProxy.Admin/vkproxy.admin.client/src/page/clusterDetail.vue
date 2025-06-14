@@ -324,8 +324,8 @@
           <el-select v-model="form.HttpRequest.Version" style="min-width: 100px;">
             <el-option key="1.0" label="1.0" value="1.0" />
             <el-option key="1.1" label="1.1" value="1.1" />
-            <el-option key="2" label="2" value="2" />
-            <el-option key="3" label="3" value="3" />
+            <el-option key="2" label="2" value="2.0" />
+            <el-option key="3" label="3" value="3.0" />
           </el-select>
         </el-form-item>
 
