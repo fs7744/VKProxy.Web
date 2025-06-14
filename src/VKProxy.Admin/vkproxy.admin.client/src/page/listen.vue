@@ -22,7 +22,8 @@
       </el-auto-resizer>
     </div>
   </el-card>
-  <el-drawer v-model="isEditView" direction="rtl" :before-close="handleClose" :title="$t('Listen')" size="70%" :destroy-on-close="true">
+  <el-drawer v-model="isEditView" direction="rtl" :before-close="handleClose" :title="$t('Listen')" size="70%"
+    :destroy-on-close="true">
     <ListenDetail :data="editData" :done="() => { isEditView = false; search() }"></ListenDetail>
   </el-drawer>
 </template>
@@ -49,6 +50,7 @@ import { TableV2SortOrder } from 'element-plus'
 import type { SortBy, SortState } from 'element-plus'
 import { RouteData } from '../ets/RouteData'
 import { ClusterData } from '../ets/ClusterData'
+import { SniData } from '@/ets/SniData'
 
 const k = useRouteQuery('key')
 const isEditView = ref(false)
@@ -154,6 +156,16 @@ const edit = async (r: any) => {
       f.Cluster = new ClusterData((await storageService.getCluster(f.ClusterId))[0])
     }
     r.Route = f
+  }
+  if (r.SniId) {
+    let f = new SniData((await storageService.getSni(r.SniId))[0]);
+    if (f.RouteId) {
+      f.Route = new RouteData((await storageService.getRoute(f.RouteId))[0])
+      if (f.Route.ClusterId) {
+        f.Route.Cluster = new ClusterData((await storageService.getCluster(f.Route.ClusterId))[0])
+      }
+    }
+    r.Sni = f
   }
   editData.value = r
   isEditView.value = true

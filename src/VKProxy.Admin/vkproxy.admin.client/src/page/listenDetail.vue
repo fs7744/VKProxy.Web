@@ -229,6 +229,11 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   } else {
     form.RouteId = null
   }
+  if (form.Sni?.Key) {
+    form.SniId = form.Sni?.Key
+  } else {
+    form.SniId = null
+  }
   var r = await storageService.updateListen(toServiceListen(form));
   (props.done as any)()
 }
