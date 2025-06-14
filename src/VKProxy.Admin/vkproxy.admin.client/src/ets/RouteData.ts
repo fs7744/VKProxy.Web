@@ -73,13 +73,14 @@ export class RouteData {
 }
 
 export function toServiceRoute(data: RouteData): any {
+  const d = filter(data.Transforms, i => i != null);
   return {
     Key: data.Key,
     Order: data.Order,
     Timeout: toSecondsTimeSpan(data.Timeout),
     UdpResponses: data.UdpResponses,
     Metadata: toServiceKV(data.Metadata),
-    Transforms: filter(data.Transforms, i => i != null),
+    Transforms: !d || d.length === 0 ? null : d,
     Match: data.Match,
     ClusterId: data.ClusterId,
     Cluster: data.Cluster ? toServiceCluster(data.Cluster) : null

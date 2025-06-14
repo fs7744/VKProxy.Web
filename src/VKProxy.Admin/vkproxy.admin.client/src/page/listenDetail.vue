@@ -208,7 +208,6 @@ watchEffect(() => {
   form.UseSni = props.data.UseSni
   form.Route = props.data.Route
   form.Sni = props.data.Sni
-  changeProtocols(props.data.Protocols, props.data.UseSni)
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {
@@ -251,5 +250,8 @@ const checkName = [{
     }
   }, trigger: 'blur'
 }]
+
+
+changeProtocols(props.data.Protocols, props.data.UseSni)
 
 </script>

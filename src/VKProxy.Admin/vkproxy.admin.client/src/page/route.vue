@@ -22,7 +22,7 @@
       </el-auto-resizer>
     </div>
   </el-card>
-  <el-drawer v-model="isEditView" direction="rtl" :before-close="handleClose" :title="$t('Routes')" size="70%">
+  <el-drawer v-model="isEditView" direction="rtl" :before-close="handleClose" :title="$t('Routes')" size="70%" :destroy-on-close="true">
     <RouteDetail :data="editData" :done="() => { isEditView = false; search() }" :allowUpdate="true"
       :protocols="GatewayProtocols.TCP | GatewayProtocols.UDP | GatewayProtocols.HTTP1 | GatewayProtocols.HTTP2 | GatewayProtocols.HTTP3">
     </RouteDetail>
