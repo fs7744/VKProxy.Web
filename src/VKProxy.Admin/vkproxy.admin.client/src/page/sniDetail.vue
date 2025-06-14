@@ -255,6 +255,11 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       }
     }
   }
+  if(form.Route?.Key) {
+    form.RouteId = form.Route?.Key
+  } else {
+    form.RouteId = null
+  }
   if (invalid || !formEl || !await formEl.validate().catch(() => false)) {
     ElMessage.error(t('wrongSave'))
     return
@@ -290,6 +295,12 @@ const validate = async () => {
         invalid = true
       }
     }
+  }
+  console.log(form)
+  if(form.Route?.Key) {
+    form.RouteId = form.Route?.Key
+  } else {
+    form.RouteId = null
   }
   if (!formRef.value || !await formRef.value.validate().catch(() => false)) {
     invalid = true

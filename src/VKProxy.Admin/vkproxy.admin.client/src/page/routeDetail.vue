@@ -258,6 +258,11 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       }
     }
   }
+  if(form.Cluster?.Key) {
+    form.ClusterId = form.Cluster?.Key
+  } else {
+    form.ClusterId = null
+  }
   if (invalid || !formEl || !await formEl.validate().catch(() => false)) {
     ElMessage.error(t('wrongSave'))
     return
