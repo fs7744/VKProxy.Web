@@ -105,7 +105,7 @@
         <el-dialog v-model="dialogSelectCluster">
           <selectCluster v-model="selectedCluster"></selectCluster>
           <el-button @click="() => { dialogSelectCluster = false; selectedCluster = null; }">{{ $t('Cancel')
-            }}</el-button>
+          }}</el-button>
           <el-button type="primary"
             @click="() => { dialogSelectCluster = false; form.Cluster = selectedCluster; selectedCluster = null; }">
             {{ $t('Confirm') }}
@@ -157,7 +157,8 @@
           </el-form-item>
         </div>
         <div>
-          <el-button @click="() => { selectedTransform = {}; selectedTransformWay = ''; dialogSelectTransform = true; }">
+          <el-button
+            @click="() => { selectedTransform = {}; selectedTransformWay = ''; dialogSelectTransform = true; }">
             <el-icon>
               <Plus />
             </el-icon>
@@ -235,9 +236,18 @@ const selectedTransform = ref({} as any)
 const selectedTransformWay = ref('')
 const isNew = ref(false)
 const form = reactive(new RouteData({}))
-const rules = reactive<FormRules<RouteData>>({
+const rules = reactive<FormRules<any>>({
   Key: [{ required: true, message: () => t('required'), trigger: 'blur' },
   { min: 1, message: () => t('requiredLength') + '1', trigger: 'blur' },],
+  Statement: [{
+    validator: (rule: any, value: any, callback: any) => {
+      console.log(value)
+      storageService.CheckStatement(form.Match?.Statement as string).then(() => callback())
+        .catch((r: any) => {
+          callback(JSON.parse(r.message).Error)
+        }).finally(() => {})
+    }, trigger: 'blur'
+  }] as any
 })
 
 watchEffect(() => {
@@ -258,7 +268,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       }
     }
   }
-  if(form.Cluster?.Key) {
+  if (form.Cluster?.Key) {
     form.ClusterId = form.Cluster?.Key
   } else {
     form.ClusterId = null
@@ -299,7 +309,7 @@ const validate = async () => {
       }
     }
   }
-  if(form.Cluster?.Key) {
+  if (form.Cluster?.Key) {
     form.ClusterId = form.Cluster?.Key
   } else {
     form.ClusterId = null

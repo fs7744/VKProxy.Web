@@ -2,6 +2,7 @@
 using Google.Protobuf;
 using System.Text.Json;
 using VKProxy.Admin.Server.Config;
+using VKProxy.HttpRoutingStatement;
 using VKProxy.Storages.Etcd;
 
 namespace VKProxy.Admin.Server.Storages;
@@ -137,6 +138,17 @@ public class EtcdStorage : IStorage
 
     public async Task UpdateRouteAsync(RouteConfigData config)
     {
+        if (config.Match != null && config.Match.Statement != null)
+        {
+            try
+            {
+                HttpRoutingStatementParser.ConvertToFunc(config.Match.Statement);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message, "Statement");
+            }
+        }
         await client.PutAsync($"{options.Prefix}route/{config.Key}", JsonSerializer.Serialize(config));
     }
 

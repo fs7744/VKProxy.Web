@@ -85,6 +85,15 @@ class StorageService {
       }
     })
   }
+
+   CheckStatement(statement: string) {
+    return http(`/api/statement`, {
+      noErrorTip: true,
+      method: 'POST', body: JSON.stringify({Statement : statement}), headers: {
+        "Content-Type": "application/json",
+      }
+    })
+  }
 }
 
 export const storageService = new StorageService();

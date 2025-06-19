@@ -16,12 +16,14 @@ export const http = async (url: string, op: any) => {
     }
     return r;
   } catch(error) {
-     ElMessage({
-        showClose: true,
-        type: 'error',
-        message: error as any,
-        duration: 10000
-    })
+    if (op?.noErrorTip !== true) {
+      ElMessage({
+          showClose: true,
+          type: 'error',
+          message: error as any,
+          duration: 10000
+      })
+    }
     throw error
   } finally {
     globalLoading.hide();
