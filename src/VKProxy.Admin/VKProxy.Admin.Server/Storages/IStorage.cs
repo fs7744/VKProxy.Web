@@ -1,4 +1,4 @@
-﻿using VKProxy.Config;
+﻿using VKProxy.Admin.Server.Config;
 
 namespace VKProxy.Admin.Server.Storages;
 
@@ -20,19 +20,19 @@ public interface IStorage
 
     Task<bool> ExistsSniAsync(string key);
 
-    Task<IEnumerable<ClusterConfig>> GetClusterAsync(string? prefix);
+    Task<IEnumerable<ClusterConfigData>> GetClusterAsync(string? prefix);
 
-    Task<IEnumerable<ListenConfig>> GetListenAsync(string prefix);
+    Task<IEnumerable<ListenConfigData>> GetListenAsync(string prefix);
 
-    Task<IEnumerable<RouteConfig>> GetRouteAsync(string? prefix);
+    Task<IEnumerable<RouteConfigData>> GetRouteAsync(string? prefix);
 
-    Task<IEnumerable<SniConfig>> GetSniAsync(string? prefix);
+    Task<IEnumerable<SniConfigData>> GetSniAsync(string? prefix);
 
-    Task UpdateClusterAsync(ClusterConfig config);
+    Task UpdateClusterAsync(ClusterConfigData config);
 
-    Task UpdateListenAsync(ListenConfig config);
+    Task UpdateListenAsync(ListenConfigData config);
 
-    Task UpdateRouteAsync(RouteConfig config);
+    Task UpdateRouteAsync(RouteConfigData config);
 
-    Task UpdateSniAsync(SniConfig config);
+    Task UpdateSniAsync(SniConfigData config);
 }

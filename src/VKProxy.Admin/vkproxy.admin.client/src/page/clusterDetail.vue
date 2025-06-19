@@ -9,13 +9,27 @@
     </el-form-item>
 
     <el-form-item :label="$t('LoadBalancingPolicy')" prop="LoadBalancingPolicy">
-      <el-select v-model="form.LoadBalancingPolicy" default-first-option>
-        <el-option key="Random" label="Random" value="Random" />
-        <el-option key="RoundRobin" label="RoundRobin" value="RoundRobin" />
-        <el-option key="LeastRequests" label="LeastRequests" value="LeastRequests" />
-        <el-option key="PowerOfTwoChoices" label="PowerOfTwoChoices" value="PowerOfTwoChoices" />
+      <el-select v-model="form.LoadBalancingPolicy" default-first-option
+        @change="(v: any) => { if (v === 'Hash') { if (!form.Metadata) { form.Metadata = { HashBy: 'header', 'Key': 'X-forwarded-For'} } } else { form.Metadata = null } }">
+        <el-option key=" Random" label="Random" value="Random" />
+      <el-option key="RoundRobin" label="RoundRobin" value="RoundRobin" />
+      <el-option key="LeastRequests" label="LeastRequests" value="LeastRequests" />
+      <el-option key="PowerOfTwoChoices" label="PowerOfTwoChoices" value="PowerOfTwoChoices" />
+      <el-option key="Hash" label="Hash" value="Hash" />
       </el-select>
     </el-form-item>
+
+    <div v-if="form.LoadBalancingPolicy === 'Hash' && form.Metadata">
+      <el-form-item label="HashBy" prop="Metadata.HashBy">
+        <el-select v-model="form.Metadata.HashBy" default-first-option>
+          <el-option key="header" label="header" value="header" />
+          <el-option key="cookie" label="cookie" value="cookie" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="Key" prop="Metadata.Key">
+        <el-input v-model="form.Metadata.Key" />
+      </el-form-item>
+    </div>
 
     <el-form-item :label="$t('Destinations')" prop="Destinations">
       <urlAddress v-model="form.Destinations" ref="addressR" />
@@ -268,7 +282,7 @@
       <el-col :span="24" v-if="form.HttpClientConfigEnable && form.HttpClientConfig">
         <el-form-item prop="HttpClientConfig.WebProxy" :label="t('WebProxy')">
           <el-checkbox v-model="form.HttpClientConfig.WebProxyEnable" :label="t('Enable')"
-            @change="(b: any) => { if(form.HttpClientConfig) { form.HttpClientConfig.WebProxy = b ? (form.HttpClientConfig.WebProxy ? form.HttpClientConfig.WebProxy : new WebProxy({})) : null } }" />
+            @change="(b: any) => { if (form.HttpClientConfig) { form.HttpClientConfig.WebProxy = b ? (form.HttpClientConfig.WebProxy ? form.HttpClientConfig.WebProxy : new WebProxy({})) : null } }" />
           <div v-if="form.HttpClientConfig && form.HttpClientConfig.WebProxy && form.HttpClientConfig.WebProxyEnable"
             style="margin-left: 8px;" class="form-item-flex">
             <el-form-item prop="HttpClientConfig.WebProxy.Address">
@@ -482,6 +496,7 @@ watchEffect(() => {
   form.HttpClientConfigEnable = props.data.HttpClientConfigEnable
   form.HttpRequest = props.data.HttpRequest
   form.HttpRequestEnable = props.data.HttpRequestEnable
+  form.Metadata = props.data.Metadata
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {

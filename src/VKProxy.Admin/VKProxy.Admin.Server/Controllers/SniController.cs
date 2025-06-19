@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using VKProxy.Admin.Server.Config;
 using VKProxy.Admin.Server.Storages;
-using VKProxy.Config;
 
 namespace VKProxy.Admin.Server.Controllers
 {
@@ -23,7 +22,7 @@ namespace VKProxy.Admin.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<SniConfig>> GetAsync([FromQuery] string? prefix)
+        public async Task<IEnumerable<SniConfigData>> GetAsync([FromQuery] string? prefix)
         {
             return await storage.GetSniAsync(prefix);
         }

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using VKProxy.Admin.Server.Config;
 using VKProxy.Admin.Server.Storages;
-using VKProxy.Config;
 
 namespace VKProxy.Admin.Server.Controllers
 {
@@ -22,13 +22,13 @@ namespace VKProxy.Admin.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ClusterConfig>> GetAsync([FromQuery] string? prefix)
+        public async Task<IEnumerable<ClusterConfigData>> GetAsync([FromQuery] string? prefix)
         {
             return await storage.GetClusterAsync(prefix);
         }
 
         [HttpPost]
-        public async Task UpdateAsync([FromBody] ClusterConfig config)
+        public async Task UpdateAsync([FromBody] ClusterConfigData config)
         {
             await storage.UpdateClusterAsync(config);
         }

@@ -95,6 +95,34 @@ const columns: Column<any>[] = [
       <span> {t('key')} </span>
     )
   },
+  {
+    key: 'Order',
+    dataKey: 'Order',
+    sortable: true,
+    width: 150,
+    headerCellRenderer: () => (
+      <span> {t('Order')} </span>
+    )
+  },
+  {
+    key: 'ClusterId',
+    dataKey: 'ClusterId',
+    width: 100,
+    headerCellRenderer: () => (
+      <span> {t('Clusters')} </span>
+    )
+  },
+  {
+    key: 'Match',
+    dataKey: 'Match',
+    minWidth: 100,
+    headerCellRenderer: () => (
+      <span> {t('Match')} </span>
+    ),
+    cellRenderer: (r: any) => (
+      <span> {r.rowData.Match ? JSON.stringify(r.rowData.Match) : "" } </span>
+    )
+  } as any,
 ]
 
 const sortState = ref<SortState>({

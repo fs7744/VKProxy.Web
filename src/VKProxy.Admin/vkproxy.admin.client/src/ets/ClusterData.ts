@@ -1,5 +1,24 @@
 import { parseTimeSpanSeconds, toSecondsTimeSpan } from '@/service/utils';
-import { isString, isArray, isNumber, filter, isBoolean, map, isInteger } from 'lodash';
+import { isString, isArray, isNumber, filter, isBoolean, map, isInteger, keys, reduce } from 'lodash';
+
+export type KV = {
+  Key: string
+  Value: string
+}
+
+export function toServiceKV(kvs: KV[] | null): any {
+  if (!kvs || kvs.length === 0) return null;
+  const r = {} as any;
+  kvs.forEach(element => {
+    if (element.Key === 'XForwarded') {
+      r['X-Forwarded'] = element.Value;
+    } else {
+      r[element.Key] = element.Value;
+    }
+
+  });
+  return r;
+}
 
 export class PassiveHealthCheckConfig {
   MinimalTotalCountThreshold: number
@@ -146,6 +165,7 @@ export class HttpRequestConfig {
   }
 }
 
+
 export class ClusterData {
   Key: string
   Destinations: Destination[]
@@ -156,6 +176,7 @@ export class ClusterData {
   HttpClientConfigEnable: boolean
   HttpRequest: HttpRequestConfig | null
   HttpRequestEnable: boolean
+  Metadata: any | null
   constructor(data: any) {
     if (!data) data = {}
     this.Key = isString(data.Key) ? data.Key : null
@@ -183,6 +204,14 @@ export class ClusterData {
       this.HttpRequest = null
       this.HttpRequestEnable = false
     }
+
+    this.Metadata = data.Metadata && keys(data.Metadata) ? reduce(keys(data.Metadata), (r, k) => {
+      const v = data.Metadata[k]
+      if (isString(v)) {
+        r[k] = v
+      }
+      return r
+    }, {} as any) : null
   }
 }
 
@@ -208,11 +237,12 @@ export function toServiceCluster(data: ClusterData): any {
     HealthCheck: toServiceHealthCheck(data.HealthCheck),
     HttpClientConfig: data.HttpClientConfig,
     HttpRequest: data.HttpRequest ? {
-      ActivityTimeout:  toSecondsTimeSpan(data.HttpRequest.ActivityTimeout),
+      ActivityTimeout: toSecondsTimeSpan(data.HttpRequest.ActivityTimeout),
       Version: data.HttpRequest.Version,
       VersionPolicy: data.HttpRequest.VersionPolicy,
       AllowResponseBuffering: data.HttpRequest.AllowResponseBuffering
-    } : null
+    } : null,
+    Metadata: data.Metadata,
   }
 }
 

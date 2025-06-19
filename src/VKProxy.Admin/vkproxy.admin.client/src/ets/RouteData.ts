@@ -1,6 +1,6 @@
 import { parseTimeSpanSeconds, toSecondsTimeSpan } from '@/service/utils';
 import { isString, isArray, isNumber, filter, isInteger, type Dictionary, map, keys, reduce } from 'lodash';
-import { ClusterData, toServiceCluster } from './ClusterData';
+import { ClusterData, toServiceCluster, toServiceKV, type KV } from './ClusterData';
 
 export class RouteMatch {
   Hosts: string[] | null
@@ -14,11 +14,6 @@ export class RouteMatch {
     this.Paths = isArray(data.Paths) ? filter(data.Paths, isString) : null
     this.Methods = isArray(data.Methods) ? filter(data.Methods, isString) : null
   }
-}
-
-export type KV = {
-  Key: string
-  Value: string
 }
 
 export class RouteData {
@@ -85,18 +80,4 @@ export function toServiceRoute(data: RouteData): any {
     ClusterId: data.ClusterId,
     Cluster: data.Cluster ? toServiceCluster(data.Cluster) : null
   }
-}
-
-export function toServiceKV(kvs: KV[] | null): any {
-  if (!kvs || kvs.length === 0) return null;
-  const r = {} as any;
-  kvs.forEach(element => {
-    if (element.Key === 'XForwarded') {
-      r['X-Forwarded'] = element.Value;
-    } else {
-      r[element.Key] = element.Value;
-    }
-
-  });
-  return r;
 }

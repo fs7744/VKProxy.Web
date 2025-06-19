@@ -8,7 +8,7 @@
       "applicationUrl": "http://localhost:5041",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ETCD_CONNECTION_STRING": "http://172.16.171.56:8068",
+        "ETCD_CONNECTION_STRING": "http://172.16.171.56:8130",
         "ETCD_PREFIX": "/ReverseProxy/"
       }
     }

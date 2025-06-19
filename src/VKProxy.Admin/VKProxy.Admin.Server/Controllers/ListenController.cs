@@ -1,9 +1,6 @@
-using Etcdserverpb;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using VKProxy.Admin.Server.Config;
 using VKProxy.Admin.Server.Storages;
-using VKProxy.Config;
 
 namespace VKProxy.Admin.Server.Controllers
 {
@@ -25,7 +22,7 @@ namespace VKProxy.Admin.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ListenConfig>> GetAsync([FromQuery] string? prefix)
+        public async Task<IEnumerable<ListenConfigData>> GetAsync([FromQuery] string? prefix)
         {
             return await storage.GetListenAsync(prefix);
         }

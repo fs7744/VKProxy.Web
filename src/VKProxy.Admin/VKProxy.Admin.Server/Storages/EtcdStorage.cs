@@ -1,7 +1,7 @@
 ﻿using Etcd;
 using Google.Protobuf;
 using System.Text.Json;
-using VKProxy.Config;
+using VKProxy.Admin.Server.Config;
 using VKProxy.Storages.Etcd;
 
 namespace VKProxy.Admin.Server.Storages;
@@ -81,66 +81,66 @@ public class EtcdStorage : IStorage
         return r.Count > 0;
     }
 
-    public async Task<IEnumerable<ClusterConfig>> GetClusterAsync(string? prefix)
+    public async Task<IEnumerable<ClusterConfigData>> GetClusterAsync(string? prefix)
     {
         var res = await client.GetRangeAsync($"{options.Prefix}cluster/{prefix}");
         return res.Kvs.Select(i =>
         {
-            var r = JsonSerializer.Deserialize<ClusterConfig>(i.Value.Span);
+            var r = JsonSerializer.Deserialize<ClusterConfigData>(i.Value.Span);
             r.Key = i.Key.ToStrUtf8().Substring(options.Prefix.Length + 8);
             return r;
         });
     }
 
-    public async Task<IEnumerable<ListenConfig>> GetListenAsync(string prefix)
+    public async Task<IEnumerable<ListenConfigData>> GetListenAsync(string prefix)
     {
         var res = await client.GetRangeAsync($"{options.Prefix}listen/{prefix}");
         return res.Kvs.Select(i =>
         {
-            var r = JsonSerializer.Deserialize<ListenConfig>(i.Value.Span);
+            var r = JsonSerializer.Deserialize<ListenConfigData>(i.Value.Span);
             r.Key = i.Key.ToStrUtf8().Substring(options.Prefix.Length + 7);
             return r;
         });
     }
 
-    public async Task<IEnumerable<RouteConfig>> GetRouteAsync(string? prefix)
+    public async Task<IEnumerable<RouteConfigData>> GetRouteAsync(string? prefix)
     {
         var res = await client.GetRangeAsync($"{options.Prefix}route/{prefix}");
         return res.Kvs.Select(i =>
         {
-            var r = JsonSerializer.Deserialize<RouteConfig>(i.Value.Span);
+            var r = JsonSerializer.Deserialize<RouteConfigData>(i.Value.Span);
             r.Key = i.Key.ToStrUtf8().Substring(options.Prefix.Length + 6);
             return r;
         });
     }
 
-    public async Task<IEnumerable<SniConfig>> GetSniAsync(string? prefix)
+    public async Task<IEnumerable<SniConfigData>> GetSniAsync(string? prefix)
     {
         var res = await client.GetRangeAsync($"{options.Prefix}sni/{prefix}");
         return res.Kvs.Select(i =>
         {
-            var r = JsonSerializer.Deserialize<SniConfig>(i.Value.Span);
+            var r = JsonSerializer.Deserialize<SniConfigData>(i.Value.Span);
             r.Key = i.Key.ToStrUtf8().Substring(options.Prefix.Length + 4);
             return r;
         });
     }
 
-    public async Task UpdateClusterAsync(ClusterConfig config)
+    public async Task UpdateClusterAsync(ClusterConfigData config)
     {
         await client.PutAsync($"{options.Prefix}cluster/{config.Key}", JsonSerializer.Serialize(config));
     }
 
-    public async Task UpdateListenAsync(ListenConfig config)
+    public async Task UpdateListenAsync(ListenConfigData config)
     {
         await client.PutAsync($"{options.Prefix}listen/{config.Key}", JsonSerializer.Serialize(config));
     }
 
-    public async Task UpdateRouteAsync(RouteConfig config)
+    public async Task UpdateRouteAsync(RouteConfigData config)
     {
         await client.PutAsync($"{options.Prefix}route/{config.Key}", JsonSerializer.Serialize(config));
     }
 
-    public async Task UpdateSniAsync(SniConfig config)
+    public async Task UpdateSniAsync(SniConfigData config)
     {
         await client.PutAsync($"{options.Prefix}sni/{config.Key}", JsonSerializer.Serialize(config));
     }
