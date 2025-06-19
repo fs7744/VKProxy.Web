@@ -137,8 +137,7 @@
             <el-option key="TokenBucket" label="TokenBucket" value="TokenBucket" />
           </el-select>
         </el-form-item>
-        <el-form-item prop="Limit.PermitLimit" label="PermitLimit"
-          v-if="form.Limit.Policy === 'Concurrency' || form.Limit.Policy === 'FixedWindow' || form.Limit.Policy === 'SlidingWindow'">
+        <el-form-item prop="Limit.PermitLimit" label="PermitLimit">
           <el-input-number v-model="form.Limit.PermitLimit" :min="1" controls-position="right">
           </el-input-number>
         </el-form-item>
