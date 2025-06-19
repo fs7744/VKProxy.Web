@@ -132,4 +132,5 @@ Metadata: 元数据
 Transforms: 转换
 Key: Key
 Value: Value
+RateLimit: 速率限制
 

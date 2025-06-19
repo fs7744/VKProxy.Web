@@ -16,6 +16,44 @@ export class RouteMatch {
   }
 }
 
+export class RateLimit {
+  By: string | null
+  Policy: string | null
+  Header: string | null
+  Cookie: string | null
+  PermitLimit: number | null
+  QueueLimit: number | null
+  SegmentsPerWindow: number | null
+  TokensPerPeriod: number | null
+  Window: number | null
+  constructor(data: any) {
+    if (!data) data = {}
+    this.By = isString(data.By) ? data.By : null
+    this.Policy = isString(data.Policy) ? data.Policy : null
+    this.Header = isString(data.Header) ? data.Header : null
+    this.Cookie = isString(data.Cookie) ? data.Cookie : null
+    this.PermitLimit = isInteger(data.PermitLimit) ? data.PermitLimit : null
+    this.QueueLimit = isInteger(data.QueueLimit) ? data.QueueLimit : null
+    this.SegmentsPerWindow = isInteger(data.SegmentsPerWindow) ? data.SegmentsPerWindow : null
+    this.TokensPerPeriod = isInteger(data.TokensPerPeriod) ? data.TokensPerPeriod : null
+    this.Window = data.Window ? parseTimeSpanSeconds(data.Window) : null
+  }
+}
+
+export function toServiceLimit(data: RateLimit) {
+  return {
+    By: data.By,
+    Policy: data.Policy,
+    Header: data.Header,
+    Cookie: data.Cookie,
+    PermitLimit: data.PermitLimit,
+    QueueLimit: data.QueueLimit,
+    SegmentsPerWindow: data.SegmentsPerWindow,
+    TokensPerPeriod: data.TokensPerPeriod,
+    Window: data.Window ? toSecondsTimeSpan(data.Window) : null,
+  }
+}
+
 export class RouteData {
   Key: string
   Order: number
@@ -26,6 +64,7 @@ export class RouteData {
   Metadata: KV[] | null
   Transforms: any[] | null
   Match: RouteMatch | null
+  Limit: RateLimit | null
   constructor(data: any) {
     if (!data) data = {}
     this.Key = isString(data.Key) ? data.Key : null
@@ -36,6 +75,7 @@ export class RouteData {
     this.ClusterId = isString(data.ClusterId) ? data.ClusterId : null
     this.Cluster = data.Cluster ? new ClusterData(data.Cluster) : null
     this.Match = data.Match ? new RouteMatch(data.Match) : null
+    this.Limit = data.Limit ? new RateLimit(data.Limit) : null
     this.Metadata = data.Metadata && keys(data.Metadata) ? reduce(keys(data.Metadata), (r, k) => {
       const v = data.Metadata[k]
       if (isString(v)) {
@@ -78,6 +118,7 @@ export function toServiceRoute(data: RouteData): any {
     Transforms: !d || d.length === 0 ? null : d,
     Match: data.Match,
     ClusterId: data.ClusterId,
-    Cluster: data.Cluster ? toServiceCluster(data.Cluster) : null
+    Cluster: data.Cluster ? toServiceCluster(data.Cluster) : null,
+    Limit: data.Limit ? toServiceLimit(data.Limit) : null
   }
 }

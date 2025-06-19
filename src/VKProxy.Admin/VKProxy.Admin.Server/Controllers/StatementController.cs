@@ -8,15 +8,16 @@ namespace VKProxy.Admin.Server.Controllers;
 public class StatementController : ControllerBase
 {
     [HttpPost]
-    public async Task CheckAsync([FromBody] StatementCheck data)
+    public async Task<object> CheckAsync([FromBody] StatementCheck data)
     {
         try
         {
             HttpRoutingStatementParser.ConvertToFunc(data.Statement);
+            return null;
         }
         catch (Exception ex)
         {
-            throw new ArgumentException(ex.Message, "Statement");
+            return this.BadRequest(new { Error = ex.Message });
         }
     }
 }

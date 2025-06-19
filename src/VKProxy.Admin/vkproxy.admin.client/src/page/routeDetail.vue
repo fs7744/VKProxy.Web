@@ -105,12 +105,68 @@
         <el-dialog v-model="dialogSelectCluster">
           <selectCluster v-model="selectedCluster"></selectCluster>
           <el-button @click="() => { dialogSelectCluster = false; selectedCluster = null; }">{{ $t('Cancel')
-          }}</el-button>
+            }}</el-button>
           <el-button type="primary"
             @click="() => { dialogSelectCluster = false; form.Cluster = selectedCluster; selectedCluster = null; }">
             {{ $t('Confirm') }}
           </el-button>
         </el-dialog>
+      </div>
+    </el-form-item>
+    <el-form-item prop="Limit" :label="$t('RateLimit')">
+      <div v-if="form.Limit" style="width: 100%;">
+        <el-button :icon="RemoveFilled" @click="() => { form.Limit = null; }" style="margin-bottom: 16px;" />
+        <el-form-item prop="Limit.By" label="By">
+          <el-select v-model="form.Limit.By"
+            @change="(v: string) => { if (v === 'Total' && form.Limit) { form.Limit.Header = null; form.Limit.Cookie = null; } }">
+            <el-option key="Total" label="Total" value="Total" />
+            <el-option key="Key" label="Key" value="Key" />
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="Limit.Header" label="Header" v-if="form.Limit?.By === 'Key'">
+          <el-input v-model="form.Limit.Header" placeholder="X-forwarded-For" />
+        </el-form-item>
+        <el-form-item prop="Limit.Cookie" label="Cookie" v-if="form.Limit?.By === 'Key'">
+          <el-input v-model="form.Limit.Cookie" />
+        </el-form-item>
+        <el-form-item label="Policy" prop="Limit.Policy">
+          <el-select v-model="form.Limit.Policy">
+            <el-option key="Concurrency" label="Concurrency" value="Concurrency" />
+            <el-option key="FixedWindow" label="FixedWindow" value="FixedWindow" />
+            <el-option key="SlidingWindow" label="SlidingWindow" value="SlidingWindow" />
+            <el-option key="TokenBucket" label="TokenBucket" value="TokenBucket" />
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="Limit.PermitLimit" label="PermitLimit"
+          v-if="form.Limit.Policy === 'Concurrency' || form.Limit.Policy === 'FixedWindow' || form.Limit.Policy === 'SlidingWindow'">
+          <el-input-number v-model="form.Limit.PermitLimit" :min="1" controls-position="right">
+          </el-input-number>
+        </el-form-item>
+        <el-form-item prop="Limit.QueueLimit" label="QueueLimit">
+          <el-input-number v-model="form.Limit.QueueLimit" :min="0" controls-position="right">
+          </el-input-number>
+        </el-form-item>
+        <el-form-item prop="Limit.Window" label="Window"
+          v-if="form.Limit.Policy === 'TokenBucket' || form.Limit.Policy === 'FixedWindow' || form.Limit.Policy === 'SlidingWindow'">
+          <el-input-number v-model="form.Limit.Window" :min="1" :max="86399" controls-position="right">
+            <template #suffix>
+              <span>{{ $t('SecondSuffix') }}</span>
+            </template>
+          </el-input-number>
+        </el-form-item>
+        <el-form-item prop="Limit.SegmentsPerWindow" label="SegmentsPerWindow"
+          v-if="form.Limit.Policy === 'SlidingWindow'">
+          <el-input-number v-model="form.Limit.SegmentsPerWindow" :min="2" controls-position="right">
+          </el-input-number>
+        </el-form-item>
+        <el-form-item prop="Limit.TokensPerPeriod" label="TokensPerPeriod" v-if="form.Limit.Policy === 'TokenBucket'">
+          <el-input-number v-model="form.Limit.TokensPerPeriod" :min="1" controls-position="right">
+          </el-input-number>
+        </el-form-item>
+      </div>
+      <div v-else>
+        <el-button :icon="CirclePlusFilled"
+          @click="() => { form.Limit = { By: 'Total', Policy: 'Concurrency', QueueLimit: 0, PermitLimit: 10 } as any; }" />
       </div>
     </el-form-item>
     <el-form-item prop="Metadata" :label="$t('Metadata')">
@@ -241,19 +297,43 @@ const rules = reactive<FormRules<any>>({
   { min: 1, message: () => t('requiredLength') + '1', trigger: 'blur' },],
   Statement: [{
     validator: (rule: any, value: any, callback: any) => {
-      console.log(value)
       storageService.CheckStatement(form.Match?.Statement as string).then(() => callback())
         .catch((r: any) => {
           callback(JSON.parse(r.message).Error)
-        }).finally(() => {})
+        }).finally(() => { })
     }, trigger: 'blur'
-  }] as any
+  }] as any,
+  'Limit.Header': [{
+    validator: (rule: any, value: any, callback: any) => {
+      if(form.Limit && form.Limit.By === 'Key'&& ((!form.Limit.Header && !form.Limit.Cookie) || (form.Limit.Header && form.Limit.Cookie))) {
+         callback(new Error('Header or Cooike must only one'))
+      } else {
+        callback()
+      }
+    }, trigger: 'blur'
+  }] as any,
+  'Limit.Cookie': [{
+    validator: (rule: any, value: any, callback: any) => {
+      if(form.Limit && form.Limit.By === 'Key'&& ((!form.Limit.Header && !form.Limit.Cookie) || (form.Limit.Header && form.Limit.Cookie))) {
+         callback(new Error('Header or Cooike must only one'))
+      } else {
+        callback()
+      }
+    }, trigger: 'blur'
+  }] as any,
+  'Limit.By': [{ required: true, message: () => t('required'), trigger: 'blur' },],
+  'Limit.Policy': [{ required: true, message: () => t('required'), trigger: 'blur' },],
+  'Limit.QueueLimit': [{ required: true, message: () => t('required'), trigger: 'blur' },],
+  'Limit.PermitLimit': [{ required: true, message: () => t('required'), trigger: 'blur' },],
+  'Limit.Window': [{ required: true, message: () => t('required'), trigger: 'blur' },],
+  'Limit.SegmentsPerWindow': [{ required: true, message: () => t('required'), trigger: 'blur' },],
+  'Limit.TokensPerPeriod': [{ required: true, message: () => t('required'), trigger: 'blur' },],
 })
 
 watchEffect(() => {
   isNew.value = props.data.Key == null
   const f = form as any
-  for (const k of ['Key', 'Order', 'Timeout', 'UdpResponses', 'ClusterId', 'Cluster', 'Match', 'Metadata', 'Transforms']) {
+  for (const k of ['Key', 'Order', 'Timeout', 'UdpResponses', 'ClusterId', 'Cluster', 'Match', 'Metadata', 'Transforms', 'Limit']) {
     f[k] = (props.data as any)[k]
   }
 })
@@ -272,6 +352,20 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     form.ClusterId = form.Cluster?.Key
   } else {
     form.ClusterId = null
+  }
+  if (form.Limit) {
+    if (form.Limit.Policy === 'Concurrency') {
+      form.Limit.Window = null
+      form.Limit.SegmentsPerWindow = null
+      form.Limit.TokensPerPeriod = null
+    } else if (form.Limit.Policy === 'FixedWindow') {
+      form.Limit.SegmentsPerWindow = null
+      form.Limit.TokensPerPeriod = null
+    } else if (form.Limit.Policy === 'SlidingWindow') {
+      form.Limit.TokensPerPeriod = null
+    } else if (form.Limit.Policy === 'TokenBucket') {
+      form.Limit.SegmentsPerWindow = null
+    }
   }
   if (invalid || !formEl || !await formEl.validate().catch(() => false)) {
     ElMessage.error(t('wrongSave'))
@@ -313,6 +407,20 @@ const validate = async () => {
     form.ClusterId = form.Cluster?.Key
   } else {
     form.ClusterId = null
+  }
+  if (form.Limit) {
+    if (form.Limit.Policy === 'Concurrency') {
+      form.Limit.Window = null
+      form.Limit.SegmentsPerWindow = null
+      form.Limit.TokensPerPeriod = null
+    } else if (form.Limit.Policy === 'FixedWindow') {
+      form.Limit.SegmentsPerWindow = null
+      form.Limit.TokensPerPeriod = null
+    } else if (form.Limit.Policy === 'SlidingWindow') {
+      form.Limit.TokensPerPeriod = null
+    } else if (form.Limit.Policy === 'TokenBucket') {
+      form.Limit.SegmentsPerWindow = null
+    }
   }
 
   if (!formRef.value || !await formRef.value.validate().catch(() => false)) {
