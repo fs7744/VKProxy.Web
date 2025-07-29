@@ -1,14 +1,12 @@
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.FileProviders;
-using System.Text.Json;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using VKProxy.Admin.Server;
+using VKProxy.Admin.Server.Config;
 using VKProxy.Admin.Server.Storages;
 using VKProxy.Core.Hosting;
+using VKProxy.Middlewares.Http.HttpFuncs.ResponseCaching;
 using VKProxy.Storages.Etcd;
-using System.Data.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,9 +19,23 @@ services.AddOpenApi();
 services.UseReverseProxy();
 services.UseEtcdConfigFromEnv();
 services.Remove(services.First(i => i.ImplementationType == typeof(VKHostedService)));
+services.Remove(services.First(i => i.ImplementationType == typeof(MemoryResponseCache)));
 services.AddSingleton<IStorage, EtcdStorage>();
 
+var acmeConfig = builder.Configuration.GetSection("Acme").Get<AcmeConfig>() ?? new AcmeConfig();
+services.AddSingleton(acmeConfig);
+services.AddSingleton<AcmeJob>();
+services.AddSingleton<IChallengeStore, ETCDChallengeStore>();
+services.AddAcmeChallengeCore(config: c =>
+{
+    if (acmeConfig.HttpClientConfig != null)
+    {
+        c.HttpClientConfig = acmeConfig.HttpClientConfig;
+    }
+});
+
 var app = builder.Build();
+app.Services.GetRequiredService<AcmeJob>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
