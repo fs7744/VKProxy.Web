@@ -104,8 +104,8 @@
                 </el-icon>
               </el-tooltip>
             </template>
-            <el-input v-model="form.Certificate.PEM"  :rows="30" style="padding-right: 8px;"
-              type="textarea" :placeholder="'-----BEGIN CERTIFICATE-----\nxxxxxx\n-----END CERTIFICATE----'" />
+            <el-input v-model="form.Certificate.PEM" :rows="30" style="padding-right: 8px;" type="textarea"
+              :placeholder="'-----BEGIN CERTIFICATE-----\nxxxxxx\n-----END CERTIFICATE----'" />
           </el-form-item>
         </el-col>
 
@@ -120,13 +120,12 @@
                 </el-icon>
               </el-tooltip>
             </template>
-            <el-input v-model="form.Certificate.PEMKey"
-              :rows="30" type="textarea"
+            <el-input v-model="form.Certificate.PEMKey" :rows="30" type="textarea"
               :placeholder="'-----BEGIN ENCRYPTED PRIVATE KEY-----\nxxxxxx\n-----END ENCRYPTED PRIVATE KEY-----'" />
           </el-form-item>
         </el-col>
 
-        <el-col :span="24" style="margin-top: 16px;">
+        <el-col :span="12" style="margin-top: 16px;">
           <el-form-item prop="Certificate.Password">
             <template #label>
               <span>{{ $t('Password') }}</span>
@@ -137,8 +136,13 @@
                 </el-icon>
               </el-tooltip>
             </template>
-            <el-input v-model="form.Certificate.Password"  />
+            <el-input v-model="form.Certificate.Password" />
           </el-form-item>
+        </el-col>
+        <el-col :span="4" style="margin-left: 8px;">
+          <el-button @click="() => { isEditAcme = true;}">
+            <el-text >{{ $t('UseAcme') }}</el-text>
+          </el-button>
         </el-col>
       </el-form-item>
 
@@ -164,7 +168,7 @@
           <el-dialog v-model="dialogSelectRoute">
             <selectRoute v-model="selectedRoute"></selectRoute>
             <el-button @click="() => { dialogSelectRoute = false; selectedRoute = null; }">{{ $t('Cancel')
-            }}</el-button>
+              }}</el-button>
             <el-button type="primary"
               @click="() => { dialogSelectRoute = false; form.Route = selectedRoute; selectedRoute = null; }">
               {{ $t('Confirm') }}
@@ -182,6 +186,12 @@
       </template>
     </el-form-item>
   </el-form>
+  <el-drawer v-model="isEditAcme" direction="rtl" :before-close="handleClose" size="60%" :title="$t('acme')"
+    :destroy-on-close="true">
+    <AcmeDetail :Key="form.Key"
+      :done="(acme: any) => { if (form.Certificate) { form.Certificate.PEM = acme.Pem; form.Certificate.PEMKey = acme.PemKey; } else { form.Certificate = { PEM: acme.Pem, PEMKey: acme.PemKey } as any } isEditAcme = false; }"
+      ></AcmeDetail>
+  </el-drawer>
 </template>
 
 <style scoped></style>
@@ -196,11 +206,15 @@ import { storageService } from '../service/storage'
 import { RouteData } from '../ets/RouteData'
 import RouteDetail from './routeDetail.vue'
 import { GatewayProtocols } from '../ets/GatewayProtocols'
+import AcmeDetail from './acme.vue'
+import { handleClose } from '../service/confirm'
 
 const { t } = useI18n({
   useScope: 'global'
 })
 const routeForm = ref<any>()
+
+const isEditAcme = ref(false)
 
 const formRef = ref<FormInstance>()
 const forms = [routeForm]
@@ -243,7 +257,7 @@ watchEffect(() => {
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   let invalid = false
-  if(!props.allowRoute) {
+  if (!props.allowRoute) {
     form.Route = null
     form.RouteId = null
   }
@@ -255,7 +269,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       }
     }
   }
-  if(form.Route?.Key) {
+  if (form.Route?.Key) {
     form.RouteId = form.Route?.Key
   } else {
     form.RouteId = null
@@ -296,8 +310,7 @@ const validate = async () => {
       }
     }
   }
-  console.log(form)
-  if(form.Route?.Key) {
+  if (form.Route?.Key) {
     form.RouteId = form.Route?.Key
   } else {
     form.RouteId = null

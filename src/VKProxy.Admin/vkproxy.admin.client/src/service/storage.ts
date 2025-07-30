@@ -86,10 +86,22 @@ class StorageService {
     })
   }
 
-   CheckStatement(statement: string) {
+  CheckStatement(statement: string) {
     return http(`/api/statement`, {
       noErrorTip: true,
-      method: 'POST', body: JSON.stringify({Statement : statement}), headers: {
+      method: 'POST', body: JSON.stringify({ Statement: statement }), headers: {
+        "Content-Type": "application/json",
+      }
+    })
+  }
+
+  getAcme(prefix: string, noLoading: boolean = false) {
+    return http(`/api/acme?prefix=${prefix}`, { noLoading })
+  }
+
+  updateAcme(config: any) {
+    return http(`/api/acme`, {
+      method: 'POST', body: JSON.stringify(config), headers: {
         "Content-Type": "application/json",
       }
     })

@@ -30,7 +30,7 @@ public class AcmeController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<AcmeChallenge> GetAsync([FromBody, Required] AcmeChallenge challenge)
+    public async Task<AcmeChallenge> UpdateAsync([FromBody, Required] AcmeChallenge challenge)
     {
         using var ts = new CancellationTokenSource(challenge.Timeout.GetValueOrDefault(AcmeChallenge.DefaultTimeout));
         var t = ts.Token;

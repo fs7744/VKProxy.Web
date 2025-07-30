@@ -77,3 +77,65 @@ export function toServiceSni(data: SniData): any {
     Certificate: data.Certificate
   }
 }
+
+export class AcmeChallenge {
+  Key: string
+  Pem: string | null
+  PemKey: string | null
+  Server: string
+  DomainNames: string[]
+  RenewDaysInAdvance: number | null
+  Timeout: number | null
+  AllowedChallengeTypes: string
+  KeyAlgorithm: string
+  KeySize: number| null
+  AdditionalIssuers: string[] | null
+  AccountKeyPem: string | null
+  Contact: string[] | null
+  EabKeyId: string | null
+  EabKey: string | null
+  EabKeyAlg: string | null
+  SniKey: string | null
+  constructor(data: any) {
+    if (!data) data = {}
+    this.Key = isString(data.Key) ? data.Key : null
+    this.Pem = isString(data.Pem) ? data.Pem : null
+    this.PemKey = isString(data.PemKey) ? data.PemKey : null
+    this.Server = isString(data.Server) ? data.Server : null
+    this.DomainNames = isArray(data.DomainNames) ? filter(data.DomainNames, isString) : []
+    this.RenewDaysInAdvance = data.RenewDaysInAdvance ? parseTimeSpanSeconds(data.RenewDaysInAdvance) / (24 * 60 * 60) : null
+    this.Timeout = data.Timeout ? parseTimeSpanSeconds(data.Timeout) : null
+    this.KeyAlgorithm = isString(data.KeyAlgorithm) ? data.KeyAlgorithm : null
+    this.AllowedChallengeTypes = isString(data.AllowedChallengeTypes) ? data.AllowedChallengeTypes : null
+    this.KeySize = isInteger(data.KeySize) ? data.KeySize : null
+    this.AdditionalIssuers = isArray(data.AdditionalIssuers) ? filter(data.AdditionalIssuers, isString) : []
+    this.AccountKeyPem = isString(data.AccountKeyPem) ? data.AccountKeyPem : null
+    this.Contact = isArray(data.Contact) ? filter(data.Contact, isString) : []
+    this.EabKeyId = isString(data.EabKeyId) ? data.EabKeyId : null
+    this.EabKey = isString(data.EabKey) ? data.EabKey : null
+    this.EabKeyAlg = isString(data.EabKeyAlg) ? data.EabKeyAlg : null
+    this.SniKey = isString(data.SniKey) ? data.SniKey : null
+  }
+}
+
+export function toServiceAcmeChallenge(data: AcmeChallenge): any {
+  return {
+    Key: data.Key,
+    Pem: data.Pem,
+    PemKey: data.PemKey,
+    Server: data.Server,
+    DomainNames: data.DomainNames,
+    RenewDaysInAdvance: data.RenewDaysInAdvance ? toSecondsTimeSpan(data.RenewDaysInAdvance * 24 * 60 * 60) : null,
+    Timeout: data.Timeout ? toSecondsTimeSpan(data.Timeout) : null,
+    KeyAlgorithm: data.KeyAlgorithm,
+    AllowedChallengeTypes: data.AllowedChallengeTypes,
+    KeySize: data.KeySize,
+    AdditionalIssuers: data.AdditionalIssuers,
+    AccountKeyPem: data.AccountKeyPem,
+    Contact: data.Contact,
+    EabKeyId: data.EabKeyId,
+    EabKey: data.EabKey,
+    EabKeyAlg: data.EabKeyAlg,
+    SniKey: data.SniKey
+  }
+}

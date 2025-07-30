@@ -133,4 +133,9 @@ Transforms: 转换
 Key: Key
 Value: Value
 RateLimit: 速率限制
-
+acme: ACME
+UseAcme: 使用 Acme
+AcmeServer: Acme 地址
+KeyAlgorithm: 密钥算法
+Contact: 联系人
+RenewDaysInAdvance: 在多少有效期之前重置

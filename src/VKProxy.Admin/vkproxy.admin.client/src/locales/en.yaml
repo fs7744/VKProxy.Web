@@ -133,3 +133,9 @@ Transforms: Transforms
 Key: Key
 Value: Value
 RateLimit: RateLimit
+acme: ACME
+UseAcme: Use Acme
+AcmeServer: Acme Server
+KeyAlgorithm: Key Algorithm
+Contact: Contact
+RenewDaysInAdvance: Renew Days In Advance

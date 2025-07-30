@@ -19,5 +19,12 @@ export function toTimeSpan(v: number) {
   v /= 60
   let m = v %  60
   v -= m
-  return `${(v / 60).toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}.${ms.toString().padStart(3, '0')}`
+  let h = v %  24
+  v /= 24
+  v -= h
+  let time = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}.${ms.toString().padStart(3, '0')}`
+  if(v > 0) {
+    return `${v}.${time}`
+  } else
+    return time
 }
