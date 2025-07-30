@@ -89,7 +89,7 @@ export class AcmeChallenge {
   AllowedChallengeTypes: string
   KeyAlgorithm: string
   KeySize: number| null
-  AdditionalIssuers: string[] | null
+  AdditionalIssuers: string | null
   AccountKeyPem: string | null
   Contact: string[] | null
   EabKeyId: string | null
@@ -108,7 +108,7 @@ export class AcmeChallenge {
     this.KeyAlgorithm = isString(data.KeyAlgorithm) ? data.KeyAlgorithm : null
     this.AllowedChallengeTypes = isString(data.AllowedChallengeTypes) ? data.AllowedChallengeTypes : null
     this.KeySize = isInteger(data.KeySize) ? data.KeySize : null
-    this.AdditionalIssuers = isArray(data.AdditionalIssuers) ? filter(data.AdditionalIssuers, isString) : []
+    this.AdditionalIssuers = isArray(data.AdditionalIssuers) ? filter(data.AdditionalIssuers, isString).join('\n;\n') : null
     this.AccountKeyPem = isString(data.AccountKeyPem) ? data.AccountKeyPem : null
     this.Contact = isArray(data.Contact) ? filter(data.Contact, isString) : []
     this.EabKeyId = isString(data.EabKeyId) ? data.EabKeyId : null
@@ -130,7 +130,7 @@ export function toServiceAcmeChallenge(data: AcmeChallenge): any {
     KeyAlgorithm: data.KeyAlgorithm,
     AllowedChallengeTypes: data.AllowedChallengeTypes,
     KeySize: data.KeySize,
-    AdditionalIssuers: data.AdditionalIssuers,
+    AdditionalIssuers: data.AdditionalIssuers ? data.AdditionalIssuers.split('\n;\n') : null,
     AccountKeyPem: data.AccountKeyPem,
     Contact: data.Contact,
     EabKeyId: data.EabKeyId,

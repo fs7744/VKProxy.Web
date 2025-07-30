@@ -17,11 +17,6 @@
       </el-select>
     </el-form-item>
 
-    <el-form-item prop="AdditionalIssuers" :label="$t('AdditionalIssuers')">
-      <el-select v-model="form.AdditionalIssuers" multiple allow-create filterable>
-      </el-select>
-    </el-form-item>
-
     <el-form-item prop="RenewDaysInAdvance" :label="$t('RenewDaysInAdvance')">
       <el-input-number v-model="form.RenewDaysInAdvance" :max="365" controls-position="right">
         <template #suffix>
@@ -56,6 +51,10 @@
       </el-select>
     </el-form-item>
 
+    <el-form-item prop="AdditionalIssuers" :label="$t('AdditionalIssuers')">
+      <el-input v-model="form.AdditionalIssuers" :rows="3" style="padding-right: 8px;" type="textarea" />
+    </el-form-item>
+
     <el-form-item prop="Certificate" :label="t('Certificate')" v-if="form.Pem">
       <el-col :span="12">
         <el-form-item prop="Pem" label-position="top">
@@ -88,7 +87,7 @@
       </el-col>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="() => { (props.done as any)(form) }" >
+      <el-button type="primary" v-if="form.Pem" @click="() => { (props.done as any)(form) }" >
         {{ $t('Use') }}
       </el-button>
       <el-button type="primary" @click="renew(form)" >
