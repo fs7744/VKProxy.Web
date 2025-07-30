@@ -1,4 +1,9 @@
 export function parseTimeSpan(time: string) {
+  let i = time.indexOf('.')
+  let j = time.indexOf(':')
+  if(i > 0 && i < j) {
+    return (Number.parseInt(time.substring(0, i)) * 24 * 60 * 60  * 1000)+ Date.parse(`1970-01-01T${time.substring(i+1)}Z`)
+  }
   return Date.parse(`1970-01-01T${time}Z`);
 }
 
@@ -19,6 +24,7 @@ export function toTimeSpan(v: number) {
   v /= 60
   let m = v %  60
   v -= m
+  v /= 60
   let h = v %  24
   v /= 24
   v -= h

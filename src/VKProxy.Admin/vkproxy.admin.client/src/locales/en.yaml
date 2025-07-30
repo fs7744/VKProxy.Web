@@ -139,3 +139,5 @@ AcmeServer: Acme Server
 KeyAlgorithm: Key Algorithm
 Contact: Contact
 RenewDaysInAdvance: Renew Days In Advance
+Use: Use
+Renew: Renew
