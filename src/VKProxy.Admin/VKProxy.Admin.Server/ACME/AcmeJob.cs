@@ -1,25 +1,28 @@
 ﻿using VKProxy.ACME.AspNetCore;
 using VKProxy.Admin.Server.Config;
+using VKProxy.Admin.Server.Storages;
 
 public class AcmeJob : IAsyncDisposable
 {
     private readonly PeriodicTimer timer;
     private readonly Task timerTask;
     private readonly ILogger<AcmeJob> logger;
-    private readonly IHttpChallengeResponseStore httpStore;
     private readonly IChallengeStore store;
+    private readonly IAcmeStateIniter initer;
+    private readonly IStorage storage;
 
-    public AcmeJob(AcmeConfig config, ILogger<AcmeJob> logger, IHttpChallengeResponseStore httpStore, IChallengeStore store)
+    public AcmeJob(AcmeConfig config, ILogger<AcmeJob> logger, IChallengeStore store, IAcmeStateIniter initer, IStorage storage)
     {
         timer = new PeriodicTimer(config.Period.GetValueOrDefault(AcmeConfig.DefaultPeriod));
         this.logger = logger;
-        this.httpStore = httpStore;
         this.store = store;
+        this.initer = initer;
+        this.storage = storage;
         timerTask = Task.Run(async () =>
         {
             try
             {
-                await Init();
+                await Do();
             }
             catch (Exception ex)
             {
@@ -46,15 +49,24 @@ public class AcmeJob : IAsyncDisposable
         await timerTask;
     }
 
-    private async Task Init()
-    {
-        foreach (var item in await store.AllAsync(string.Empty))
-        {
-        }
-    }
-
     private async Task Do()
     {
-        logger.LogError(DateTime.Now.ToString());
+        var tasks = (await store.AllAsync(string.Empty))
+            .Select(async i =>
+            {
+                try
+                {
+                    if (i.IsNeedRenew())
+                    {
+                        await i.Renew(store, initer, storage);
+                        logger.LogInformation("Renew certificate for {Key} Done.", i.Key);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, $"Renew certificate for {i.Key} Failed");
+                }
+            }).ToArray();
+        await Task.WhenAll(tasks);
     }
 }

@@ -32,6 +32,6 @@ public class ETCDChallengeStore : IChallengeStore
     public async Task UpdateAsync(AcmeChallenge challenge, CancellationToken cancellationToken = default)
     {
         challenge.LastUpdateDate = DateTime.UtcNow.Ticks;
-        await client.PutAsync($"{prefix}cluster/{challenge.Key}", JsonSerializer.Serialize(challenge));
+        await client.PutAsync($"{prefix}{challenge.Key}", JsonSerializer.Serialize(challenge));
     }
 }

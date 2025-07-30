@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using VKProxy.ACME;
 using VKProxy.ACME.AspNetCore;
-using VKProxy.Core.Extensions;
+using VKProxy.Admin.Server.Storages;
 
 namespace VKProxy.Admin.Server.Controllers;
 
@@ -13,12 +13,14 @@ public class AcmeController : ControllerBase
     private readonly IChallengeStore store;
     private readonly IAcmeStateIniter initer;
     private readonly IServiceProvider serviceProvider;
+    private readonly IStorage storage;
 
-    public AcmeController(IChallengeStore store, IAcmeStateIniter initer, IServiceProvider serviceProvider)
+    public AcmeController(IChallengeStore store, IAcmeStateIniter initer, IServiceProvider serviceProvider, IStorage storage)
     {
         this.store = store;
         this.initer = initer;
         this.serviceProvider = serviceProvider;
+        this.storage = storage;
     }
 
     [HttpGet]
@@ -27,12 +29,10 @@ public class AcmeController : ControllerBase
         return await store.AllAsync(prefix ?? string.Empty);
     }
 
-    private static readonly TimeSpan DefaultTimeout = TimeSpan.FromMinutes(10);
-
     [HttpPost]
     public async Task<AcmeChallenge> GetAsync([FromBody, Required] AcmeChallenge challenge)
     {
-        var ts = new CancellationTokenSource(challenge.Timeout.GetValueOrDefault(DefaultTimeout));
+        using var ts = new CancellationTokenSource(challenge.Timeout.GetValueOrDefault(AcmeChallenge.DefaultTimeout));
         var t = ts.Token;
         if (string.IsNullOrWhiteSpace(challenge.AccountKeyPem))
         {
@@ -43,8 +43,7 @@ public class AcmeController : ControllerBase
             challenge.AccountKeyPem = key.ToPem();
         }
         var cert = await initer.CreateCertificateAsync(challenge.ToOptions(), t);
-        challenge.Pem = cert.ExportPem();
-        await store.UpdateAsync(challenge, t);
+        await challenge.Renew(store, initer, storage);
         return challenge;
     }
 
