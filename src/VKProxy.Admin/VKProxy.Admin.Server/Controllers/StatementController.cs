@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using VKProxy.HttpRoutingStatement;
+﻿using Lmzzz.AspNetCoreTemplate;
+using Microsoft.AspNetCore.Mvc;
 
 namespace VKProxy.Admin.Server.Controllers;
 
@@ -7,12 +7,19 @@ namespace VKProxy.Admin.Server.Controllers;
 [Route("api/statement")]
 public class StatementController : ControllerBase
 {
+    private readonly ITemplateEngineFactory engineFactory;
+
+    public StatementController(ITemplateEngineFactory engineFactory)
+    {
+        this.engineFactory = engineFactory;
+    }
+
     [HttpPost]
     public async Task<object> CheckAsync([FromBody] StatementCheck data)
     {
         try
         {
-            HttpRoutingStatementParser.ConvertToFunc(data.Statement);
+            engineFactory.ConvertRouteFunction(data.Statement);
             return null;
         }
         catch (Exception ex)

@@ -1,8 +1,8 @@
 ﻿using Etcd;
 using Google.Protobuf;
+using Lmzzz.AspNetCoreTemplate;
 using System.Text.Json;
 using VKProxy.Admin.Server.Config;
-using VKProxy.HttpRoutingStatement;
 using VKProxy.Storages.Etcd;
 
 namespace VKProxy.Admin.Server.Storages;
@@ -11,11 +11,13 @@ public class EtcdStorage : IStorage
 {
     private readonly IEtcdClient client;
     private readonly EtcdProxyConfigSourceOptions options;
+    private readonly ITemplateEngineFactory engineFactory;
 
-    public EtcdStorage([FromKeyedServices(nameof(EtcdProxyConfigSource))] IEtcdClient client, EtcdProxyConfigSourceOptions options)
+    public EtcdStorage([FromKeyedServices(nameof(EtcdProxyConfigSource))] IEtcdClient client, EtcdProxyConfigSourceOptions options, ITemplateEngineFactory engineFactory)
     {
         this.client = client;
         this.options = options;
+        this.engineFactory = engineFactory;
     }
 
     public async Task<long> DeleteClusterAsync(string key)
@@ -142,7 +144,7 @@ public class EtcdStorage : IStorage
         {
             try
             {
-                HttpRoutingStatementParser.ConvertToFunc(config.Match.Statement);
+                engineFactory.ConvertRouteFunction(config.Match.Statement);
             }
             catch (Exception ex)
             {
