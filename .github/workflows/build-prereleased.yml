@@ -24,7 +24,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 9.x.x
+        dotnet-version: 10.x.x
     - name: Setup Node.js environment
       uses: actions/setup-node@v4.4.0
       with:
@@ -38,7 +38,7 @@ jobs:
     - name: CP ui 
       run: cd src/VKProxy.Admin && cp -r vkproxy.admin.client/dist VKProxy.Admin.Server/bin/Release/net9.0/wwwroot && ls VKProxy.Admin.Server/bin/Release/net9.0/wwwroot
     - name: Docker Setup Docker
-      uses: docker/setup-docker-action@v4.3.0
+      uses: docker/setup-docker-action@v4.5.0
     - name: build img
       run: cd src/VKProxy.Admin && docker build -t vkproxy/ui:$RELEASE_VERSION .
     - name: Docker Login
